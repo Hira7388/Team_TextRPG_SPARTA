@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
-    internal class Character
+    public abstract class Character
     {
         public string Name { get; protected set; }
         public CharacterStat Stat { get; protected set; }
