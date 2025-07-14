@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ConsoleTextRPG.Scenes;
 
 namespace ConsoleTextRPG.Managers
 {
@@ -22,8 +23,7 @@ namespace ConsoleTextRPG.Managers
         private readonly Dictionary<GameState, BaseScene> scenes = new();
 
         // 플레이어 객체 생성
-        private static Player _player;
-        public Player Player
+        public Player Player { get; private set; }
         
         // 싱글톤
         private static GameManager _instance;
@@ -55,9 +55,10 @@ namespace ConsoleTextRPG.Managers
         }
         private void Init()
         {
-            
+            this.Player = new Player("");
             Console.CursorVisible = false;
-
+            // 임시 아이템 추가(테스트용)
+            Player.Inventory.AddItem(new Item(0, "낡은 검", Item.ItemType.Weapon, 5, "쉽게 볼 수 있는 검입니다.", 100));
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
             scenes[GameState.DungeonScene] = new DungeonScene();
@@ -65,7 +66,7 @@ namespace ConsoleTextRPG.Managers
 
 
             // 초기 Scene 설정
-            // currentScene = SceneID.Main;
+             currentScene = GameState.TownScene;
         }
 
         private void Render()

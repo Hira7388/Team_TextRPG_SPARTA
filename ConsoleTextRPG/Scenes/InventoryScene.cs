@@ -1,4 +1,5 @@
 ﻿using ConsoleTextRPG.Data;
+using ConsoleTextRPG.Managers;
 using ConsoleTextRPG.Scene;
 using System;
 using System.Collections.Generic;
@@ -38,8 +39,39 @@ namespace ConsoleTextRPG.Scenes
 
         public void ShowInventoryItem()
         {
-            foreach(Item item in Player.Inventory.Items)
-            Console.WriteLine(
+            List<Item> items = GameManager.Instance.Player.Inventory.Items;
+
+            // 우선 보유중인 아이템이 있는지 확인
+            if (items.Count == 0)
+            {
+                Print("  [비어 있음]", ConsoleColor.DarkGray);
+                return;
+            }
+
+            // 아이템 목록을 번호와 함께 출력합니다.
+            for (int i = 0; i < items.Count; i++)
+            {
+                Item item = items[i];
+
+                Console.Write("- ");
+
+                // 장착 여부에 따라 '[E]' 표시 및 색상 변경
+                if (item.IsEquipped)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("[E]");
+                    Console.ResetColor();
+                    Console.Write($" {item.Name,-15}");
+                }
+                else
+                {
+                    Console.Write($"   {item.Name,-15}");
+                }
+
+                // 아이템 능력치와 설명 출력
+                Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
+                Console.WriteLine($" | {item.Comment}");
+            }
         }
     }
 }

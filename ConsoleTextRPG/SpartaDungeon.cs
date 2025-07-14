@@ -1,4 +1,5 @@
 ﻿using ConsoleTextRPG.Data;
+using ConsoleTextRPG.Managers;
 
 namespace ConsoleTextRPG
 {
@@ -6,8 +7,7 @@ namespace ConsoleTextRPG
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
-            
+            GameManager.Instance.GameRun();
         }
     }
 }
