@@ -14,10 +14,6 @@ namespace ConsoleTextRPG.Scene
         int dungeonClearCount = 15; // 던전 클리어 횟수
         double monsValue = 0.3f; // 몬스터 등장 확률 (30%)
 
-        public DungeonScene(GameManager game) : base(game)
-        {
-        }
-
         public override void Render()
         {
             Print("◎던전◎", ConsoleColor.Red);
@@ -78,7 +74,7 @@ namespace ConsoleTextRPG.Scene
             {
                 Console.WriteLine("\ninfo : 던전을 클리어했습니다.");
                 Console.WriteLine("\ninfo : 마을로 돌아갑니다");
-                //gameManager.SwitchScene(SceneID.Twon);
+                GameManager.Instance.SwitchScene(id: SceneID.Main);
                 Thread.Sleep(1000);
                 walkCount = 0;// 이동 횟수 초기화
                 return;

@@ -20,7 +20,7 @@ namespace ConsoleTextRPG.Managers
     }
 
 
-    public class GameManager
+    internal class GameManager
     {
         // 현재 씬
         private SceneID currentScene;
