@@ -44,6 +44,16 @@ namespace ConsoleTextRPG.Managers
         }
 
         //===================[이영신 추가]
+        private bool running = true;
+        public void GameRun()
+        {
+            Init();
+            while (running)
+            {
+                Render();
+                Update();
+            }
+        }
                 private void Init()
         {
             Console.CursorVisible = false;
@@ -56,6 +66,18 @@ namespace ConsoleTextRPG.Managers
             // 초기 Scene 설정
             // currentScene = SceneID.Main;
         }
+
+        private void Render()
+        {
+            Console.Clear(); // 화면을 초기화
+            scenes[currentScene].Render();
+        }
+        private void Update()
+        {
+            scenes[currentScene].Update();
+        }
+       // ==== Scene 전환 메서드 ====
+        public void SwitchScene(SceneID id) => currentScene = id;
         //===================[이영신 추가]
 
 
