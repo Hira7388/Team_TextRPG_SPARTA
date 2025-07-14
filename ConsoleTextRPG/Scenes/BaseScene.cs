@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Scenes
 {
-    public abstract class BaseScene
+    internal abstract class BaseScene
     {
         public abstract void Render();
         public abstract void Update();

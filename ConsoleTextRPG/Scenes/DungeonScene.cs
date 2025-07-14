@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Scenes
 {
-    public class DungeonScene : BaseScene
+    internal class DungeonScene : BaseScene
     {
         // 던전 클리어 조건
         int walkCount = 0; // 이동 횟수
