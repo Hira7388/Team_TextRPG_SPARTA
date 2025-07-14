@@ -1,4 +1,5 @@
 ﻿using ConsoleTextRPG.Scene;
+using ConsoleTextRPG.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +13,13 @@ namespace ConsoleTextRPG.Managers
     // 게임 Scene 전환을 위한 SceneID 열거형
     // 작성자 : 이영신
     // 아래 열거형에 씬 이름을 추가후 아래 'Init' 함수에서 씬을 등록해주세요.
-    public enum SceneID
-    {
-        // 작성법 : 씬 이름, 씬이름, 씬이름 
-        Main,       // 메인
-        Dungeon
-    }
 
 
     internal class GameManager
     {
         // 현재 씬
-        private SceneID currentScene;
-        private readonly Dictionary<SceneID, BaseScene> scenes = new();
+        private GameState currentScene;
+        private readonly Dictionary<GameState, BaseScene> scenes = new();
         
         // 싱글톤
         private static GameManager _instance;
@@ -60,7 +55,7 @@ namespace ConsoleTextRPG.Managers
 
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
-            scenes[SceneID.Dungeon] = new DungeonScene(this);
+            scenes[GameState.DungeonScene] = new DungeonScene();
 
 
             // 초기 Scene 설정
