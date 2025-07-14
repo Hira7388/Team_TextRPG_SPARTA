@@ -8,7 +8,7 @@ namespace ConsoleTextRPG.Data
 {
     internal class Character
     {
-        //정승우 캐릭터 수정
+        //정승우 캐릭터 수정수정
 
     }
 }
