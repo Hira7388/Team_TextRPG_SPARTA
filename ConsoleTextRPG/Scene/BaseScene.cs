@@ -9,6 +9,16 @@ namespace ConsoleTextRPG.Scene
 {
     public abstract class BaseScene
     {
+        protected GameManager gameManager;
+
+        public BaseScene(GameManager gameManager)
+        {
+            this.gameManager = gameManager;
+        }
+
+        public abstract void Render();
+        public abstract void Update();
+
         
     }
 }
