@@ -43,7 +43,21 @@ namespace ConsoleTextRPG.Managers
 
         }
 
-       
+        //===================[이영신 추가]
+                private void Init()
+        {
+            Console.CursorVisible = false;
+
+            // Scene 등록
+            // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
+            scenes[SceneID.Dungeon] = new DungeonScene(this);
+
+
+            // 초기 Scene 설정
+            // currentScene = SceneID.Main;
+        }
+        //===================[이영신 추가]
+
 
     }
 }
