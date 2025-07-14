@@ -1,14 +1,31 @@
-﻿using System;
+﻿using ConsoleTextRPG.Scene;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Managers
 {
-    internal class GameManager
-    { 
+    // 게임 Scene 전환을 위한 SceneID 열거형
+    // 작성자 : 이영신
+    // 아래 열거형에 씬 이름을 추가후 아래 'Init' 함수에서 씬을 등록해주세요.
+    public enum SceneID
+    {
+        // 작성법 : 씬 이름, 씬이름, 씬이름 
+        Main,       // 메인
+        Dungeon
+    }
+
+
+    public class GameManager
+    {
+        // 현재 씬
+        private SceneID currentScene;
+        private readonly Dictionary<SceneID, BaseScene> scenes = new();
+        
         // 싱글톤
         private static GameManager _instance;
         public static GameManager Instance
@@ -25,5 +42,8 @@ namespace ConsoleTextRPG.Managers
         {
 
         }
+
+       
+
     }
 }
