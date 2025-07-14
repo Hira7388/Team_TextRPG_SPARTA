@@ -47,12 +47,10 @@ namespace ConsoleTextRPG.Scenes
             string input = Console.ReadLine();
             if (input == "0")
             {
-                Console.Clear();
                 return;
             }
             else if (input == "1")
             {
-                Console.Clear();
                 Itembuy();
             }
             else
@@ -73,7 +71,6 @@ namespace ConsoleTextRPG.Scenes
             string input = Console.ReadLine();
             if (input == "0")
             {
-                Console.Clear();
                 return;
             }
             else if (input == "1")
