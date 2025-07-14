@@ -38,8 +38,8 @@ namespace ConsoleTextRPG.Managers
 
         }
 
-        //===================[이영신 추가]
         private bool running = true;
+
         public void GameRun()
         {
             Init();
@@ -49,7 +49,8 @@ namespace ConsoleTextRPG.Managers
                 Update();
             }
         }
-                private void Init()
+
+         private void Init()
         {
             Console.CursorVisible = false;
 
@@ -73,8 +74,5 @@ namespace ConsoleTextRPG.Managers
         }
        // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;
-        //===================[이영신 추가]
-
-
     }
 }
