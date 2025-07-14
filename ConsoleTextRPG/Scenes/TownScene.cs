@@ -66,9 +66,10 @@ namespace ConsoleTextRPG.Scenes
                 Console.Write("\n당신의 이름은 기억이 나십니까? ");
                 string input = Console.ReadLine()?.Trim();
 
-                if (string.IsNullOrWhiteSpace(myPlayer.Name))
+                if (string.IsNullOrWhiteSpace(input))
                 {
                     Console.WriteLine("⚠️  유효하지 않은 이름입니다. 다시 입력해주세요.");
+                    Console.ReadKey();
                 }
                 else
                 {
@@ -115,7 +116,8 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else
                 {
-                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.\n");
+                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                    Console.ReadKey();
                 }
             }
         }
@@ -155,7 +157,8 @@ namespace ConsoleTextRPG.Scenes
                         stayInTown = false;
                         break;
                     default:
-                        Console.WriteLine("⚠️  올바른 번호를 선택해주세요.\n");
+                        Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                        Console.ReadKey();
                         break;
                 }
             }
