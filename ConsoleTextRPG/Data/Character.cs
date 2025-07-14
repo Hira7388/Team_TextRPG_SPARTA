@@ -14,7 +14,7 @@ namespace ConsoleTextRPG.Data
         // 호출한 이가 target를 공격하는 행동
         public virtual void Attack(Character target)
         {
-            int damage = this.Stat.Attack;
+            int damage = this.Stat.TotalAttack;
             Console.WriteLine($"{this.Name}의 공격!");
             target.TakeDamage(damage); // 상대방의 TakeDamage 이벤트를 발동시킴
         }
