@@ -40,7 +40,7 @@ namespace ConsoleTextRPG.Managers
         // 생성자
         private GameManager()
         {
-
+            
         }
 
         //===================[이영신 추가]
@@ -59,8 +59,8 @@ namespace ConsoleTextRPG.Managers
             Console.CursorVisible = false;
 
             // Scene 등록
-            // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
-            scenes[SceneID.Dungeon] = new DungeonScene(this);
+            // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름();
+            scenes[SceneID.Dungeon] = new DungeonScene();
 
 
             // 초기 Scene 설정

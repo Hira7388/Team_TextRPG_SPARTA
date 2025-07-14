@@ -8,7 +8,9 @@ namespace ConsoleTextRPG.Data
 {
     internal class Store
     {
-        public static void Item() 
+        List<Item> inventory = new List<Item>();
+
+        public static void Itemdisplay() 
         {
             Console.Clear();
             Console.WriteLine("상점");
@@ -17,7 +19,10 @@ namespace ConsoleTextRPG.Data
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             Console.WriteLine();
-
+            for(int i = 0; i < Item.Count; i++ )
+            {
+                Console.WriteLine(i);
+            }
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("1. 아이템 구매");
