@@ -15,10 +15,10 @@ namespace ConsoleTextRPG.Data
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Comment { get; set; }
         public ItemType Type { get; set; }
         public string StatType { get; set; }
         public int StatusBonus { get; set; }
+        public string Comment { get; set; }
         public int Price { get; set; }
         // 아이템이 장착되어 있는지 여부를 추적하는 속성
         public bool IsEquipped { get; set; }
@@ -27,9 +27,9 @@ namespace ConsoleTextRPG.Data
         {
             Id = id;
             Name = name;
-            Comment = comment;
             Type = type;
             StatusBonus = statusBonus;
+            Comment = comment;
             Price = price;
             IsEquipped = false;
 
