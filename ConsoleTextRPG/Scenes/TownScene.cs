@@ -8,12 +8,12 @@ namespace ConsoleTextRPG.Scenes
         private static TownScene _instance;
         public static TownScene Instance => _instance ??= new TownScene();
 
-        // 플레이어 정보 클래스
-        private class Player
+        // 캐릭터 클래스
+        public class Player
         {
             public string Name { get; set; } = string.Empty;
             public int Level { get; set; } = 1;
-            public string Class { get; set; }
+            public string Job { get; set; }  // Class -> Job
             public int Gold
             {
                 get => gold;
@@ -32,7 +32,7 @@ namespace ConsoleTextRPG.Scenes
         }
 
         // 플레이어 인스턴스
-        private Player player = new Player();
+        public Player player = new Player();
 
         // 생성자
         private TownScene() { }
@@ -43,7 +43,7 @@ namespace ConsoleTextRPG.Scenes
             Console.Clear();
             Console.WriteLine("스파르타 마을에 오신 것을 환영합니다!");
 
-            if (string.IsNullOrWhiteSpace(player.Name))
+            if (string.IsNullOrWhiteSpace(input))
             {
                 AskPlayerName();  // 이름 입력
                 ChooseJob();      // 직업 선택
@@ -60,9 +60,10 @@ namespace ConsoleTextRPG.Scenes
                 Console.Write("\n당신의 이름은 기억이 나십니까? ");
                 string input = Console.ReadLine()?.Trim();
 
-                if (string.IsNullOrWhiteSpace(player.Name))
+                if (string.IsNullOrWhiteSpace(input))
                 {
                     Console.WriteLine("⚠️  유효하지 않은 이름입니다. 다시 입력해주세요.");
+                    Console.ReadKey();
                 }
                 else
                 {
@@ -86,7 +87,7 @@ namespace ConsoleTextRPG.Scenes
 
                 if (choice == "1")
                 {
-                    player.Class = "전사";
+                    player.Job = "전사";
                     player.Level = 1;
                     player.Gold = 100;
                     player.Attack = 15;
@@ -97,7 +98,7 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else if (choice == "2")
                 {
-                    player.Class = "마법사";
+                    player.Job = "마법사";
                     player.Level = 1;
                     player.Gold = 100;
                     player.Attack = 20;
@@ -108,7 +109,8 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else
                 {
-                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.\n");
+                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                    Console.ReadKey();
                 }
             }
         }
@@ -148,7 +150,8 @@ namespace ConsoleTextRPG.Scenes
                         stayInTown = false;
                         break;
                     default:
-                        Console.WriteLine("⚠️  올바른 번호를 선택해주세요.\n");
+                        Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                        Console.ReadKey();
                         break;
                 }
             }
@@ -161,7 +164,7 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine("📜 [내 정보]");
             Console.WriteLine($"이름   : {player.Name}");
             Console.WriteLine($"레벨   : {player.Level}");
-            Console.WriteLine($"직업   : {player.Class}");
+            Console.WriteLine($"직업   : {player.Job}");
             Console.WriteLine($"소지금 : {player.Gold} G");
             Console.WriteLine($"공격력 : {player.Attack}{(player.ItemAttack > 0 ? $"(+{player.ItemAttack})" : "")}");
             Console.WriteLine($"방어력 : {player.Defense}{(player.ItemDefense > 0 ? $"(+{player.ItemDefense})" : "")}");
