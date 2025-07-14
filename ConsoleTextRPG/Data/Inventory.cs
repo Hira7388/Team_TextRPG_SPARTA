@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
-    internal class Inventory
+    public class Inventory
     {
+        public List<Item> Items = new List<Item>();
     }
 }

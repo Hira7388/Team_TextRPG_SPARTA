@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
-    internal class Item
+    public class Item
     {
         public int Id { get; }
         public string Name { get; }
