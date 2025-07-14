@@ -15,7 +15,14 @@ namespace ConsoleTextRPG.Scenes
         int dungeonClearCount = 15; // 던전 클리어 횟수
         double monsValue = 0.3f; // 몬스터 등장 확률 (30%)
 
+
         public override void Render()
+        {
+            DungeonRender();
+        }
+
+        // 던전 씬 랜더함수
+        void DungeonRender()
         {
             Print("◎던전◎", ConsoleColor.Red);
             Print("3가지 선택지를 보고 길을 선택해주세요\n");
@@ -28,6 +35,17 @@ namespace ConsoleTextRPG.Scenes
             Print("원하시는 행동을 입력해주세요");
             Console.Write(">>");
         }
+        // 배틀씬 랜더함수
+        public void BattleRender()
+        {
+            Print("◎Battle!!◎", ConsoleColor.DarkYellow);
+            // 몬스터 리스트 전개(list와 랜덤으로 몬스터 마리수 조정)
+
+            Print("몬스터와의 전투가 시작되었습니다!\n");
+        }
+
+
+
 
         public override void Update()
         {
