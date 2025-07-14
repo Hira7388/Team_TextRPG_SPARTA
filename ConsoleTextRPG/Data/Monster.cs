@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
-    public class Monster : Character
+    internal class Monster : Character
     {
     }
 }
