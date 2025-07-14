@@ -1,4 +1,4 @@
-﻿using ConsoleTextRPG.Scene;
+﻿using ConsoleTextRPG.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
