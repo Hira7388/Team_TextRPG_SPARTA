@@ -20,6 +20,10 @@ namespace ConsoleTextRPG.Managers
         // 현재 씬
         private GameState currentScene;
         private readonly Dictionary<GameState, BaseScene> scenes = new();
+
+        // 플레이어 객체 생성
+        private static Player _player;
+        public Player Player
         
         // 싱글톤
         private static GameManager _instance;
@@ -49,13 +53,15 @@ namespace ConsoleTextRPG.Managers
                 Update();
             }
         }
-                private void Init()
+        private void Init()
         {
+            
             Console.CursorVisible = false;
 
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
             scenes[GameState.DungeonScene] = new DungeonScene();
+            scenes[GameState.InventoryScene] = new InventoryScene();
 
 
             // 초기 Scene 설정

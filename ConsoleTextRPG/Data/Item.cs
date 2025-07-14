@@ -23,7 +23,7 @@ namespace ConsoleTextRPG.Data
         // 아이템이 장착되어 있는지 여부를 추적하는 속성
         public bool IsEquipped { get; set; }
 
-        public Item(int id, string name, ItemType type, string itemType, int statusBonus, string comment, int price)
+        public Item(int id, string name, ItemType type, int statusBonus, string comment, int price)
         {
             Id = id;
             Name = name;
