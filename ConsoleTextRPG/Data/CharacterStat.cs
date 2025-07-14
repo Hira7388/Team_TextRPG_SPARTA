@@ -3,7 +3,7 @@
 
 namespace ConsoleTextRPG.Data
 {
-    internal class CharacterStat
+    public class CharacterStat
     {
         public int Level { get; private set; }
         public int MaxHp { get; private set; }
