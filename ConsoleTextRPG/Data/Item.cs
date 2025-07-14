@@ -8,23 +8,25 @@ namespace ConsoleTextRPG.Data
 {
     internal class Item
     {
-        public int Id { get; }
-        public string Name { get; }
-        public string StatusBonus { get; }
-        public string Comment { get; }
-        public string Price { get; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Itemtype { get; set; }
+        public int StatusBonus { get; set; }
+        public string Comment { get; set; }
+        public int Price { get; set; }
 
-        public Item(int id, string name, string statusBonus, string comment, string price)
+        public Item(int id, string name, string itemType, int statusBonus, string comment, int price)
         {
             Id = id;
             Name = name;
+            Itemtype = itemType;
             StatusBonus = statusBonus;
             Comment = comment;
             Price = price;
         }
         public override string ToString()
         {
-            return $"{Id}.{Name} | {StatusBonus} | {Comment} | {Price}";
+            return $"{Id}.{Name} | {Itemtype} + {StatusBonus} | {Comment} | {Price} G";
         }
     }
 }
