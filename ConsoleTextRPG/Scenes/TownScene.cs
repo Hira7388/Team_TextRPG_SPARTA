@@ -43,7 +43,7 @@ namespace ConsoleTextRPG.Scenes
             Console.Clear();
             Console.WriteLine("스파르타 마을에 오신 것을 환영합니다!");
 
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrWhiteSpace(player.Name))
             {
                 AskPlayerName();  // 이름 입력
                 ChooseJob();      // 직업 선택
