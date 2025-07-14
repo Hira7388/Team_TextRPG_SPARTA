@@ -4,13 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Data;
+using System.Collections.Generic;
 
 namespace ConsoleTextRPG.Scenes
 {
     internal class Store
     {
-        List<Item> inventory = new List<Item>();
+        List<Item> shopItem = new List<Item>();
+        public Store()
+        {
+            shopItem.Add(new Item(1, "수련자 갑옷", "방어력", 5, "초보 모험가를 위한 검.",1000));
 
+        }
         public static void Itemdisplay()
         {
             Console.Clear();
@@ -20,10 +25,7 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             Console.WriteLine();
-            for (int i = 0; i < 10; i++)
-            {
-                Console.WriteLine(i);
-            }
+
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("1. 아이템 구매");
@@ -80,6 +82,14 @@ namespace ConsoleTextRPG.Scenes
                 Console.Clear();
                 Console.WriteLine("잘못된 입력입니다.");
                 Console.WriteLine();
+            }
+        }
+
+        public void DisplayShopItems()
+        {
+            for (int i = 0; i < shopItem.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {shopItem[i].Name} ({shopItem[i].Price} G)");
             }
         }
     }
