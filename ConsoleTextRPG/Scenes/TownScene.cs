@@ -1,42 +1,61 @@
-﻿using System;
+﻿using ConsoleTextRPG.Managers;
+using ConsoleTextRPG.Data;
+using System;
+using System.Numerics;
 
 namespace ConsoleTextRPG.Scenes
 {
     internal class TownScene
     {
-        // 싱글톤
+        // 싱글톤 인스턴스
         private static TownScene _instance;
-        public static TownScene Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new TownScene();
-                return _instance;
-            }
-        }
+        public static TownScene Instance => _instance ??= new TownScene();
+
+        // 플레이어 정보 클래스
+        // 정진규 - Town씬에서 Player 객체를 만들 필요 없습니다. GameManager에서 인스턴스로 생성되기 때문에 불러오면 됩니다.
+        Player myPlayer = GameManager.Instance.Player; // 게임매니저에서 생성된 Player 객체 불러오기
+
+        //private class Player
+        //{
+        //    public string Name { get; set; } = string.Empty;
+        //    public int Level { get; set; } = 1;
+        //    public string Class { get; set; }
+        //    public int Gold
+        //    {
+        //        get => gold;
+        //        set => gold = value >= 0 ? value : 0;
+        //    }
+        //    public int Attack { get; set; }
+        //    public int Defense { get; set; }
+        //    public int Health { get; set; }
+
+        //    // 아이템 효과
+        //    public int ItemAttack { get; set; }
+        //    public int ItemDefense { get; set; }
+        //    public int ItemHealth { get; set; }
+
+        //    private int gold;
+        //}
+
+        //// 플레이어 인스턴스
+        //private Player player = new Player();
 
         // 생성자
         private TownScene() { }
 
-        // 🧍‍♂️ 플레이어 정보 (7개)
-        private string playerName;
-        private int playerLevel;
-        private string playerJob;
-        private int playerGold;
-        private int playerAtk;
-        private int playerDef;
-        private int playerHp;
-
-        // 타운 진입
+        // 마을 진입
         public void Enter()
         {
             Console.Clear();
             Console.WriteLine("스파르타 마을에 오신 것을 환영합니다!");
 
-            AskPlayerName();     // 이름
-            ChooseJob();         // 직업 (능력치 설정)
-            ShowMenu();          // 메뉴
+            if (string.IsNullOrWhiteSpace(myPlayer.Name))
+            {
+                AskPlayerName();  // 이름 입력
+                ChooseJob();      // 직업 선택
+            }
+
+            ShowMenu();           // 마을 메뉴
         }
 
         // 이름 입력
@@ -44,23 +63,24 @@ namespace ConsoleTextRPG.Scenes
         {
             while (true)
             {
-                Console.Write("당신의 이름을 입력하세요: ");
+                Console.Write("\n당신의 이름은 기억이 나십니까? ");
                 string input = Console.ReadLine()?.Trim();
 
                 if (string.IsNullOrWhiteSpace(input))
                 {
                     Console.WriteLine("⚠️  유효하지 않은 이름입니다. 다시 입력해주세요.");
+                    Console.ReadKey();
                 }
                 else
                 {
-                    playerName = input;
-                    Console.WriteLine($"환영합니다, {playerName}님!\n");
+                    myPlayer.SetName(input);
+                    Console.WriteLine($"나의 이름은, {myPlayer.Name}...\n");
                     break;
                 }
             }
         }
 
-        // 직업 선택 및 능력치 설정
+        // 직업 선택
         private void ChooseJob()
         {
             while (true)
@@ -73,29 +93,31 @@ namespace ConsoleTextRPG.Scenes
 
                 if (choice == "1")
                 {
-                    playerJob = "전사";
-                    playerLevel = 1;
-                    playerGold = 100;
-                    playerAtk = 15;
-                    playerDef = 10;
-                    playerHp = 120;
-                    Console.WriteLine($"{playerName}님은 용맹한 전사가 되었습니다!\n");
+                    myPlayer.SetJob("전사");
+                    // 우선 Player.cs에서 기본 스텟을 제공(차후 직업별 스텟을 다르게 설정할 수 있음)
+                    //player.Level = 1;
+                    //player.Gold = 100;
+                    //player.Attack = 15;
+                    //player.Defense = 10;
+                    //player.Health = 120;
+                    Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!\n");
                     break;
                 }
                 else if (choice == "2")
                 {
-                    playerJob = "마법사";
-                    playerLevel = 1;
-                    playerGold = 100;
-                    playerAtk = 20;
-                    playerDef = 5;
-                    playerHp = 80;
-                    Console.WriteLine($"{playerName}님은 지혜로운 마법사가 되었습니다!\n");
+                    myPlayer.SetJob("마법사");
+                    //player.Level = 1;
+                    //player.Gold = 100;
+                    //player.Attack = 20;
+                    //player.Defense = 5;
+                    //player.Health = 80;
+                    Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!\n");
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.\n");
+                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                    Console.ReadKey();
                 }
             }
         }
@@ -107,6 +129,7 @@ namespace ConsoleTextRPG.Scenes
 
             while (stayInTown)
             {
+                Console.Clear();
                 Console.WriteLine("어디로 가시겠습니까?");
                 Console.WriteLine("1. 상점");
                 Console.WriteLine("2. 던전");
@@ -119,10 +142,12 @@ namespace ConsoleTextRPG.Scenes
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("\n[상점에 입장했습니다.]\n");
+                        Console.WriteLine("\n[상점에 입장했습니다. (추후 구현)]");
+                        Console.ReadKey();
                         break;
                     case "2":
-                        Console.WriteLine("\n[던전으로 향합니다...]\n");
+                        Console.WriteLine("\n[던전으로 향합니다... (추후 구현)]");
+                        Console.ReadKey();
                         break;
                     case "3":
                         ShowStatus();
@@ -132,23 +157,29 @@ namespace ConsoleTextRPG.Scenes
                         stayInTown = false;
                         break;
                     default:
-                        Console.WriteLine("⚠️  올바른 번호를 선택해주세요.\n");
+                        Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                        Console.ReadKey();
                         break;
                 }
             }
         }
 
-        // 플레이어 정보 출력
+        // 내 정보 보기
         private void ShowStatus()
         {
-            Console.WriteLine("\n📜 [내 정보]");
-            Console.WriteLine($"이름   : {playerName}");
-            Console.WriteLine($"레벨   : {playerLevel}");
-            Console.WriteLine($"직업   : {playerJob}");
-            Console.WriteLine($"소지금 : {playerGold} G");
-            Console.WriteLine($"공격력 : {playerAtk}"); 
-            Console.WriteLine($"방어력 : {playerDef}");
-            Console.WriteLine($"체력   : {playerHp}\n");
+            Console.Clear();
+            Console.WriteLine("📜 [내 정보]");
+            Console.WriteLine($"이름   : {myPlayer.Name}");
+            Console.WriteLine($"레벨   : {myPlayer.Stat.Level}");
+            Console.WriteLine($"직업   : {myPlayer.Job}");
+            Console.WriteLine($"소지금 : {myPlayer.Gold} G");
+            Console.WriteLine($"공격력 : {myPlayer.Stat.BaseAttack}{(myPlayer.Stat.AdditionalAttack > 0 ? $"(+{myPlayer.Stat.AdditionalAttack})" : "")}");
+            Console.WriteLine($"방어력 : {myPlayer.Stat.BaseDefense}{(myPlayer.Stat.AdditionalDefense > 0 ? $"(+{myPlayer.Stat.AdditionalDefense})" : "")}");
+            Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}");
+            // 아래는 아직 아이템으로 인한 추가 최대 체력이 없어서 잠시 비활성화 해두었습니다.
+            //Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}{(myPlayer.Stat.AdditionalHp > 0 ? $"(+{myPlayer.ItemHealth})" : "")}"); 
+            Console.WriteLine("\n메뉴로 돌아가려면 아무 키나 누르세요...");
+            Console.ReadKey();
         }
     }
 }

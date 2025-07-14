@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
-    internal class Character
+    public abstract class Character
     {
         public string Name { get; protected set; }
         public CharacterStat Stat { get; protected set; }
 
         // 호출한 이가 target를 공격하는 행동
+        // 작성법 : 공격하는객체.Attack(타겟객체);
+        // 이후 데미지를 받는 로직을 실행하고(TakeDamage), 받은 데미지와 방어력을 통해 실제 입는 피해량 계산 로직이 실행됨(Stat.ApplyDamage);
         public virtual void Attack(Character target)
         {
             int damage = this.Stat.TotalAttack;

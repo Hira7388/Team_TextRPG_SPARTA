@@ -9,9 +9,18 @@ namespace ConsoleTextRPG.Scenes
 {
     internal class Store
     {
-        List<Item> inventory = new List<Item>();
+        List<Item> shopItem = new List<Item>();
+        public Store()
+        {
+            shopItem.Add(new Item(1, "수련자 갑옷    ", Item.ItemType.Armor, 5, "수련에 도움을 주는 갑옷입니다.                    ", 1000));
+            shopItem.Add(new Item(2, "무쇠갑옷       ", Item.ItemType.Armor, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.                ", 2000));
+            shopItem.Add(new Item(3, "스파르타의 갑옷", Item.ItemType.Armor, 15,"스파르타의 전사들이 사용했다는 전설의 갑옷입니다. ", 3500));
+            shopItem.Add(new Item(4, "낡은 검        ", Item.ItemType.Weapon, 2,"쉽게 볼 수 있는 낡은 검 입니다.                   ", 600));
+            shopItem.Add(new Item(5, "청동 도끼      ", Item.ItemType.Weapon, 5,"어디선가 사용됐던거 같은 도끼입니다.              ", 1500));
+            shopItem.Add(new Item(6, "스파르타의 창  ", Item.ItemType.Weapon, 7,"스파르타의 전사들이 사용했다는 전설의 창입니다.   ", 3000));
 
-        public static void Itemdisplay()
+        }
+        public void display()
         {
             Console.Clear();
             Console.WriteLine("상점");
@@ -20,9 +29,9 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             Console.WriteLine();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < shopItem.Count; i++)
             {
-                Console.WriteLine(i);
+                Console.WriteLine($"{shopItem[i].Id}.{shopItem[i].Name} | {shopItem[i].StatType} + {shopItem[i].StatusBonus,2} | {shopItem[i].Comment} | {shopItem[i].Price,6} G");
             }
             Console.WriteLine();
             Console.WriteLine();
@@ -30,6 +39,11 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine("0. 나가기");
             Console.WriteLine();
             Console.Write("원하시는 행동을 입력해주세요.\n>>");
+        }
+        public static void Itemdisplay()
+        {
+            Store myShop = new Store();
+            myShop.display();
             string input = Console.ReadLine();
             if (input == "0")
             {
@@ -82,6 +96,7 @@ namespace ConsoleTextRPG.Scenes
                 Console.WriteLine();
             }
         }
+
     }
 
 }
