@@ -74,7 +74,7 @@ namespace ConsoleTextRPG.Scenes
             {
                 Console.WriteLine("\ninfo : 던전을 클리어했습니다.");
                 Console.WriteLine("\ninfo : 마을로 돌아갑니다");
-                GameManager.Instance.SwitchScene(id: SceneID.Main);
+                GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
                 Thread.Sleep(1000);
                 walkCount = 0;// 이동 횟수 초기화
                 return;
