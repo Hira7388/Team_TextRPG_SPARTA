@@ -72,7 +72,7 @@ namespace ConsoleTextRPG.Managers
             scenes[currentScene].Update();
         }
        // ==== Scene 전환 메서드 ====
-        public void SwitchScene(SceneID id) => currentScene = id;
+        public void SwitchScene(GameState id) => currentScene = id;
         //===================[이영신 추가]
 
 
