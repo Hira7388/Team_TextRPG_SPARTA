@@ -35,7 +35,7 @@ namespace ConsoleTextRPG.Managers
         // 생성자
         private GameManager()
         {
-            
+
         }
 
         //===================[이영신 추가]
