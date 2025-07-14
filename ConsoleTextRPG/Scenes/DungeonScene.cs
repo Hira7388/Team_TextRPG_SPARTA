@@ -1,4 +1,5 @@
 ﻿using ConsoleTextRPG.Managers;
+using ConsoleTextRPG.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Scenes
 {
-    internal class DungeonScene : BaseScene
+    public class DungeonScene : BaseScene
     {
         // 던전 클리어 조건
         int walkCount = 0; // 이동 횟수
@@ -76,6 +77,7 @@ namespace ConsoleTextRPG.Scenes
                 Console.WriteLine("\ninfo : 마을로 돌아갑니다");
                 GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
                 Thread.Sleep(1000);
+                Monster.Init(); // 몬스터 목록 초기화
                 walkCount = 0;// 이동 횟수 초기화
                 return;
             }
