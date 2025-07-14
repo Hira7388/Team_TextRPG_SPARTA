@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleTextRPG.Scene
+namespace ConsoleTextRPG.Scenes
 {
     public abstract class BaseScene
     {
