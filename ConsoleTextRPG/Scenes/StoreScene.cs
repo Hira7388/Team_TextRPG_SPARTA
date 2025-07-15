@@ -12,17 +12,18 @@ namespace ConsoleTextRPG.Scenes
     public class StoreScene : BaseScene
     {
         List<Item> shopItem = new List<Item>();
-
+        Player myPlayer = GameManager.Instance.Player;
+        //시작
         public override void RenderMenu()
         {
             Display();
         }
-
+        //업데이트
         public override void UpdateInput()
         {
             ItemDisplay();
         }
-
+        //진열할 아이템 추가
         public StoreScene()
         {
             shopItem.Add(new Item(1, "수련자 갑옷    ", Item.ItemType.Armor, 5, "수련에 도움을 주는 갑옷입니다.                    ", 1000));
@@ -33,26 +34,26 @@ namespace ConsoleTextRPG.Scenes
             shopItem.Add(new Item(6, "스파르타의 창  ", Item.ItemType.Weapon, 7,"스파르타의 전사들이 사용했다는 전설의 창입니다.   ", 3000));
 
         }
+        //아이템 상점 소개
         public void Display()
         {
             Console.Clear();
             Console.WriteLine("상점");
             Console.WriteLine("[보유 골드]");
-            Console.WriteLine($" G");
+            Console.WriteLine($"{myPlayer.Gold} G");
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             Console.WriteLine();
             for (int i = 0; i < shopItem.Count; i++)
             {
-                Console.WriteLine($"{shopItem[i].Id}.{shopItem[i].Name} | {shopItem[i].StatType} + {shopItem[i].StatusBonus,2} | {shopItem[i].Comment} | {shopItem[i].Price,6} G");
+                Console.WriteLine($"{shopItem[i]}");
             }
             Console.WriteLine();
             Console.WriteLine();
         }
+        //아이템 상점 구경하기
         public void ItemDisplay()
         {
-            //StoreScene myShop = new StoreScene();
-            //Display();
             Console.WriteLine("1. 아이템 구매");
             Console.WriteLine("0. 나가기");
             Console.WriteLine();
@@ -74,9 +75,9 @@ namespace ConsoleTextRPG.Scenes
                 Console.WriteLine();
             }
         }
+        //아이템 구매창
         public void ItemBuy()
         {
-            //StoreScene myShop = new StoreScene();
             Display();
             Console.WriteLine("번호로 아이템 구매 (1 ~ 6)");
             Console.WriteLine("0. 나가기");
@@ -90,13 +91,25 @@ namespace ConsoleTextRPG.Scenes
             else if (input == "1")
             {
                 Console.Clear();
-
+                if(shopItem[0].Id == 1)
+                {
+                    BuyCycle();
+                }
             }
             else
             {
                 Console.Clear();
                 Console.WriteLine("잘못된 입력입니다.");
                 Console.WriteLine();
+            }
+        }
+        //구매 로직
+        public void BuyCycle()
+        {
+            if (myPlayer.Gold >= shopItem[0].Price)
+            {
+                shopItem[0].IsSoldOut = true;
+                //Player.AddGold(shopItem[1].Price);
             }
         }
 
