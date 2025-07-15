@@ -109,7 +109,7 @@ namespace ConsoleTextRPG.Managers
         }
         // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;
-        //===================[이영신 추가]
+        public void SwitchState(DungeonState id) => _currentState = id; // 던전 상태 전환 메서드
 
         // 게임 저장하기 기능
         public void SaveGame()
