@@ -19,6 +19,7 @@ namespace ConsoleTextRPG.Scenes
         double monsValue = 0.5f; // 몬스터 등장 확률(ex. 0.5f = 50% 확률로 몬스터 등장)
 
         bool battleInitialized = false;                 // 수정: 전투 초기화 플래그 추가
+        Player myPlayer = GameManager.Instance.Player; // 플레이어 객체 가져오기
 
         List<Monster> currentMonsters = new();
 
@@ -57,10 +58,6 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 case DungeonState.PlayerTrun:
                     PlayerTrunMove(index); // 플레이어 턴 행동 선택
-                    break;
-                case DungeonState.EnemyTurn:
-                    break;
-                case DungeonState.EndBattle:
                     break;
             }                
         }
@@ -158,9 +155,77 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-
         // ==============[플레이어턴상태]==============
         void PlayerTurnRender()
+        {
+            Print("◎Battle!!◎", ConsoleColor.DarkYellow);
+            Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
+            Print("\n============[몬스터]============");
+            for (int i = 0; i < currentMonsters.Count; i++)
+            {
+                currentMonsters[i].PrintMonster();
+            }
+
+            Print("===========[전투선택지]===========");
+            Print(1, "공격", ConsoleColor.DarkCyan);
+            Print(2, "방어", ConsoleColor.DarkCyan);
+            Print(3, "도망", ConsoleColor.DarkCyan);
+
+            Print("\n원하시는 행동을 입력해주세요");
+            Console.Write(">>");
+        }
+
+        void PlayerTrunMove(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    Info("공격합니다");
+                    // 로직
+                    PlayerAttack(index - 1); // 공격할 몬스터 인덱스
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                    Thread.Sleep(200);
+                    break;
+                case 2:
+                    Info("방어합니다");
+                    // 로직
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                    Thread.Sleep(200);
+                    break;
+                case 3:
+                    GameManager.Instance.currentState = DungeonState.Idle;
+                    // 로직
+                    break;
+                default:
+                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                    Thread.Sleep(300);
+                    break;
+            }
+        }
+
+        void PlayerAttack(int i)
+        {
+            myPlayer.Attack(currentMonsters[i]);
+        }
+
+        void PlayerDefend()
+        {
+            myPlayer.Defend();
+        }
+        void PlayerRun()
+        {
+            // 도망 로직
+            Info("도망쳤습니다.");
+            GameManager.Instance.currentState = DungeonState.Idle;
+            Thread.Sleep(200);
+        }
+
+
+
+
+
+        // ==============[몬스터턴상태]==============
+        void EnemyTurnRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
@@ -178,34 +243,6 @@ namespace ConsoleTextRPG.Scenes
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
         }
-
-        void PlayerTrunMove(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    Info("공격합니다");
-                    // FSM 공격 상태로 전환 로직 추가
-                    Thread.Sleep(200);
-                    break;
-                case 2:
-                    Info("방어합니다");
-                    Thread.Sleep(200);
-                    break;
-                case 3:
-                    GameManager.Instance.currentState = DungeonState.Idle;
-                    Info("전투를 종료합니다");
-                    Thread.Sleep(200);
-                    break;
-                default:
-                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                    Thread.Sleep(300);
-                    break;
-            }
-        }
-
-        // ==============[몬스터턴상태]==============
-
 
 
 

@@ -21,6 +21,14 @@ namespace ConsoleTextRPG.Data
             target.TakeDamage(damage); // 상대방의 TakeDamage 이벤트를 발동시킴
         }
 
+        // 
+        public virtual void Defend(Character me)
+        {
+            int damage = this.Stat.TotalAttack;
+            Console.WriteLine($"{this.Name}의 방어!!");
+            me.TakeDefendDamage(damage); // 자신의 TakeDefendDamage 이벤트를 발동시킴
+        }
+
         // target이 damage를 받는 행동
         public virtual void TakeDamage(int damage)
         {
@@ -35,5 +43,27 @@ namespace ConsoleTextRPG.Data
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
             }
         }
+
+        // 자신이 damage를 받는 행동
+        public virtual void TakeDefendDamage(int damage)
+        {
+            // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
+            Stat.ApplyDamage(damage);
+
+            if (damage >= 0)
+            {
+                Console.WriteLine($"{this.Name}은(는) 방어에 성공했습니다. (남은 체력: {Stat.CurrentHp})");
+            }
+            else
+            {
+                Console.WriteLine($"{this.Name}은(는) {damage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+            }
+
+            if (Stat.IsDead)
+            {
+                Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
+            }
+        }
+
     }
 }

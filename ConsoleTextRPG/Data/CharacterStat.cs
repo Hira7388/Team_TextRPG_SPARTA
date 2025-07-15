@@ -43,6 +43,13 @@ namespace ConsoleTextRPG.Data
             if (CurrentHp < 0) CurrentHp = 0;
         }
 
+        public void DefecnDamage(int damage)
+        {
+            int finalDamage = (TotalDefense * 2)- damage;
+            if (finalDamage < 1) CurrentHp += finalDamage; //  데미지가 방어력을 넘었다면 차이만큼 데미지입음
+            if (CurrentHp < 0) CurrentHp = 0;
+        }
+
         // 기본 스탯을 설정하는 헬퍼 메서드
         public void SetBaseStats(int level, int attack, int defense, int maxHp)
         {
