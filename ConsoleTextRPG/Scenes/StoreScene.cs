@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Data;
 using ConsoleTextRPG.Managers;
-using ConsoleTextRPG.Scene;
+using ConsoleTextRPG.Scenes;
 
 namespace ConsoleTextRPG.Scenes
 {

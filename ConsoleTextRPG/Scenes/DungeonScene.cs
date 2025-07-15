@@ -23,7 +23,7 @@ namespace ConsoleTextRPG.Scenes
 
         List<Monster> currentMonsters = new();
 
-        public override void Render()
+        public override void RenderMenu()
         {
             Console.Clear(); // 콘솔 화면 초기화
             if(isBattle)
@@ -31,7 +31,7 @@ namespace ConsoleTextRPG.Scenes
             else
                 DungeonRender(); // 던전 씬 랜더링
         }
-        public override void Update()
+        public override void UpdateInput()
         {
             string input = Console.ReadLine();
             int index;
