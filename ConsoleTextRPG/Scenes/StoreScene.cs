@@ -127,7 +127,7 @@ namespace ConsoleTextRPG.Scenes
         {
             if (int.TryParse(select, out int selectnum))
             {
-                selectnum--;
+                selectnum--; //배열은 0부터 시작이니깐
 
                 if (shopItem[selectnum].IsSoldOut == true) //이미 구매한 경우
                 {
@@ -146,7 +146,8 @@ namespace ConsoleTextRPG.Scenes
                     shopItem[selectnum].IsSoldOut = true;
                     Console.WriteLine();
                     Console.WriteLine($"==== {shopItem[selectnum].Id}.{shopItem[selectnum].Name} 구매 완료 ====");
-                    myPlayer.AddGold(-shopItem[selectnum].Price);
+                    myPlayer.Inventory.AddItem(shopItem[selectnum]);
+                    myPlayer.AddGold( - shopItem[selectnum].Price); //골드 차감
                     Thread.Sleep(700);
                     return;
                 }

@@ -55,7 +55,7 @@ namespace ConsoleTextRPG.Data
             }
         }
 
-        //Gold +-하는 메서드
+        //Gold +하는 메서드
         public void AddGold(int amount)
         {
             int sum = Gold + amount;
