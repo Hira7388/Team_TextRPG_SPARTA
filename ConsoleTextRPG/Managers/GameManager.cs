@@ -14,8 +14,6 @@ namespace ConsoleTextRPG.Managers
     // 게임 Scene 전환을 위한 SceneID 열거형
     // 작성자 : 이영신
     // 아래 열거형에 씬 이름을 추가후 아래 'Init' 함수에서 씬을 등록해주세요.
-
-
     internal class GameManager
     {
         // 현재 씬
@@ -42,8 +40,8 @@ namespace ConsoleTextRPG.Managers
 
         }
 
-        //===================[이영신 추가]
         private bool running = true;
+
         public void GameRun()
         {
             Init();
@@ -57,13 +55,13 @@ namespace ConsoleTextRPG.Managers
         {
             this.Player = new Player("");
             Console.CursorVisible = false;
+            Monster.Init(); // 몬스터 목록 초기화
             // 임시 아이템 추가(테스트용)
             Player.Inventory.AddItem(new Item(0, "낡은 검", Item.ItemType.Weapon, 5, "쉽게 볼 수 있는 검입니다.", 100));
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
             scenes[GameState.DungeonScene] = new DungeonScene();
             scenes[GameState.InventoryScene] = new InventoryScene();
-
 
             // 초기 Scene 설정
              currentScene = GameState.TownScene;
@@ -80,8 +78,5 @@ namespace ConsoleTextRPG.Managers
         }
        // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;
-        //===================[이영신 추가]
-
-
     }
 }
