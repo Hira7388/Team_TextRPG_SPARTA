@@ -2,14 +2,15 @@
 using ConsoleTextRPG.Data;
 using System;
 using System.Numerics;
+using ConsoleTextRPG.Scene;
 
 namespace ConsoleTextRPG.Scenes
 {
-    internal class TownScene
+    public class TownScene : BaseScene
     {
         // 싱글톤 인스턴스
-        private static TownScene _instance;
-        public static TownScene Instance => _instance ??= new TownScene();
+        //private static TownScene _instance;
+        //public static TownScene Instance => _instance ??= new TownScene();
 
         // 플레이어 정보 클래스
         // 정진규 - Town씬에서 Player 객체를 만들 필요 없습니다. GameManager에서 인스턴스로 생성되기 때문에 불러오면 됩니다.
@@ -41,9 +42,19 @@ namespace ConsoleTextRPG.Scenes
         //private Player player = new Player();
 
         // 생성자
-        private TownScene() { }
+        //private TownScene() { }
 
         // 마을 진입
+
+        // Render()에 화면 띄우기, Update()에 입력 받기
+        public override void Render()
+        {
+            Enter();
+        }
+        public override void Update()
+        {
+
+        }
         public void Enter()
         {
             Console.Clear();
@@ -64,6 +75,7 @@ namespace ConsoleTextRPG.Scenes
             while (true)
             {
                 Console.Write("\n당신의 이름은 기억이 나십니까? ");
+                Console.Write("\n>> ");
                 string input = Console.ReadLine()?.Trim();
 
                 if (string.IsNullOrWhiteSpace(input))
@@ -134,7 +146,8 @@ namespace ConsoleTextRPG.Scenes
                 Console.WriteLine("1. 상점");
                 Console.WriteLine("2. 던전");
                 Console.WriteLine("3. 내 정보 보기");
-                Console.WriteLine("4. 게임 종료");
+                Console.WriteLine("4. 인벤토리");
+                Console.WriteLine("5. 게임 종료");
 
                 Console.Write("선택: ");
                 string choice = Console.ReadLine();
@@ -142,17 +155,34 @@ namespace ConsoleTextRPG.Scenes
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("\n[상점에 입장했습니다. (추후 구현)]");
-                        Console.ReadKey();
+                        Console.WriteLine("\n[상점에 입장했습니다.]");
+                        //Console.ReadKey();
+                        Thread.Sleep(100);
+                        //Console.Clear();
+                        stayInTown = false;
+                        GameManager.Instance.SwitchScene(GameState.StoreScene);
                         break;
                     case "2":
-                        Console.WriteLine("\n[던전으로 향합니다... (추후 구현)]");
-                        Console.ReadKey();
+                        Console.WriteLine("\n[던전으로 향합니다...]");
+                        //Console.ReadKey();
+                        Thread.Sleep(100);
+                        //Console.Clear();
+                        stayInTown = false;
+                        GameManager.Instance.SwitchScene(GameState.DungeonScene);
                         break;
                     case "3":
                         ShowStatus();
                         break;
                     case "4":
+                        Console.WriteLine("\n[인벤토리로 향합니다.]");
+                        //Console.ReadKey();
+                        Thread.Sleep(100);
+                        //Console.Clear();
+                        stayInTown = false;
+                        Console.WriteLine("테스트");
+                        GameManager.Instance.SwitchScene(GameState.InventoryScene);
+                        break;
+                    case "5":
                         Console.WriteLine("\n게임을 종료합니다. 안녕히 가세요!");
                         stayInTown = false;
                         break;
@@ -162,6 +192,8 @@ namespace ConsoleTextRPG.Scenes
                         break;
                 }
             }
+            Console.WriteLine("타운 while문 종료");
+            Thread.Sleep(500);
         }
 
         // 내 정보 보기

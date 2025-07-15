@@ -63,10 +63,11 @@ namespace ConsoleTextRPG.Managers
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
             scenes[GameState.DungeonScene] = new DungeonScene();
             scenes[GameState.InventoryScene] = new InventoryScene();
-
+            scenes[GameState.TownScene] = new TownScene();
+            scenes[GameState.StoreScene] = new StoreScene();
 
             // 초기 Scene 설정
-             currentScene = GameState.TownScene;
+            currentScene = GameState.TownScene;
         }
 
         private void Render()

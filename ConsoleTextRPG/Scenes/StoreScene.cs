@@ -4,13 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Data;
+using ConsoleTextRPG.Managers;
+using ConsoleTextRPG.Scene;
 
 namespace ConsoleTextRPG.Scenes
 {
-    internal class Store
+    public class StoreScene : BaseScene
     {
         List<Item> shopItem = new List<Item>();
-        public Store()
+
+        public override void Render()
+        {
+            Display();
+        }
+
+        public override void Update()
+        {
+            ItemDisplay();
+        }
+
+        public StoreScene()
         {
             shopItem.Add(new Item(1, "수련자 갑옷    ", Item.ItemType.Armor, 5, "수련에 도움을 주는 갑옷입니다.                    ", 1000));
             shopItem.Add(new Item(2, "무쇠갑옷       ", Item.ItemType.Armor, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.                ", 2000));
@@ -20,7 +33,7 @@ namespace ConsoleTextRPG.Scenes
             shopItem.Add(new Item(6, "스파르타의 창  ", Item.ItemType.Weapon, 7,"스파르타의 전사들이 사용했다는 전설의 창입니다.   ", 3000));
 
         }
-        public void display()
+        public void Display()
         {
             Console.Clear();
             Console.WriteLine("상점");
@@ -36,10 +49,10 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine();
             Console.WriteLine();
         }
-        public static void Itemdisplay()
+        public void ItemDisplay()
         {
-            Store myShop = new Store();
-            myShop.display();
+            //StoreScene myShop = new StoreScene();
+            Display();
             Console.WriteLine("1. 아이템 구매");
             Console.WriteLine("0. 나가기");
             Console.WriteLine();
@@ -47,11 +60,12 @@ namespace ConsoleTextRPG.Scenes
             string input = Console.ReadLine();
             if (input == "0")
             {
+                GameManager.Instance.SwitchScene(GameState.TownScene);
                 return;
             }
             else if (input == "1")
             {
-                Itembuy();
+                ItemBuy();
             }
             else
             {
@@ -60,10 +74,10 @@ namespace ConsoleTextRPG.Scenes
                 Console.WriteLine();
             }
         }
-        public static void Itembuy()
+        public void ItemBuy()
         {
-            Store myShop = new Store();
-            myShop.display();
+            //StoreScene myShop = new StoreScene();
+            Display();
             Console.WriteLine("번호로 아이템 구매 (1 ~ 6)");
             Console.WriteLine("0. 나가기");
             Console.WriteLine();

@@ -9,8 +9,8 @@ namespace ConsoleTextRPG.Scene
 {
     public abstract class BaseScene
     {
-        public abstract void Render();
-        public abstract void Update();
+        public abstract void Render(); // 화면 출력용도
+        public abstract void Update(); // 입력받는 용도
 
         // 텍스트 출력 함수 오버로딩
         public void Print<T>(string text1, T no, string text2, ConsoleColor c)
