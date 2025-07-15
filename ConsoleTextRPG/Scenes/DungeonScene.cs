@@ -32,11 +32,16 @@ namespace ConsoleTextRPG.Scenes
                     DungeonRender(); // 던전 씬 랜더링
                     break;
                 case DungeonState.PlayerTrun:
-                    PlayerTurnRender(); // 배틀씬 랜더링
+                    PlayerTurnRender();
+                    break;
+                case DungeonState.PlayerAttack:
+                    //
                     break;
                 case DungeonState.EnemyTurn:
+                    //
                     break;
                 case DungeonState.EndBattle:
+                    //
                     break;
             }
         }
@@ -58,6 +63,15 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 case DungeonState.PlayerTrun:
                     PlayerTrunMove(index); // 플레이어 턴 행동 선택
+                    break;
+                case DungeonState.PlayerAttack:
+                    //
+                    break;
+                case DungeonState.EnemyTurn:
+                    //
+                    break;
+                case DungeonState.EndBattle:
+                    //
                     break;
             }                
         }
@@ -180,21 +194,13 @@ namespace ConsoleTextRPG.Scenes
             switch (index)
             {
                 case 1:
-                    Info("공격합니다");
-                    // 로직
-                    PlayerAttack(index - 1); // 공격할 몬스터 인덱스
-                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                    Thread.Sleep(200);
+                    PlayerAttack(index - 1);
                     break;
                 case 2:
-                    Info("방어합니다");
-                    // 로직
-                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                    Thread.Sleep(200);
+                    PlayerDefend(index - 1);
                     break;
                 case 3:
-                    GameManager.Instance.currentState = DungeonState.Idle;
-                    // 로직
+                    PlayerRun();
                     break;
                 default:
                     Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
@@ -205,19 +211,41 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerAttack(int i)
         {
+            Info("공격합니다");
             myPlayer.Attack(currentMonsters[i]);
+            Thread.Sleep(200);
+            GameManager.Instance.currentState = DungeonState.EnemyTurn;
         }
 
-        void PlayerDefend()
+        void PlayerDefend(int i)
         {
-            myPlayer.Defend();
+            Info("방어합니다");
+            myPlayer.Defend(currentMonsters[i]);
+            Thread.Sleep(200);
+            GameManager.Instance.currentState = DungeonState.EnemyTurn;
         }
         void PlayerRun()
         {
-            // 도망 로직
+            if(currentMonsters.Count > 1)
+            {
+                if (new Random().NextDouble() < 0.3f) // 30% 확률로 도망 성공
+                {
+                    Info("도망쳤습니다");
+                    Thread.Sleep(200);
+                    GameManager.Instance.currentState = DungeonState.Idle;
+                    return;
+                }
+                else
+                {
+                    Info("도망치지 못했습니다.");
+                    Thread.Sleep(200);
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                    return;
+                }
+            }
             Info("도망쳤습니다.");
-            GameManager.Instance.currentState = DungeonState.Idle;
             Thread.Sleep(200);
+            GameManager.Instance.currentState = DungeonState.Idle;
         }
 
 
@@ -235,7 +263,7 @@ namespace ConsoleTextRPG.Scenes
                 currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green);
             }
 
-            Print("===========[전투선택지]===========");
+            Print("===========[대상선택지]===========");
             Print(1, "공격", ConsoleColor.DarkCyan);
             Print(2, "방어", ConsoleColor.DarkCyan);
             Print(3, "종료", ConsoleColor.DarkCyan);

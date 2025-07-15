@@ -20,6 +20,7 @@ namespace ConsoleTextRPG.Data
     {
         Idle,
         PlayerTrun,
+        PlayerAttack,
         EnemyTurn,
         EndBattle,
     }

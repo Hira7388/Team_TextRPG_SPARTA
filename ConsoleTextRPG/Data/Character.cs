@@ -22,11 +22,11 @@ namespace ConsoleTextRPG.Data
         }
 
         // 
-        public virtual void Defend(Character me)
+        public virtual void Defend(Character target)
         {
             int damage = this.Stat.TotalAttack;
             Console.WriteLine($"{this.Name}의 방어!!");
-            me.TakeDefendDamage(damage); // 자신의 TakeDefendDamage 이벤트를 발동시킴
+            this.TakeDefendDamage(damage); // 자신의 TakeDefendDamage 이벤트를 발동시킴
         }
 
         // target이 damage를 받는 행동
@@ -48,7 +48,7 @@ namespace ConsoleTextRPG.Data
         public virtual void TakeDefendDamage(int damage)
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
-            Stat.ApplyDamage(damage);
+            Stat.DefecnDamage(damage);
 
             if (damage >= 0)
             {
