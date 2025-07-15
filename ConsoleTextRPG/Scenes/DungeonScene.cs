@@ -1,8 +1,9 @@
-﻿using ConsoleTextRPG.Managers;
-using ConsoleTextRPG.Data;
+﻿using ConsoleTextRPG.Data;
+using ConsoleTextRPG.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,25 @@ namespace ConsoleTextRPG.Scenes
             }
             DungeonRender();
         }
+        public override void Update()
+        {
+            string input = Console.ReadLine();
+            int index;
+            if (!int.TryParse(input, out index))
+            {
+                Info("잘못된 입력입니다.");
+                Thread.Sleep(800);
+                return;
+            }
+            if (isBattle) // 배틀씬일 경우
+            {
+                BattleMove(index); // 배틀 행동 선택
+                return;
+            }
+            // 던전 씬일 경우
+            DungeonMove(index); // 던전 행동 선택
+        }
+
 
         // 던전 씬 랜더함수
         void DungeonRender()
@@ -53,41 +73,9 @@ namespace ConsoleTextRPG.Scenes
             Console.Write(">>");
         }
 
-        public override void Update()
+
+        void DungeonMove(int index)
         {
-            string input = Console.ReadLine();
-            int index;
-            if (!int.TryParse(input, out index))
-            {
-                Info("잘못된 입력입니다.");
-                Thread.Sleep(800); 
-                return;
-            }
-
-            if (isBattle)
-            {
-                switch (index)
-                {
-                    case 1:
-                        Info("공격");
-                        Thread.Sleep(500);
-                        break;
-                    case 2:
-                        Info("방어");
-                        Thread.Sleep(500);
-                        break;
-                    case 3:
-                        Info("종료");
-                        Thread.Sleep(500);
-                        break;
-                    default:
-                        Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                        Thread.Sleep(800);
-                        break;
-                }
-            }
-
-
             switch (index)
             {
                 case 1:
@@ -103,6 +91,31 @@ namespace ConsoleTextRPG.Scenes
                 case 3:
                     Console.WriteLine("\ninfo : 오른쪽길로 갑니다.");
                     DungeonEvent();
+                    Thread.Sleep(500);
+                    break;
+                default:
+                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                    Thread.Sleep(800);
+                    break;
+            }
+        }
+
+        void BattleMove(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    Info("공격합니다");
+                    // FSM 공격 상태로 전환 로직 추가
+                    Thread.Sleep(500);
+                    break;
+                case 2:
+                    Info("방어합니다");
+                    Thread.Sleep(500);
+                    break;
+                case 3:
+                    Info("전투를 종료합니다");
+                    isBattle = false; // 배틀 종료
                     Thread.Sleep(500);
                     break;
                 default:
@@ -151,3 +164,63 @@ namespace ConsoleTextRPG.Scenes
         }
     }
 }
+
+// FSM의 상태들
+namespace ConsoleTextRPG.TurnBasedSystem
+{
+    public enum State
+    {
+        Idle,
+        Battle,
+        EndBattle,
+        Size,// Size는 현재 배열의 크기를 시각적으로 나타내주기위한 요소임
+    }
+
+    public class IdelState : BaseState
+    {
+        public override void Enter()
+        {
+        }
+        public override void Update()
+        {
+        }
+        public override void Exit()
+        {
+        }
+    }
+
+    public class BattleState : BaseState
+    {
+        public override void Enter()
+        {
+           
+        }
+        public override void Update()
+        {
+         
+        }
+        public override void Exit()
+        {
+          
+        }
+    }
+
+    public class EndBattleState : BaseState
+    {
+        public override void Enter()
+        {
+           
+        }
+        public override void Update()
+        {
+          
+        }
+        public override void Exit()
+        {
+          
+        }
+    }
+}
+
+
+
