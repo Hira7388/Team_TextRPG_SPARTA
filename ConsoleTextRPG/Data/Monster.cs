@@ -19,11 +19,8 @@ namespace ConsoleTextRPG.Data
         public int DFP;
         public int Level;
         public int Gold;
-        public bool IsDead = false;
-    
-        public virtual string PrintMonster(int no)
+        public virtual void PrintMonster( int no, ConsoleColor c)
         {
-            return Image;
         }
     }
 }

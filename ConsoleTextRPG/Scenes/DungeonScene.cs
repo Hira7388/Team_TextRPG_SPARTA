@@ -16,9 +16,8 @@ namespace ConsoleTextRPG.Scenes
         int walkCount = 0; // 이동 횟수
         int dungeonClearCount = 15; // 던전 클리어 횟수
 
-        double monsValue = 0.3f; // 몬스터 등장 확률 (30%)
+        double monsValue = 0.5f; // 몬스터 등장 확률(ex. 0.5f = 50% 확률로 몬스터 등장)
 
-        bool isBattle = false; // 배틀 여부
         bool battleInitialized = false;                 // 수정: 전투 초기화 플래그 추가
 
         List<Monster> currentMonsters = new();
@@ -26,11 +25,21 @@ namespace ConsoleTextRPG.Scenes
         public override void RenderMenu()
         {
             Console.Clear(); // 콘솔 화면 초기화
-            if(isBattle)
-                BattleRender(); // 배틀씬 랜더링
-            else
-                DungeonRender(); // 던전 씬 랜더링
+            switch(GameManager.Instance.currentState)
+            {
+                case DungeonState.Idle:
+                    DungeonRender(); // 던전 씬 랜더링
+                    break;
+                case DungeonState.PlayerTrun:
+                    PlayerTurnRender(); // 배틀씬 랜더링
+                    break;
+                case DungeonState.EnemyTurn:
+                    break;
+                case DungeonState.EndBattle:
+                    break;
+            }
         }
+
         public override void UpdateInput()
         {
             string input = Console.ReadLine();
@@ -41,13 +50,22 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(800);
                 return;
             }
-            if (isBattle)
-                BattleMove(index); // 배틀 행동 선택
-            else
-                DungeonMove(index); // 던전 행동 선택
+            switch (GameManager.Instance.currentState)
+            {
+                case DungeonState.Idle:
+                    DungeonMove(index); // 던전 행동 선택
+                    break;
+                case DungeonState.PlayerTrun:
+                    PlayerTrunMove(index); // 플레이어 턴 행동 선택
+                    break;
+                case DungeonState.EnemyTurn:
+                    break;
+                case DungeonState.EndBattle:
+                    break;
+            }                
         }
 
-
+        // ==============[던전상태]==============
         // 던전 씬 랜더함수
         void DungeonRender()
         {
@@ -61,76 +79,6 @@ namespace ConsoleTextRPG.Scenes
 
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
-        }
-
-        // 몬스터 등장 함수
-        // 몬스터 소환 로직
-        void BattleRender()
-        {
-                isBattle = true; // 배틀 시작
-                Print("◎Battle!!◎", ConsoleColor.DarkYellow);
-                Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
-                Print("\n============[몬스터]============");
-                for (int i = 0; i < currentMonsters.Count; i++)
-                {
-                    Console.WriteLine($"{currentMonsters[i].PrintMonster(i+1)}");
-                }
-
-                Print("\n===========[전투선택지]===========");
-                Print(1, "공격", ConsoleColor.DarkCyan);
-                Print(2, "방어", ConsoleColor.DarkCyan);
-                Print(3, "종료", ConsoleColor.DarkCyan);
-                Print("\n원하시는 행동을 입력해주세요");
-                Console.Write(">>");
-        }
-
-        void InitBattle()
-        {
-            if (battleInitialized) return; // 이미 배틀이 초기화된 경우, 중복 초기화를 방지
-            battleInitialized = true;
-            isBattle = true;
-            currentMonsters.Clear(); // 몬스터 목록 초기화
-
-            var rnd = new Random();
-            var types = GameManager.Instance.monsType.Keys.ToList(); // 몬스터 타입 목록 가져오기
-            int MonsterCount = new Random().Next(1, 4); // 최소 1, 최대 3 마리 까지 생성하도록 설정
-
-            for (int i = 0; i < MonsterCount; i++)
-            {
-                var mType = types[rnd.Next(types.Count)];
-
-                switch(mType)
-                {
-                    case MonsterType.Minion:
-                        currentMonsters.Add(new Minion());
-                        break;
-                    case MonsterType.SigeMinion:
-                        currentMonsters.Add(new SiegeMinion());
-                        break;
-                    case MonsterType.Voidgrub:
-                        currentMonsters.Add(new Voidgrub());
-                        break;
-                }
-            }
-        }
-
-        void DungeonEvent()
-        {
-            if (walkCount < dungeonClearCount)
-            {
-                walkCount++; // 이동 횟수 증가
-                if (new Random().NextDouble() < monsValue)  // 몬스터 등장 확률 체크
-                    InitBattle();
-            }
-            else
-            {
-                Console.WriteLine("\ninfo : 던전을 클리어했습니다.");
-                Console.WriteLine("\ninfo : 마을로 돌아갑니다");
-                GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
-                Thread.Sleep(1000);
-                walkCount = 0;// 이동 횟수 초기화
-                return;
-            }
         }
 
         void DungeonMove(int index)
@@ -148,7 +96,7 @@ namespace ConsoleTextRPG.Scenes
                     Thread.Sleep(200);
                     break;
                 case 3:
-                    Console.WriteLine("\ninfo : 오른쪽길로 갑니다.");
+                    Info("오른쪽길로 갑니다");
                     DungeonEvent();
                     Thread.Sleep(200);
                     break;
@@ -159,7 +107,79 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        void BattleMove(int index)
+        void DungeonEvent()
+        {
+            if (walkCount < dungeonClearCount)
+            {
+                walkCount++; // 이동 횟수 증가
+                if (new Random().NextDouble() < monsValue)  // 몬스터 등장 확률 체크
+                {
+                    GameManager.Instance.currentState = DungeonState.PlayerTrun;
+                    SwapnMonster();
+                }
+            }
+            else
+            {
+                Console.WriteLine("\ninfo : 던전을 클리어했습니다.");
+                Console.WriteLine("\ninfo : 마을로 돌아갑니다");
+                GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
+                Thread.Sleep(1000);
+                walkCount = 0;// 이동 횟수 초기화
+                return;
+            }
+        }
+
+        void SwapnMonster()
+        {
+            if (battleInitialized) return; // 이미 배틀이 초기화된 경우, 중복 초기화를 방지
+            battleInitialized = true;
+            currentMonsters.Clear(); // 몬스터 목록 초기화
+
+            var rnd = new Random();
+            var types = GameManager.Instance.monsType.Keys.ToList(); // 몬스터 타입 목록 가져오기
+            int MonsterCount = new Random().Next(1, 4); // 최소 1, 최대 3 마리 까지 생성하도록 설정
+
+            for (int i = 0; i < MonsterCount; i++)
+            {
+                var mType = types[rnd.Next(types.Count)];
+
+                switch (mType)
+                {
+                    case MonsterType.Minion:
+                        currentMonsters.Add(new Minion());
+                        break;
+                    case MonsterType.SigeMinion:
+                        currentMonsters.Add(new SiegeMinion());
+                        break;
+                    case MonsterType.Voidgrub:
+                        currentMonsters.Add(new Voidgrub());
+                        break;
+                }
+            }
+        }
+
+
+        // ==============[플레이어턴상태]==============
+        void PlayerTurnRender()
+        {
+            Print("◎Battle!!◎", ConsoleColor.DarkYellow);
+            Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
+            Print("\n============[몬스터]============");
+            for (int i = 0; i < currentMonsters.Count; i++)
+            {
+                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green);
+            }
+
+            Print("===========[전투선택지]===========");
+            Print(1, "공격", ConsoleColor.DarkCyan);
+            Print(2, "방어", ConsoleColor.DarkCyan);
+            Print(3, "종료", ConsoleColor.DarkCyan);
+
+            Print("\n원하시는 행동을 입력해주세요");
+            Console.Write(">>");
+        }
+
+        void PlayerTrunMove(int index)
         {
             switch (index)
             {
@@ -173,8 +193,8 @@ namespace ConsoleTextRPG.Scenes
                     Thread.Sleep(200);
                     break;
                 case 3:
+                    GameManager.Instance.currentState = DungeonState.Idle;
                     Info("전투를 종료합니다");
-                    isBattle = false; // 배틀 종료
                     Thread.Sleep(200);
                     break;
                 default:
@@ -183,57 +203,12 @@ namespace ConsoleTextRPG.Scenes
                     break;
             }
         }
-    }
-}
 
-// FSM의 상태들
-namespace ConsoleTextRPG.TurnBasedSystem
-{
+        // ==============[몬스터턴상태]==============
 
 
-    public class IdelState : BaseState
-    {
-        public override void Enter()
-        {
-        }
-        public override void Update()
-        {
-        }
-        public override void Exit()
-        {
-        }
-    }
 
-    public class BattleState : BaseState
-    {
-        public override void Enter()
-        {
-           
-        }
-        public override void Update()
-        {
-         
-        }
-        public override void Exit()
-        {
-          
-        }
-    }
 
-    public class EndBattleState : BaseState
-    {
-        public override void Enter()
-        {
-           
-        }
-        public override void Update()
-        {
-          
-        }
-        public override void Exit()
-        {
-
-        }
     }
 }
 
