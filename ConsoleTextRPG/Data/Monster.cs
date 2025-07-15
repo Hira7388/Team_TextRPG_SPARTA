@@ -22,6 +22,9 @@ namespace ConsoleTextRPG.Data
         public virtual void PrintMonster( int no, ConsoleColor c)
         {
         }
+        public virtual void PrintMonster(ConsoleColor c)
+        { 
+        }
         public virtual void PrintMonster()
         {
         }

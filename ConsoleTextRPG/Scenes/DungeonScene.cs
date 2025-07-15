@@ -35,7 +35,7 @@ namespace ConsoleTextRPG.Scenes
                     PlayerTurnRender();
                     break;
                 case DungeonState.PlayerAttack:
-                    //
+                    PlayerAttackRender();
                     break;
                 case DungeonState.EnemyTurn:
                     //
@@ -65,7 +65,7 @@ namespace ConsoleTextRPG.Scenes
                     PlayerTrunMove(index); // 플레이어 턴 행동 선택
                     break;
                 case DungeonState.PlayerAttack:
-                    //
+                    PlayerAttackMove(index); // 플레이어 공격 행동 선택
                     break;
                 case DungeonState.EnemyTurn:
                     //
@@ -180,7 +180,7 @@ namespace ConsoleTextRPG.Scenes
                 currentMonsters[i].PrintMonster();
             }
 
-            Print("===========[전투선택지]===========");
+            Print("===========[선택지]===========");
             Print(1, "공격", ConsoleColor.DarkCyan);
             Print(2, "방어", ConsoleColor.DarkCyan);
             Print(3, "도망", ConsoleColor.DarkCyan);
@@ -194,7 +194,7 @@ namespace ConsoleTextRPG.Scenes
             switch (index)
             {
                 case 1:
-                    PlayerAttack(index - 1);
+                    GameManager.Instance.currentState = DungeonState.PlayerAttack;
                     break;
                 case 2:
                     PlayerDefend(index - 1);
@@ -207,14 +207,6 @@ namespace ConsoleTextRPG.Scenes
                     Thread.Sleep(300);
                     break;
             }
-        }
-
-        void PlayerAttack(int i)
-        {
-            Info("공격합니다");
-            myPlayer.Attack(currentMonsters[i]);
-            Thread.Sleep(200);
-            GameManager.Instance.currentState = DungeonState.EnemyTurn;
         }
 
         void PlayerDefend(int i)
@@ -248,9 +240,55 @@ namespace ConsoleTextRPG.Scenes
             GameManager.Instance.currentState = DungeonState.Idle;
         }
 
+        // ==============[플레이어 공격 상태]==============
 
+        void PlayerAttackRender()
+        {
+            Print("◎Battle!!◎", ConsoleColor.DarkYellow);
+            Print($"\n공격할 대상을 선택해주세요.\n");
+            Print("\n============[몬스터]============");
+            for (int i = 0; i < currentMonsters.Count; i++)
+            {
+                currentMonsters[i].PrintMonster();
+            }
 
+            Print("===========[선택지]===========");
+            Print(0, "취소", ConsoleColor.DarkCyan);
 
+            Print("\n원하시는 행동을 입력해주세요");
+            Console.Write(">>");
+        }
+
+        void PlayerAttackMove(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    PlayerAttack(index - 1);
+                    break;
+                case 2:
+                    PlayerAttack(index - 1);
+                    break;
+                case 3:
+                    PlayerAttack(index - 1);
+                    break;
+                case 0:
+                    GameManager.Instance.currentState = DungeonState.PlayerTrun;
+                    break;
+                default:
+                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                    Thread.Sleep(300);
+                    break;
+            }
+        }
+
+        void PlayerAttack(int i)
+        {
+            Info("공격합니다");
+            myPlayer.Attack(currentMonsters[i]);
+            Thread.Sleep(200);
+            GameManager.Instance.currentState = DungeonState.EnemyTurn;
+        }
 
         // ==============[몬스터턴상태]==============
         void EnemyTurnRender()

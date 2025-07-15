@@ -39,5 +39,10 @@ namespace ConsoleTextRPG.Monsters
         {
             Console.WriteLine($"Lv.{Level} | ,{Name} | HP : {CurHP}/{MaxHP}");
         }
+        public override void PrintMonster(ConsoleColor c)
+        {
+            Console.ForegroundColor = c;   // 번호 색
+            Console.WriteLine($"Lv.{Level} | ,{Name} | HP : {CurHP}/{MaxHP}");
+        }
     }
 }
