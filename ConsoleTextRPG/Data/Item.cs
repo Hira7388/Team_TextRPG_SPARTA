@@ -57,7 +57,7 @@ namespace ConsoleTextRPG.Data
             {
                 priceDisplay = $"{Price,6} G";
             }
-            return $"{Id}.{Name} | {StatType} + {StatusBonus,2} | {Comment} | {priceDisplay}";
+            return $"{Id}.{Name,3} | {StatType} + {StatusBonus,2} | {Comment} | {priceDisplay}";
         }
 
     }
