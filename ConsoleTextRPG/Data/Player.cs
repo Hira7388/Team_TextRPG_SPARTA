@@ -54,5 +54,21 @@ namespace ConsoleTextRPG.Data
                 Stat.SetBaseStats(1, 20, 5, 80);
             }
         }
+
+        //Gold +-하는 메서드
+        public void AddGold(int amount)
+        {
+            int sum = Gold + amount;
+
+            if(sum < 0)
+            {
+                Gold = 0;
+            }
+            else
+            {
+                Gold += amount;
+            }
+        }
+
     }
 }
