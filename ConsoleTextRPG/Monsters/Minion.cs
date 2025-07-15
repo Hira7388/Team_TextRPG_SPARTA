@@ -26,12 +26,13 @@ namespace ConsoleTextRPG.Monsters
             // 초기화
             CurHP = MaxHP;
         }
-        public void PrintMonster<T>(T no, string text, ConsoleColor c)
+
+        // 몬스터 이미지 설정
+        public override string PrintMonster(int no)
         {
-            Console.ForegroundColor = c;   // 번호 색
-            Console.Write($"{no}. ");
-            Console.ResetColor();// 기본 색 복원
-            Console.WriteLine($"# {no}. {Name}   |   HP : {CurHP}/{MaxHP}");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"# {no}. {Name}   |   HP : {CurHP}/{MaxHP}");
+            return sb.ToString(); ;
         }
     }
 }

@@ -76,7 +76,7 @@ namespace ConsoleTextRPG.Managers
 
 
             // 초기 Scene 설정
-            currentScene = GameState.DungeonScene;
+            currentScene = GameState.TownScene;
         }
 
         private void Render()

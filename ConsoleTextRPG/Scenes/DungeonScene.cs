@@ -69,7 +69,7 @@ namespace ConsoleTextRPG.Scenes
         {
                 isBattle = true; // 배틀 시작
                 Print("◎Battle!!◎", ConsoleColor.DarkYellow);
-                Print("\ninfo : 몬스터가 나타났습니다!\n");
+                Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
                 Print("\n============[몬스터]============");
                 for (int i = 0; i < currentMonsters.Count; i++)
                 {

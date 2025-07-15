@@ -25,20 +25,9 @@ namespace ConsoleTextRPG.Monsters
 
         public override string PrintMonster(int no)
         {
-            string[] artLines = new[]
-           {
-            $"# {no}. {Name} ",
-            $"# HP : {CurHP}/{MaxHP}",
-             };
             StringBuilder sb = new StringBuilder();
-            int targetWidth = artLines.Max(line => line.Length);
-
-            // 각 행을 PadRight로 동일 너비로 맞춘 뒤 추가
-            foreach (var line in artLines)
-            {
-                sb.AppendLine(line.PadRight(targetWidth));
-            }
-            return sb.ToString(); 
+            sb.AppendLine($"# {no}. {Name}   |   HP : {CurHP}/{MaxHP}");
+            return sb.ToString(); ;
         }
     }
 }
