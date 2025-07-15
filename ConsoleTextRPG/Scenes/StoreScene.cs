@@ -7,10 +7,10 @@ using ConsoleTextRPG.Data;
 
 namespace ConsoleTextRPG.Scenes
 {
-    internal class Store
+    public class StoreScene
     {
         List<Item> shopItem = new List<Item>();
-        public Store()
+        public StoreScene()
         {
             shopItem.Add(new Item(1, "수련자 갑옷    ", Item.ItemType.Armor, 5, "수련에 도움을 주는 갑옷입니다.                    ", 1000));
             shopItem.Add(new Item(2, "무쇠갑옷       ", Item.ItemType.Armor, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.                ", 2000));
@@ -38,7 +38,7 @@ namespace ConsoleTextRPG.Scenes
         }
         public static void Itemdisplay()
         {
-            Store myShop = new Store();
+            StoreScene myShop = new StoreScene();
             myShop.display();
             Console.WriteLine("1. 아이템 구매");
             Console.WriteLine("0. 나가기");
@@ -62,7 +62,7 @@ namespace ConsoleTextRPG.Scenes
         }
         public static void Itembuy()
         {
-            Store myShop = new Store();
+            StoreScene myShop = new StoreScene();
             myShop.display();
             Console.WriteLine("번호로 아이템 구매 (1 ~ 6)");
             Console.WriteLine("0. 나가기");
