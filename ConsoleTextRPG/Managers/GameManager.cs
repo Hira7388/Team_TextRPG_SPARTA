@@ -78,7 +78,7 @@ namespace ConsoleTextRPG.Managers
             this.Player = new Player("");
             Console.CursorVisible = false;
             LoadItemDatabase();
-            BaseState.Init(); // 상태 목록 초기화
+            //BaseState.Init(); // 상태 목록 초기화
 
             // 임시 아이템 추가(테스트용)
             Item item;
