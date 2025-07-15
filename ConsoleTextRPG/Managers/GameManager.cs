@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using ConsoleTextRPG.Scenes;
 using ConsoleTextRPG.TurnBasedSystem;
 using ConsoleTextRPG.Monsters;
+using Newtonsoft.Json;
 
 namespace ConsoleTextRPG.Managers
 {
@@ -24,6 +25,8 @@ namespace ConsoleTextRPG.Managers
 
         public readonly Dictionary<MonsterType, Monster> monsType = new();
 
+        // 모든 아이템 정보 불러오기
+        public List<Item> AllItems { get; private set; }
 
         // 싱글톤
         private static GameManager _instance;
@@ -69,11 +72,12 @@ namespace ConsoleTextRPG.Managers
         {
             this.Player = new Player("");
             Console.CursorVisible = false;
-
+            LoadItemDatabase();
             BaseState.Init(); // 상태 목록 초기화
 
             // 임시 아이템 추가(테스트용)
-            Player.Inventory.AddItem(new Item(0, "낡은 검", Item.ItemType.Weapon, 5, "쉽게 볼 수 있는 검입니다.", 100));
+            Item item;
+            Player.Inventory.AddItem(item = AllItems.FirstOrDefault(i => i.Id == 0));
 
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
@@ -90,6 +94,33 @@ namespace ConsoleTextRPG.Managers
 
             // 초기 Scene 설정
             currentScene = GameState.TownScene;
+        }
+
+        // 아이템 정보 불러오기
+        private void LoadItemDatabase()
+        {
+            try
+            {
+                string projectRootPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".."));
+                string itemDbPath = Path.Combine(projectRootPath, "Json", "items.json");
+
+                if (File.Exists(itemDbPath))
+                {
+                    string json = File.ReadAllText(itemDbPath, Encoding.UTF8);
+                    this.AllItems = JsonConvert.DeserializeObject<List<Item>>(json);
+                }
+                else
+                {
+                    this.AllItems = new List<Item>();
+                    Console.WriteLine("아이템 데이터베이스 파일을 찾을 수 없습니다!");
+                }
+            }
+            catch (Exception ex)
+            {
+                // JSON 형식 오류 등 예외 발생 시 처리
+                Console.WriteLine($"아이템 데이터베이스 로딩 중 오류 발생: {ex.Message}");
+                this.AllItems = new List<Item>();
+            }
         }
 
         private void RenderMenu()
@@ -125,6 +156,29 @@ namespace ConsoleTextRPG.Managers
             // TODO: 인벤토리 및 장비 복원 로직 추가
             // 이 부분은 Player 클래스 또는 GameManager에서 처리할 수 있다.
             // 예를 들어, 모든 아이템 목록을 가진 GameManager가 ID를 기반으로 아이템을 찾아 플레이어에게 줍니다.
+            this.Player.Inventory.Clear();
+
+            // 인벤토리를 불러온다.
+            foreach (int itemId in saveData.InventoryItemIds)
+            {
+                Item item = AllItems.FirstOrDefault(i => i.Id == itemId);
+                if (item != null)
+                {
+                    this.Player.Inventory.AddItem(item.Clone());
+                }
+            }
+
+            // 장착 아이템을 불러온다.
+            if (saveData.EquippedWeaponId != -1)
+            {
+                Item weapon = this.Player.Inventory.Items.FirstOrDefault(i => i.Id == saveData.EquippedWeaponId);
+                if (weapon != null) this.Player.EquipItem(weapon);
+            }
+            if (saveData.EquippedArmorId != -1)
+            {
+                Item armor = this.Player.Inventory.Items.FirstOrDefault(i => i.Id == saveData.EquippedArmorId);
+                if (armor != null) this.Player.EquipItem(armor);
+            }
         }
     }
 }

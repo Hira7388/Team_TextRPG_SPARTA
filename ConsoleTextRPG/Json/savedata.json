@@ -1,5 +1,5 @@
 {
-  "PlayerName": "아이들",
+  "PlayerName": "아니",
   "PlayerJob": "전사",
   "Gold": 1500,
   "Level": 1,
@@ -7,6 +7,9 @@
   "BaseDefense": 10,
   "MaxHp": 120,
   "CurrentHp": 120,
+  "InventoryItemIds": [
+    0
+  ],
   "EquippedWeaponId": -1,
   "EquippedArmorId": -1
 }

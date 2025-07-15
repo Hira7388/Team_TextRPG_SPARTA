@@ -80,5 +80,32 @@ namespace ConsoleTextRPG.Data
             }
         }
 
+        // 아이템을 장착하는 메서드
+        public void EquipItem(Item item)
+        {
+            if (item.Type == Item.ItemType.Weapon)
+            {
+                if (this.EquippedWeapon != null) UnequipItem(this.EquippedWeapon);
+                this.EquippedWeapon = item;
+            }
+            else if (item.Type == Item.ItemType.Armor)
+            {
+                if (this.EquippedArmor != null) UnequipItem(this.EquippedArmor);
+                this.EquippedArmor = item;
+            }
+
+            item.IsEquipped = true;
+            this.Stat.AddBonusStats(item); // Stat에 보너스 능력치 적용 요청
+        }
+
+        // 아이템 장착을 해제하는 메서드
+        public void UnequipItem(Item item)
+        {
+            if (item.Type == Item.ItemType.Weapon) this.EquippedWeapon = null;
+            else if (item.Type == Item.ItemType.Armor) this.EquippedArmor = null;
+
+            item.IsEquipped = false;
+            this.Stat.RemoveBonusStats(item); // Stat에 보너스 능력치 제거 요청
+        }
     }
 }

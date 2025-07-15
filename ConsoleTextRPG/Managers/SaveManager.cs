@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ConsoleTextRPG.Data;
 using ConsoleTextRPG.Scenes;
 using ConsoleTextRPG.Managers;
+using System.Text;
 
 namespace ConsoleTextRPG.Managers
 {
@@ -51,7 +52,7 @@ namespace ConsoleTextRPG.Managers
             };
             string json = JsonConvert.SerializeObject(saveData, Formatting.Indented); // saveData의 내용을 Json문자열로 변환하는 기능
             Directory.CreateDirectory(_saveDirectoryPath); // 혹시 경로에 Json 폴더가 없으면 생성한다.
-            File.WriteAllText(SaveFilePath, json); // _pathSaveFile 경로에 json 파일을 작성한다.
+            File.WriteAllText(SaveFilePath, json, Encoding.UTF8); // _pathSaveFile 경로에 json 파일을 작성한다.
         }
 
         // 게임 정보 불러오기(GameManager에서)
@@ -64,7 +65,7 @@ namespace ConsoleTextRPG.Managers
             }
 
             // 파일에서 JSON 문자열을 읽어온다.
-            string json = File.ReadAllText(SaveFilePath);
+            string json = File.ReadAllText(SaveFilePath, Encoding.UTF8);
 
             // JSON 문자열을 SaveData 객체로 변환합니다.
             SaveData saveData = JsonConvert.DeserializeObject<SaveData>(json);
