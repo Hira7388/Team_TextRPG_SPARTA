@@ -13,20 +13,31 @@ namespace ConsoleTextRPG.Monsters
         {
             // 몬스터 정보 설정
             Name = "대포미니언";
-            MaxHp = 25;
+            MaxHP = 25;
             Level = 5;
             ATK = 8;
             DFP = 3;
             Gold = 50;
 
+            // 초기화
+            CurHP = MaxHP;
+        }
+        public void PrintMonsterInfo(int i)
+        {
             // 이미지 설정
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("####################");
-            sb.AppendLine("#                  #");
-            sb.AppendLine("#   (우람한 네오암스트롱포를 가진)   #");
-            sb.AppendLine("#  (대포미니언)  #");
-            sb.AppendLine("#                  #");
-            sb.AppendLine("####################");
+            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢤⣖⡄⠀⠀⠀⠀⠀");
+            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣜⣞⢎⡷⡀⠀⠀⠀⠀");
+            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⢀⣄⡶⣝⡮⣟⡾⣝⢶⡀⠀⠀⠀");
+            sb.AppendLine("⠀⠀⠀⠀⠀⠀⢠⣞⡗⠿⢘⢯⣗⡯⡯⣗⠗⠀⠀⠀");
+            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠠⡹⡮⡯⣮⡪⣷⣻⣽⢽⢠⢤⣀⡀");
+            sb.AppendLine("⠀⢀⣔⢤⢤⢔⢮⡳⣝⢽⢮⣻⡺⣾⣺⣏⢧⢳⢼⡂");
+            sb.AppendLine("⠀⢸⠪⢿⣹⣵⢺⢽⢽⣝⣷⣳⣯⣳⣻⢮⡫⡧⣷⠁");
+            sb.AppendLine("⢀⣔⣾⣱⣟⡎⣗⡽⡻⣞⣗⡟⡞⠈⠀⠳⣝⢝⠇⠀");
+            sb.AppendLine("⠘⠚⠞⠚⣷⢧⡧⡇⣏⣞⢮⢯⠀⠀⠀⠀⠀⠀⠀⠀");
+            sb.AppendLine("⠀⠀⠀⠀⠈⠫⠯⠺⠚⠊⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀");
+            sb.AppendLine($"\n {i}. {Name}");
+            sb.AppendLine($"HP : {CurHP}");
             Image = sb.ToString();
         }
     }

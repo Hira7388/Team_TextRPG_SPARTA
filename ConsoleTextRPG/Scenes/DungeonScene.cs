@@ -64,7 +64,10 @@ namespace ConsoleTextRPG.Scenes
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             // 몬스터 리스트 전개(list와 랜덤으로 몬스터 마리수 조정)
-
+            for (int i = 0; i < Monster.monsterlist.Count; i++)
+            {
+                Print(i+1,$"| {Monster.monsterlist[i].Name}  |  {Monster.monsterlist[i]} \n");
+            }
             Print("몬스터와의 전투가 시작되었습니다!\n");
             Print(1, "공격", ConsoleColor.DarkCyan);
             Print(2, "방어", ConsoleColor.DarkCyan);
@@ -217,7 +220,8 @@ namespace ConsoleTextRPG.TurnBasedSystem
         }
         public override void Exit()
         {
-          
+            GameManager.monsterlist.Clear(); // 몬스터 목록 초기화
+
         }
     }
 }

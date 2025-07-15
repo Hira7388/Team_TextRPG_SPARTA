@@ -14,7 +14,6 @@ namespace ConsoleTextRPG.Data
         public static void Init()
         {
             // 몬스터 목록 초기화
-            monsterlist.Clear();
             monsterlist = new List<Monster>();
         }
 
@@ -24,8 +23,8 @@ namespace ConsoleTextRPG.Data
 
         public string Name;
         public string Image;
-        public int CurHp;
-        public int MaxHp;
+        public int CurHP;
+        public int MaxHP;
         public int ATK;
         public int DFP;
         public int Level;
