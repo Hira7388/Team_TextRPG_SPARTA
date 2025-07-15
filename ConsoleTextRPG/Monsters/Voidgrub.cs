@@ -9,7 +9,7 @@ namespace ConsoleTextRPG.Monsters
 {
     public class Voidgrub : Monster
     {
-        public Voidgrub(Monster ms) : base(ms)
+        public Voidgrub()
         {
             // 몬스터 정보 설정
             Name = "공허충";
@@ -22,19 +22,23 @@ namespace ConsoleTextRPG.Monsters
             // 초기화
             CurHP = MaxHP;
         }
-        public void PrintMonsterInfo(int i)
-        {
-            // 이미지 설정
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠀⢀⢤⢦⠀⠀⡀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⡰⡂⢀⡗⡮⣯⠇⡀⢟⠄⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⡎⠁⠑⡝⣜⠇⠈⠀⠈⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠁⠀⠀⡧⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine($"\n {i}. {Name}");
-            sb.AppendLine($"HP : {CurHP}");
-            Image = sb.ToString();
-        }
 
+        public override string PrintMonster(int no)
+        {
+            string[] artLines = new[]
+           {
+            $"# {no}. {Name} ",
+            $"# HP : {CurHP}/{MaxHP}",
+             };
+            StringBuilder sb = new StringBuilder();
+            int targetWidth = artLines.Max(line => line.Length);
+
+            // 각 행을 PadRight로 동일 너비로 맞춘 뒤 추가
+            foreach (var line in artLines)
+            {
+                sb.AppendLine(line.PadRight(targetWidth));
+            }
+            return sb.ToString(); 
+        }
     }
 }

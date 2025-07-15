@@ -12,10 +12,10 @@ namespace ConsoleTextRPG.TurnBasedSystem
         public static BaseState[] states { get; private set; } = null!;
         public static void Init()
         {
-            states = new BaseState[(int)State.Size];
-            states[(int)State.Idle] = new IdelState();
-            states[(int)State.Battle] = new BattleState();
-            states[(int)State.EndBattle] = new EndBattleState();
+            states = new BaseState[(int)TurnState.Size];
+            states[(int)TurnState.Idle] = new IdelState();
+            states[(int)TurnState.Battle] = new BattleState();
+            states[(int)TurnState.EndBattle] = new EndBattleState();
         }
 
 

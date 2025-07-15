@@ -12,7 +12,7 @@ namespace ConsoleTextRPG.Monsters
 {
     public class Minion : Monster
     {
-        public Minion(Monster ms) : base(ms)
+        public Minion()
         {
             // 몬스터 정보 설정
             Name = "미니언";
@@ -22,26 +22,16 @@ namespace ConsoleTextRPG.Monsters
             DFP = 1;
             Gold = 15;
 
+
             // 초기화
             CurHP = MaxHP;
         }
-
-        public void PrintMonsterInfo(int i)
+        public void PrintMonster<T>(T no, string text, ConsoleColor c)
         {
-            // 이미지 설정
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⢀⣔⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠐⣗⣗⢇⠀⠀⡀⠀⠀⡀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⢠⣟⢦⢦⣞⢮⢻⢗⡧⡣⢀⢼⢽⣄⠀⠀");
-            sb.AppendLine("⠀⠀⠀⢠⣪⢿⣽⡵⡽⡽⣝⢟⣮⣟⡮⡿⣕⣗⠇⠀");
-            sb.AppendLine("⠀⠀⡠⣿⡺⡙⠀⡸⣟⣿⣺⡇⠈⠓⢟⡯⣗⠏⠀⠀");
-            sb.AppendLine("⠀⠐⠽⢳⣹⣕⡷⣟⣿⣺⣳⢷⠀⠀⠈⠽⠁⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠰⡵⣗⡏⠉⠉⠙⠹⠙⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⢝⢞⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠉⠓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine($"\n {i}. {Name}");
-            sb.AppendLine($"HP : {CurHP}");
-            Image = sb.ToString();
+            Console.ForegroundColor = c;   // 번호 색
+            Console.Write($"{no}. ");
+            Console.ResetColor();// 기본 색 복원
+            Console.WriteLine($"# {no}. {Name}   |   HP : {CurHP}/{MaxHP}");
         }
     }
 }

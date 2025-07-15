@@ -9,7 +9,7 @@ namespace ConsoleTextRPG.Monsters
 {
     public class SiegeMinion : Monster
     {
-        public SiegeMinion(Monster ms) : base(ms)
+        public SiegeMinion()
         {
             // 몬스터 정보 설정
             Name = "대포미니언";
@@ -22,23 +22,23 @@ namespace ConsoleTextRPG.Monsters
             // 초기화
             CurHP = MaxHP;
         }
-        public void PrintMonsterInfo(int i)
+        // 몬스터 이미지 설정
+        public override string PrintMonster(int no)
         {
-            // 이미지 설정
+            string[] artLines = new[]
+           {
+            $"# {no}. {Name}",
+            $"# HP : {CurHP}/{MaxHP}",
+             };
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢤⣖⡄⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣜⣞⢎⡷⡀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠀⢀⣄⡶⣝⡮⣟⡾⣝⢶⡀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⢠⣞⡗⠿⢘⢯⣗⡯⡯⣗⠗⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠀⠀⠠⡹⡮⡯⣮⡪⣷⣻⣽⢽⢠⢤⣀⡀");
-            sb.AppendLine("⠀⢀⣔⢤⢤⢔⢮⡳⣝⢽⢮⣻⡺⣾⣺⣏⢧⢳⢼⡂");
-            sb.AppendLine("⠀⢸⠪⢿⣹⣵⢺⢽⢽⣝⣷⣳⣯⣳⣻⢮⡫⡧⣷⠁");
-            sb.AppendLine("⢀⣔⣾⣱⣟⡎⣗⡽⡻⣞⣗⡟⡞⠈⠀⠳⣝⢝⠇⠀");
-            sb.AppendLine("⠘⠚⠞⠚⣷⢧⡧⡇⣏⣞⢮⢯⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine("⠀⠀⠀⠀⠈⠫⠯⠺⠚⠊⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀");
-            sb.AppendLine($"\n {i}. {Name}");
-            sb.AppendLine($"HP : {CurHP}");
-            Image = sb.ToString();
+            int targetWidth = artLines.Max(line => line.Length);
+
+            // 각 행을 PadRight로 동일 너비로 맞춘 뒤 추가
+            foreach (var line in artLines)
+            {
+                sb.AppendLine(line.PadRight(targetWidth));
+            }
+            return sb.ToString(); 
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Scenes;
 using ConsoleTextRPG.TurnBasedSystem;
+using ConsoleTextRPG.Monsters;
 
 namespace ConsoleTextRPG.Managers
 {
@@ -20,6 +21,8 @@ namespace ConsoleTextRPG.Managers
 
         // 플레이어 객체 생성
         public Player Player { get; private set; }
+
+        public readonly Dictionary<MonsterType, Monster> monsType = new();
 
 
         // 싱글톤
@@ -50,12 +53,12 @@ namespace ConsoleTextRPG.Managers
                 Update();
             }
         }
+
         private void Init()
         {
             this.Player = new Player("");
             Console.CursorVisible = false;
 
-            Monster.Init(); // 몬스터 목록 초기화
             BaseState.Init(); // 상태 목록 초기화
 
             // 임시 아이템 추가(테스트용)
@@ -66,8 +69,14 @@ namespace ConsoleTextRPG.Managers
             scenes[GameState.DungeonScene] = new DungeonScene();
             scenes[GameState.InventoryScene] = new InventoryScene();
 
+            // Monster등록
+            monsType[MonsterType.Minion] = new Minion();
+            monsType[MonsterType.SigeMinion] = new SiegeMinion();
+            monsType[MonsterType.Voidgrub] = new Voidgrub();
+
+
             // 초기 Scene 설정
-             currentScene = GameState.TownScene;
+            currentScene = GameState.DungeonScene;
         }
 
         private void Render()
