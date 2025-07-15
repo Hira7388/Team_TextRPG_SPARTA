@@ -1,4 +1,4 @@
-﻿using ConsoleTextRPG.Scene;
+﻿using ConsoleTextRPG.Scenes;
 using ConsoleTextRPG.Data;
 using System;
 using System.Collections.Generic;
@@ -8,14 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Scenes;
+using ConsoleTextRPG.TurnBasedSystem;
+using ConsoleTextRPG.Monsters;
 
 namespace ConsoleTextRPG.Managers
 {
-    // 게임 Scene 전환을 위한 SceneID 열거형
-    // 작성자 : 이영신
-    // 아래 열거형에 씬 이름을 추가후 아래 'Init' 함수에서 씬을 등록해주세요.
-
-
     internal class GameManager
     {
         // 현재 씬
@@ -24,7 +21,10 @@ namespace ConsoleTextRPG.Managers
 
         // 플레이어 객체 생성
         public Player Player { get; private set; }
-        
+
+        public readonly Dictionary<MonsterType, Monster> monsType = new();
+
+
         // 싱글톤
         private static GameManager _instance;
         public static GameManager Instance
@@ -42,8 +42,8 @@ namespace ConsoleTextRPG.Managers
 
         }
 
-        //===================[이영신 추가]
         private bool running = true;
+
         public void GameRun()
         {
             Init();
@@ -53,18 +53,29 @@ namespace ConsoleTextRPG.Managers
                 UpdateInput();
             }
         }
+
         private void Init()
         {
             this.Player = new Player("");
             Console.CursorVisible = false;
+
+            BaseState.Init(); // 상태 목록 초기화
+
             // 임시 아이템 추가(테스트용)
             Player.Inventory.AddItem(new Item(0, "낡은 검", Item.ItemType.Weapon, 5, "쉽게 볼 수 있는 검입니다.", 100));
+
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
             scenes[GameState.DungeonScene] = new DungeonScene();
             scenes[GameState.InventoryScene] = new InventoryScene();
             scenes[GameState.TownScene] = new TownScene();
             scenes[GameState.StoreScene] = new StoreScene();
+
+            // Monster등록
+            monsType[MonsterType.Minion] = new Minion();
+            monsType[MonsterType.SigeMinion] = new SiegeMinion();
+            monsType[MonsterType.Voidgrub] = new Voidgrub();
+
 
             // 초기 Scene 설정
             currentScene = GameState.TownScene;
@@ -81,6 +92,5 @@ namespace ConsoleTextRPG.Managers
         }
        // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;
-        //===================[이영신 추가]
     }
 }
