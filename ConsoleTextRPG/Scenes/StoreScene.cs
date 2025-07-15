@@ -39,7 +39,7 @@ namespace ConsoleTextRPG.Scenes
         public void Display()
         {
             Console.Clear();
-            Console.WriteLine("상점");
+            Console.WriteLine("=== 상점 ===");
             Console.WriteLine("[보유 골드]");
             Console.WriteLine($"{myPlayer.Gold} G");
             Console.WriteLine();
@@ -163,9 +163,9 @@ namespace ConsoleTextRPG.Scenes
                     shopItem[selectnum].IsSoldOut = true;
                     Console.WriteLine();
                     Console.WriteLine($"==== {shopItem[selectnum].Id}.{shopItem[selectnum].Name} 구매 완료 ====");
-                    myPlayer.Inventory.AddItem(shopItem[selectnum]);
+                    myPlayer.Inventory.AddItem(shopItem[selectnum]); //아이템 추가
                     myPlayer.AddGold(-shopItem[selectnum].Price); //골드 차감
-                    Thread.Sleep(700);
+                    Thread.Sleep(700); 
                     return;
                 }
             }
@@ -179,10 +179,18 @@ namespace ConsoleTextRPG.Scenes
         //아이템 판매창 만드는중..
         public void ItemSell()
         {
+            List<Item> playerItems = myPlayer.Inventory.Items;
+
             while (true)
             {
-                Display();
-                Console.WriteLine("번호로 아이템 판매");
+                Console.Clear();
+                Console.WriteLine("=== 상점 - 아이템 판매 ===");
+                Console.WriteLine("[보유 골드]");
+                Console.WriteLine($"{myPlayer.Gold} G");
+                Console.WriteLine();
+
+                Console.WriteLine("번호로 아이템 판매 (1 ~");
+                Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine();
@@ -194,16 +202,21 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else if (int.TryParse(input, out int select))
                 {
-                    if (select >= 1 && select <= shopItem.Count)
+                    select--; // 기본템이 있기 때문에
+
+                    if (select >= 1 && select <= myPlayer.Inventory.Items.Count) //입력값을 비교
                     {
-                        BuyCycle(input);
+                        int sellPrice = (int)(shopItem[select].Price * 0.8); //원 가격의 80프로
+                        myPlayer.AddGold(sellPrice); //골드 더해주기
+                        //myPlayer.Inventory.RemoveItem(item[select]); 아이템 제거
                     }
                     else
                     {
                         Console.Clear();
                         Console.WriteLine();
-                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.WriteLine("판매할 아이템이 없습니다.");
                         Thread.Sleep(700);
+                        return;
                     }
                 }
                 else
