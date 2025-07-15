@@ -12,25 +12,27 @@ namespace ConsoleTextRPG.Monsters
 {
     public class Minion : Monster
     {
-        public Minion(Monster ms) : base(ms)
+        public Minion()
         {
             // 몬스터 정보 설정
             Name = "미니언";
-            MaxHp = 15;
+            MaxHP = 15;
             Level = 2;
             ATK = 5;
             DFP = 1;
             Gold = 15;
 
-            // 이미지 설정
+
+            // 초기화
+            CurHP = MaxHP;
+        }
+
+        // 몬스터 이미지 설정
+        public override string PrintMonster(int no)
+        {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("####################");
-            sb.AppendLine("#                  #");
-            sb.AppendLine("#   (작고 소듕한)   #");
-            sb.AppendLine("#  (미니언)  #");
-            sb.AppendLine("#                  #");
-            sb.AppendLine("####################");
-            Image = sb.ToString();
+            sb.AppendLine($"# {no}. {Name}   |   HP : {CurHP}/{MaxHP}");
+            return sb.ToString(); ;
         }
     }
 }

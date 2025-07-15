@@ -65,6 +65,13 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine(text);
             Console.ResetColor();// 기본 색 복원 
         }
+        public void MonsterPrint<T>(int no, T image, ConsoleColor c)
+        {
+            Console.WriteLine(image);
+            Console.ForegroundColor = c;   // 번호 색
+            Console.WriteLine(image);
+            Console.ResetColor();// 기본 색 복원 
+        }
 
         // 화면내 행동 정보 출력
         public void Info(string msg)
