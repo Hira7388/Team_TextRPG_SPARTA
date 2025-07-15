@@ -2,7 +2,7 @@
 using ConsoleTextRPG.Data;
 using System;
 using System.Numerics;
-using ConsoleTextRPG.Scene;
+using ConsoleTextRPG.Scenes;
 
 namespace ConsoleTextRPG.Scenes
 {

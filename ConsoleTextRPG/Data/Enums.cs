@@ -14,4 +14,23 @@ namespace ConsoleTextRPG.Data
         DungeonScene, // 던전 씬
         ViewStatueScene  // 스텟창 씬
     }
+
+    // 게임의 상태를 나타내는 열거형
+    public enum TurnState
+    {
+        Idle,
+        Battle,
+        EndBattle,
+        Size,// Size는 현재 배열의 크기를 시각적으로 나타내주기위한 요소임
+    }
+
+    // 몬스터 종류 열거형
+    public enum MonsterType
+    {
+        Minion,
+        SigeMinion,
+        Voidgrub,
+    }
+
+
 }

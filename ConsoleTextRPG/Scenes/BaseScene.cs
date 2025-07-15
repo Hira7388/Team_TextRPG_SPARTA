@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleTextRPG.Scene
+namespace ConsoleTextRPG.Scenes
 {
     public abstract class BaseScene
     {
@@ -63,6 +63,13 @@ namespace ConsoleTextRPG.Scene
         {
             Console.ForegroundColor = c;   // 번호 색
             Console.WriteLine(text);
+            Console.ResetColor();// 기본 색 복원 
+        }
+        public void MonsterPrint<T>(int no, T image, ConsoleColor c)
+        {
+            Console.WriteLine(image);
+            Console.ForegroundColor = c;   // 번호 색
+            Console.WriteLine(image);
             Console.ResetColor();// 기본 색 복원 
         }
 
