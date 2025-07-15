@@ -16,7 +16,7 @@ namespace ConsoleTextRPG.Scene
         double monsValue = 0.3f; // 몬스터 등장 확률 (30%)
 
         
-        public override void Render()
+        public override void RenderMenu()
         {
             Print("◎던전◎", ConsoleColor.Red);
             Print("3가지 선택지를 보고 길을 선택해주세요\n");
@@ -30,7 +30,7 @@ namespace ConsoleTextRPG.Scene
             Console.Write(">>");
         }
 
-        public override void Update()
+        public override void UpdateInput()
         {
             string input = Console.ReadLine();
             int index;

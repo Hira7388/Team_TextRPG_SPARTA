@@ -49,8 +49,8 @@ namespace ConsoleTextRPG.Managers
             Init();
             while (running)
             {
-                Render();
-                Update();
+                RenderMenu();
+                UpdateInput();
             }
         }
         private void Init()
@@ -70,19 +70,17 @@ namespace ConsoleTextRPG.Managers
             currentScene = GameState.TownScene;
         }
 
-        private void Render()
+        private void RenderMenu()
         {
             Console.Clear(); // 화면을 초기화
-            scenes[currentScene].Render();
+            scenes[currentScene].RenderMenu();
         }
-        private void Update()
+        private void UpdateInput()
         {
-            scenes[currentScene].Update();
+            scenes[currentScene].UpdateInput();
         }
        // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;
         //===================[이영신 추가]
-
-
     }
 }

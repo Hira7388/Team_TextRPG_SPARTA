@@ -13,12 +13,12 @@ namespace ConsoleTextRPG.Scenes
     {
         List<Item> shopItem = new List<Item>();
 
-        public override void Render()
+        public override void RenderMenu()
         {
             Display();
         }
 
-        public override void Update()
+        public override void UpdateInput()
         {
             ItemDisplay();
         }
@@ -52,7 +52,7 @@ namespace ConsoleTextRPG.Scenes
         public void ItemDisplay()
         {
             //StoreScene myShop = new StoreScene();
-            Display();
+            //Display();
             Console.WriteLine("1. 아이템 구매");
             Console.WriteLine("0. 나가기");
             Console.WriteLine();

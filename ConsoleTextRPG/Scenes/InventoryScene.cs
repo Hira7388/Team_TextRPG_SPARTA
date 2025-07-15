@@ -11,13 +11,13 @@ namespace ConsoleTextRPG.Scenes
 {
     public class InventoryScene : BaseScene
     {   
-        public override void Render()
+        public override void RenderMenu()
         {
             ShowInventoryMenu();
         }
 
 
-        public override void Update()
+        public override void UpdateInput()
         {
             InventoryInput();
 
