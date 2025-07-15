@@ -26,18 +26,16 @@ namespace ConsoleTextRPG.Scenes
         Player myPlayer = GameManager.Instance.Player;
         private void ShowInventoryMenu()
         {
-            //Print("◎인벤토리◎", ConsoleColor.Red);
-            //Print("보유 중인 아이템을 관리할 수 있습니다.\n");
-            //Print("\n");
-            //Print("[아이템 목록]\n");
-            Console.WriteLine("◎인벤토리◎");
-            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n");
-            Console.WriteLine("\n");
-            Console.WriteLine("[아이템 목록]\n");
+            Print("◎인벤토리◎", ConsoleColor.Red);
+            Print("보유 중인 아이템을 관리할 수 있습니다.");
+            Print("");
+            Print("[아이템 목록]");
+
             ShowInventoryItem();
 
-            //Print("원하시는 행동을 입력해주세요");
-            Console.WriteLine("원하시는 행동을 입력해주세요");
+            Print("0. 나가기");
+            Print("");
+            Print("원하시는 행동을 입력해주세요");
             Console.Write(">> ");
         }
         private void InventoryInput()
@@ -49,6 +47,14 @@ namespace ConsoleTextRPG.Scenes
                 Info("잘못된 입력입니다.(인벤토리씬)");
                 Thread.Sleep(800);
                 return;
+            }
+            switch (index)
+            {
+                case 0:
+                    Print("[타운으로 향합니다.]");
+                    Thread.Sleep(500);
+                    GameManager.Instance.SwitchScene(GameState.TownScene);
+                    break;
             }
 
         }
@@ -88,6 +94,8 @@ namespace ConsoleTextRPG.Scenes
                 Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
                 Console.WriteLine($" | {item.Comment}");
             }
+
+            Print("");
         }
     }
 }
