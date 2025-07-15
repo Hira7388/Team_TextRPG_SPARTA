@@ -54,5 +54,15 @@ namespace ConsoleTextRPG.Data
                 Stat.SetBaseStats(1, 20, 5, 80);
             }
         }
+
+        // 불러오기 시 불러온 데이터를 현재 플레이어 객체 데이터에 저장한다.
+        public void LoadFromData(SaveData data)
+        {
+            this.Name = data.PlayerName;
+            this.Job = data.PlayerJob;
+            this.Gold = data.Gold;
+            this.Stat.SetBaseStats(data.Level, data.BaseAttack, data.BaseDefense, data.MaxHp);
+            this.Stat.LoadCurrentHp(data.CurrentHp);
+        }
     }
 }

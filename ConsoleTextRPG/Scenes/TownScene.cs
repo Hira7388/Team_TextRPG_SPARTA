@@ -147,7 +147,8 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine("2. 던전");
             Console.WriteLine("3. 내 정보 보기");
             Console.WriteLine("4. 인벤토리");
-            Console.WriteLine("5. 게임 종료");
+            Console.WriteLine("5. 저장하기");
+            Console.WriteLine("0. 게임 종료하기");
 
             Console.Write("선택: ");
         }
@@ -160,14 +161,14 @@ namespace ConsoleTextRPG.Scenes
                 case "1":
                     Console.WriteLine("\n[상점에 입장했습니다.]");
                     //Console.ReadKey();
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                     //Console.Clear();
                     GameManager.Instance.SwitchScene(GameState.StoreScene);
                     break;
                 case "2":
                     Console.WriteLine("\n[던전으로 향합니다...]");
                     //Console.ReadKey();
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                     //Console.Clear();
                     GameManager.Instance.SwitchScene(GameState.DungeonScene);
                     break;
@@ -177,12 +178,17 @@ namespace ConsoleTextRPG.Scenes
                 case "4":
                     Console.WriteLine("\n[인벤토리로 향합니다.]");
                     //Console.ReadKey();
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                     //Console.Clear();
                     Console.WriteLine("테스트");
                     GameManager.Instance.SwitchScene(GameState.InventoryScene);
                     break;
                 case "5":
+                    GameManager.Instance.SaveGame();
+                    Info("게임이 저장되었습니다.");
+                    Thread.Sleep(500); 
+                    break;
+                case "0":
                     Console.WriteLine("\n게임을 종료합니다. 안녕히 가세요!");
                     break;
                 default:

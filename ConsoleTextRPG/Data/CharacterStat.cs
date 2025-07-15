@@ -53,6 +53,12 @@ namespace ConsoleTextRPG.Data
             this.CurrentHp = maxHp; // 새 스탯 설정 시 체력을 최대로 회복
         }
 
+        // 불러오기 시 저장된 현재 체력을 가져오는 메서드
+        public void LoadCurrentHp(int currentHp)
+        {
+            this.CurrentHp = currentHp;
+        }
+
         // 아이템 장착/해제 시 보너스 스탯을 변경하는 메서드 (추후 제대로 구현)
         public void AddBonusStats(Item item)
         {
