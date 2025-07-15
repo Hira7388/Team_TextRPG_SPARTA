@@ -180,7 +180,6 @@ namespace ConsoleTextRPG.Scenes
                     //Console.ReadKey();
                     Thread.Sleep(500);
                     //Console.Clear();
-                    Console.WriteLine("테스트");
                     GameManager.Instance.SwitchScene(GameState.InventoryScene);
                     break;
                 case "5":
@@ -196,8 +195,6 @@ namespace ConsoleTextRPG.Scenes
                     Console.ReadKey();
                     break;
             }
-            Console.WriteLine("타운 while문 종료");
-            Thread.Sleep(500);
         }
 
         // 내 정보 보기

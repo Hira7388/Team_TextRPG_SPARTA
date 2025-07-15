@@ -33,6 +33,8 @@ namespace ConsoleTextRPG.Scenes
 
             ShowInventoryItem();
 
+            Print("0. 나가기");
+            Print("");
             Print("원하시는 행동을 입력해주세요");
             Console.Write(">> ");
         }
@@ -45,6 +47,14 @@ namespace ConsoleTextRPG.Scenes
                 Info("잘못된 입력입니다.(인벤토리씬)");
                 Thread.Sleep(800);
                 return;
+            }
+            switch (index)
+            {
+                case 0:
+                    Print("[타운으로 향합니다.]");
+                    Thread.Sleep(500);
+                    GameManager.Instance.SwitchScene(GameState.TownScene);
+                    break;
             }
 
         }
