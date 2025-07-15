@@ -66,13 +66,17 @@ namespace ConsoleTextRPG.Scenes
             }
             else if (input == "1")
             {
+                Console.Clear();
+                Console.WriteLine("상품 진열중....");
+                Thread.Sleep(700);
                 ItemBuy();
             }
             else
             {
                 Console.Clear();
-                Console.WriteLine("잘못된 입력입니다.");
                 Console.WriteLine();
+                Console.WriteLine("잘못된 입력입니다.");
+                Thread.Sleep(700);
             }
         }
         //아이템 구매창
@@ -88,29 +92,56 @@ namespace ConsoleTextRPG.Scenes
             {
                 return;
             }
-            else if (input == "1")
+            else if (int.TryParse(input, out int select))
             {
-                Console.Clear();
-                if(shopItem[0].Id == 1)
+                if(select >= 1 && select <= shopItem.Count)
                 {
-                    BuyCycle();
+                    BuyCycle(input);
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine();
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Thread.Sleep(700);
                 }
             }
             else
             {
                 Console.Clear();
-                Console.WriteLine("잘못된 입력입니다.");
                 Console.WriteLine();
+                Console.WriteLine("잘못된 입력입니다.");
+                Thread.Sleep(700);
             }
         }
         //구매 로직
-        public void BuyCycle()
+        public void BuyCycle(string select)
         {
-            if (myPlayer.Gold >= shopItem[0].Price)
+            if (int.TryParse(select, out int selectnum))
             {
-                shopItem[0].IsSoldOut = true;
-                //Player.AddGold(shopItem[1].Price);
+                selectnum--;
+
+                if (myPlayer.Gold >= shopItem[selectnum].Price)
+                {
+                    shopItem[selectnum].IsSoldOut = true;
+                    Console.WriteLine();
+                    Console.WriteLine($"==== {shopItem[selectnum].Id}.{shopItem[selectnum].Name} 구매 완료 ====");
+                    //Player.AddGold(shopItem[1].Price);
+                    Thread.Sleep(700);
+                    ItemBuy();
+                }
+                else
+                {
+                    Console.WriteLine("골드가 부족 합니다.");
+                    Thread.Sleep(700);
+                    ItemBuy();
+                }
             }
+            else 
+            {
+                Console.WriteLine("잘못된 입력입니다.");
+            }
+
         }
 
     }
