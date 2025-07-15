@@ -49,8 +49,8 @@ namespace ConsoleTextRPG.Managers
             Init();
             while (running)
             {
-                Render();
-                Update();
+                RenderMenu();
+                UpdateInput();
             }
         }
 
@@ -68,6 +68,8 @@ namespace ConsoleTextRPG.Managers
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);
             scenes[GameState.DungeonScene] = new DungeonScene();
             scenes[GameState.InventoryScene] = new InventoryScene();
+            scenes[GameState.TownScene] = new TownScene();
+            scenes[GameState.StoreScene] = new StoreScene();
 
             // Monster등록
             monsType[MonsterType.Minion] = new Minion();
@@ -79,14 +81,14 @@ namespace ConsoleTextRPG.Managers
             currentScene = GameState.TownScene;
         }
 
-        private void Render()
+        private void RenderMenu()
         {
             Console.Clear(); // 화면을 초기화
-            scenes[currentScene].Render();
+            scenes[currentScene].RenderMenu();
         }
-        private void Update()
+        private void UpdateInput()
         {
-            scenes[currentScene].Update();
+            scenes[currentScene].UpdateInput();
         }
        // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;

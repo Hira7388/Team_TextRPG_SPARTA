@@ -10,27 +10,43 @@ using System.Threading.Tasks;
 namespace ConsoleTextRPG.Scenes
 {
     public class InventoryScene : BaseScene
-    {
-        public override void Render()
+    {   
+        public override void RenderMenu()
         {
-            Print("◎인벤토리◎", ConsoleColor.Red);
-            Print("보유 중인 아이템을 관리할 수 있습니다.\n");
-            Print("\n");
-            Print("[아이템 목록]\n");
-
-            // 보유중인 아이템 목록 보여주는 메서드
-
-            Print("원하시는 행동을 입력해주세요");
-            Console.Write(">> ");
+            ShowInventoryMenu();
         }
 
-        public override void Update()
+
+        public override void UpdateInput()
+        {
+            InventoryInput();
+
+        }
+
+        Player myPlayer = GameManager.Instance.Player;
+        private void ShowInventoryMenu()
+        {
+            //Print("◎인벤토리◎", ConsoleColor.Red);
+            //Print("보유 중인 아이템을 관리할 수 있습니다.\n");
+            //Print("\n");
+            //Print("[아이템 목록]\n");
+            Console.WriteLine("◎인벤토리◎");
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n");
+            Console.WriteLine("\n");
+            Console.WriteLine("[아이템 목록]\n");
+            ShowInventoryItem();
+
+            //Print("원하시는 행동을 입력해주세요");
+            Console.WriteLine("원하시는 행동을 입력해주세요");
+            Console.Write(">> ");
+        }
+        private void InventoryInput()
         {
             string input = Console.ReadLine();
             int index;
             if (!int.TryParse(input, out index))
             {
-                Info("잘못된 입력입니다.");
+                Info("잘못된 입력입니다.(인벤토리씬)");
                 Thread.Sleep(800);
                 return;
             }
@@ -39,7 +55,7 @@ namespace ConsoleTextRPG.Scenes
 
         public void ShowInventoryItem()
         {
-            List<Item> items = GameManager.Instance.Player.Inventory.Items;
+            List<Item> items = myPlayer.Inventory.Items;
 
             // 우선 보유중인 아이템이 있는지 확인
             if (items.Count == 0)

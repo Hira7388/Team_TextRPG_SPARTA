@@ -22,6 +22,7 @@ namespace ConsoleTextRPG.Data
         public int Price { get; set; }
         // 아이템이 장착되어 있는지 여부를 추적하는 속성
         public bool IsEquipped { get; set; }
+        public bool IsSoldOut { get; set; }
 
         public Item(int id, string name, ItemType type, int statusBonus, string comment, int price)
         {
@@ -32,6 +33,7 @@ namespace ConsoleTextRPG.Data
             Comment = comment;
             Price = price;
             IsEquipped = false;
+            IsSoldOut = false;
 
             // Type에 따라 StatType 문자열을 자동으로 생성한다.
             if (type == ItemType.Weapon)
@@ -43,11 +45,20 @@ namespace ConsoleTextRPG.Data
                 StatType = "방어력";
             }
         }
+        //상점리스트를 표시해줌
         public override string ToString()
         {
-            return $"{Id}.{Name} | {StatType} + {StatusBonus} | {Comment} | {Price} G";
+            string priceDisplay;
+            if (IsSoldOut)
+            {
+                priceDisplay = "구매완료";
+            }
+            else
+            {
+                priceDisplay = $"{Price,6} G";
+            }
+            return $"{Id}.{Name} | {StatType} + {StatusBonus,2} | {Comment} | {priceDisplay}";
         }
-
 
     }
 }
