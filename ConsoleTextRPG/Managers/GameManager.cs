@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Scenes;
-using ConsoleTextRPG.TurnBasedSystem;
 using ConsoleTextRPG.Monsters;
 
 namespace ConsoleTextRPG.Managers
@@ -17,12 +16,18 @@ namespace ConsoleTextRPG.Managers
     {
         // 현재 씬
         private GameState currentScene;
+
         private readonly Dictionary<GameState, BaseScene> scenes = new();
 
         // 플레이어 객체 생성
         public Player Player { get; private set; }
 
         public readonly Dictionary<MonsterType, Monster> monsType = new();
+
+
+        // 현재 던전 상태
+        private DungeonState _currentState;
+        public DungeonState currentState { get;  set; }
 
 
         // 싱글톤
@@ -70,8 +75,6 @@ namespace ConsoleTextRPG.Managers
             this.Player = new Player("");
             Console.CursorVisible = false;
 
-            BaseState.Init(); // 상태 목록 초기화
-
             // 임시 아이템 추가(테스트용)
             Player.Inventory.AddItem(new Item(0, "낡은 검", Item.ItemType.Weapon, 5, "쉽게 볼 수 있는 검입니다.", 100));
 
@@ -90,6 +93,9 @@ namespace ConsoleTextRPG.Managers
 
             // 초기 Scene 설정
             currentScene = GameState.TownScene;
+
+            // 초기 던전 상태 설정
+            _currentState = DungeonState.Idle;
         }
 
         private void RenderMenu()
@@ -103,7 +109,7 @@ namespace ConsoleTextRPG.Managers
         }
         // ==== Scene 전환 메서드 ====
         public void SwitchScene(GameState id) => currentScene = id;
-        //===================[이영신 추가]
+        public void SwitchState(DungeonState id) => _currentState = id; // 던전 상태 전환 메서드
 
         // 게임 저장하기 기능
         public void SaveGame()
