@@ -14,10 +14,14 @@ namespace ConsoleTextRPG.Scenes
         int walkCount = 0; // 이동 횟수
         int dungeonClearCount = 15; // 던전 클리어 횟수
         double monsValue = 0.3f; // 몬스터 등장 확률 (30%)
-
-
+        bool isBattle = false; // 배틀 여부
         public override void Render()
         {
+            if( isBattle)
+            {
+                BattleRender(); // 배틀씬 랜더링
+                return;
+            }
             DungeonRender();
         }
 
@@ -42,10 +46,12 @@ namespace ConsoleTextRPG.Scenes
             // 몬스터 리스트 전개(list와 랜덤으로 몬스터 마리수 조정)
 
             Print("몬스터와의 전투가 시작되었습니다!\n");
+            Print(1, "공격", ConsoleColor.DarkCyan);
+            Print(2, "방어", ConsoleColor.DarkCyan);
+            Print(3, "종료", ConsoleColor.DarkCyan);
+            Print("원하시는 행동을 입력해주세요");
+            Console.Write(">>");
         }
-
-
-
 
         public override void Update()
         {
@@ -57,6 +63,31 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(800); 
                 return;
             }
+
+            if (isBattle)
+            {
+                switch (index)
+                {
+                    case 1:
+                        Info("공격");
+                        Thread.Sleep(500);
+                        break;
+                    case 2:
+                        Info("방어");
+                        Thread.Sleep(500);
+                        break;
+                    case 3:
+                        Info("종료");
+                        Thread.Sleep(500);
+                        break;
+                    default:
+                        Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                        Thread.Sleep(800);
+                        break;
+                }
+            }
+
+
             switch (index)
             {
                 case 1:
@@ -110,6 +141,7 @@ namespace ConsoleTextRPG.Scenes
             Random rand1 = new Random();
             if (rand1.NextDouble() < monsValue) // 몬스터 등장 확률에 따라 몬스터 소환
             {
+                isBattle= true; // 배틀 시작
                 Console.WriteLine("\ninfo : 몬스터가 나타났습니다!");
                 Thread.Sleep(1000);
                 //gameManager.SwitchScene(SceneID.배틀씬); // 배틀씬으로 전환
