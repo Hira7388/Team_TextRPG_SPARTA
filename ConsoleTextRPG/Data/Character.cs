@@ -64,6 +64,5 @@ namespace ConsoleTextRPG.Data
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
             }
         }
-
     }
 }

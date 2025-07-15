@@ -56,6 +56,7 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(800);
                 return;
             }
+
             switch (GameManager.Instance.currentState)
             {
                 case DungeonState.Idle:
@@ -216,6 +217,7 @@ namespace ConsoleTextRPG.Scenes
             Thread.Sleep(200);
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
         }
+
         void PlayerRun()
         {
             if(currentMonsters.Count > 1)
@@ -241,7 +243,6 @@ namespace ConsoleTextRPG.Scenes
         }
 
         // ==============[플레이어 공격 상태]==============
-
         void PlayerAttackRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
@@ -249,7 +250,7 @@ namespace ConsoleTextRPG.Scenes
             Print("\n============[몬스터]============");
             for (int i = 0; i < currentMonsters.Count; i++)
             {
-                currentMonsters[i].PrintMonster();
+                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green);
             }
 
             Print("===========[선택지]===========");

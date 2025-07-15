@@ -18,9 +18,9 @@ namespace ConsoleTextRPG.Monsters
             ATK = 9;
             DFP = 1;
             Gold = 20;
-
-            // 초기화
             CurHP = MaxHP;
+            // 전투 상호작용을 위한 스탯 초기화 설정
+            this.Stat = new CharacterStat(Level, ATK, DFP, MaxHP);
         }
 
         public override void PrintMonster(int no, ConsoleColor c)
@@ -30,6 +30,15 @@ namespace ConsoleTextRPG.Monsters
             Console.Write($"# {no}. ");
             Console.ResetColor();// 기본 색 복원
             Console.WriteLine($"{Name} | HP : {CurHP}/{MaxHP}");
+        }
+        public override void PrintMonster()
+        {
+            Console.WriteLine($"Lv.{Level} | ,{Name} | HP : {CurHP}/{MaxHP}");
+        }
+        public override void PrintMonster(ConsoleColor c)
+        {
+            Console.ForegroundColor = c;   // 번호 색
+            Console.WriteLine($"Lv.{Level} | ,{Name} | HP : {CurHP}/{MaxHP}");
         }
     }
 }
