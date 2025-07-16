@@ -407,8 +407,9 @@ namespace ConsoleTextRPG.Scenes
             Print("◎Battle!! - Result◎", ConsoleColor.DarkYellow);
             Print($"\nVictory!\n", ConsoleColor.Green);
             Print($"던전에서 몬스터 {currentMonsters.Count}마리를 잡았습니다.\n");
-            Print($"Lv.{myPlayer.Stat.Level} | {myPlayer.Name}\n");
-            Print($"HP.{myPlayer.Stat.MaxHp} | {myPlayer.Name}\n");
+            Print($"Lv.{myPlayer.Stat.Level} | {myPlayer.Name}");
+            Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
+
             Print(0, "다음", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
@@ -419,14 +420,11 @@ namespace ConsoleTextRPG.Scenes
         {
             Print("◎Battle!! - Result◎", ConsoleColor.DarkYellow);
             Print($"\nYou Lose!\n", ConsoleColor.Green);
-            Print("\n============[몬스터]============");
-            for (int i = 0; i < currentMonsters.Count; i++)
-            {
-                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.DarkCyan, ConsoleColor.DarkGray);
-            }
-            Print("===========[대상선택지]===========");
-            Print(0, "다음", ConsoleColor.DarkCyan);
 
+            Print($"Lv.{myPlayer.Stat.Level} | {myPlayer.Name}\n");
+            Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
+
+            Print(0, "다음", ConsoleColor.DarkCyan);
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
         }
@@ -436,6 +434,13 @@ namespace ConsoleTextRPG.Scenes
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
                 Thread.Sleep(300);
+                return;
+            }
+            if(myPlayer.Stat.IsDead)
+            {
+                GameManager.Instance.currentState = DungeonState.Idle;
+                int loseHP = myPlayer.Stat.MaxHp / 3; // 플레이어가 죽었을 때 체력 감소
+                myPlayer.Stat.CurrentHp = loseHP;
                 return;
             }
             if (index == 0)

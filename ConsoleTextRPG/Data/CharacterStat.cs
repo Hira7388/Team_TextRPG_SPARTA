@@ -7,7 +7,7 @@ namespace ConsoleTextRPG.Data
     {
         public int Level { get; private set; }
         public int MaxHp { get; private set; }
-        public int CurrentHp { get; private set; }
+        public int CurrentHp { get; set; }
 
         // 초기 능력치
         public int BaseAttack { get; private set; }
