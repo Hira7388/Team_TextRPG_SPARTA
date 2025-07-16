@@ -4,13 +4,18 @@ using ConsoleTextRPG.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Scenes
 {
     public class InventoryScene : BaseScene
-    {   
+    {
+        private int _width = 18;                   //이름 너비 제한
+        private int _statWidth = 12;                //스텟 너비 제한
+        private int _commentWidth = 50;              //설명 너비 제한
+        List<Item> items = GameManager.Instance.Player.Inventory.Items;
         public override void RenderMenu()
         {
             ShowInventoryMenu();
@@ -24,6 +29,7 @@ namespace ConsoleTextRPG.Scenes
         }
 
         Player myPlayer = GameManager.Instance.Player;
+
         private void ShowInventoryMenu()
         {
             Print("◎인벤토리◎", ConsoleColor.Red);
@@ -33,6 +39,8 @@ namespace ConsoleTextRPG.Scenes
 
             ShowInventoryItem();
 
+            Print("");
+            Print("장착할 아이템의 번호를 입력해주세요. (1~9)");
             Print("0. 나가기");
             Print("");
             Print("원하시는 행동을 입력해주세요");
@@ -42,26 +50,44 @@ namespace ConsoleTextRPG.Scenes
         {
             string input = Console.ReadLine();
             int index;
-            if (!int.TryParse(input, out index))
+            if (int.TryParse(input, out index))
+            {
+                if(index == 0)
+                {
+                    Print("[타운으로 향합니다.]");
+                    Thread.Sleep(500);
+                    GameManager.Instance.SwitchScene(GameState.TownScene);
+                }
+                else if(index > 0 && index <=items.Count)
+                {
+                    int itemIndex = index - 1;
+                    Item targetItem = items[itemIndex];
+
+                    if (targetItem.IsEquipped)
+                    {
+                        targetItem.IsEquipped = false;
+                        Print($"[ {targetItem.Name} ] 을(를) 해제했습니다.");
+                        Thread.Sleep(800);
+                    }
+                    else
+                    {
+                        targetItem.IsEquipped = true;
+                        Print($"[ {targetItem.Name} ] 을(를) 장착했습니다.");
+                        Thread.Sleep(800);
+                    }
+                }
+            }
+            else
             {
                 Info("잘못된 입력입니다.(인벤토리씬)");
                 Thread.Sleep(800);
                 return;
-            }
-            switch (index)
-            {
-                case 0:
-                    Print("[타운으로 향합니다.]");
-                    Thread.Sleep(500);
-                    GameManager.Instance.SwitchScene(GameState.TownScene);
-                    break;
             }
 
         }
 
         public void ShowInventoryItem()
         {
-            List<Item> items = myPlayer.Inventory.Items;
 
             // 우선 보유중인 아이템이 있는지 확인
             if (items.Count == 0)
@@ -75,24 +101,10 @@ namespace ConsoleTextRPG.Scenes
             {
                 Item item = items[i];
 
-                Console.Write("- ");
-
-                // 장착 여부에 따라 '[E]' 표시 및 색상 변경
-                if (item.IsEquipped)
-                {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write("[E]");
-                    Console.ResetColor();
-                    Console.Write($" {item.Name,-15}");
-                }
-                else
-                {
-                    Console.Write($"   {item.Name,-15}");
-                }
-
                 // 아이템 능력치와 설명 출력
-                Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
-                Console.WriteLine($" | {item.Comment}");
+
+                ConsoleHelper.DisplayInventory(i + 1, item.Name, item.StatType, item.StatusBonus, item.Comment, item.IsEquipped, _width, _statWidth, _commentWidth);
+
             }
 
             Print("");

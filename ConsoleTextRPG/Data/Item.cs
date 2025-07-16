@@ -30,7 +30,7 @@ namespace ConsoleTextRPG.Data
         public Item() { }
 
         // 실제 아이템을 생성할 때 사용하는 생성자.
-        public Item(int id, string name, ItemType type, int statusBonus, string comment, int price)
+        public Item(int id, string name, ItemType type, int statusBonus, string comment, int price, bool isEquipped)
         {
             Id = id;
             Name = name;
@@ -38,7 +38,7 @@ namespace ConsoleTextRPG.Data
             StatusBonus = statusBonus;
             Comment = comment;
             Price = price;
-            IsEquipped = false;
+            IsEquipped = isEquipped;
 
             // Type에 따라 StatType 문자열을 자동으로 생성한다.
             if (type == ItemType.Weapon)
