@@ -47,11 +47,11 @@ namespace ConsoleTextRPG.Data
             if (job == "전사")
             {
                 // 레벨, 공격력, 방어력, 최대체력
-                Stat.SetBaseStats(1, 15, 10, 120);
+                Stat.SetBaseStats(1, 15, 2, 120);
             }
             else if (job == "마법사")
             {
-                Stat.SetBaseStats(1, 20, 5, 80);
+                Stat.SetBaseStats(1, 20, 0, 80);
             }
         }
 

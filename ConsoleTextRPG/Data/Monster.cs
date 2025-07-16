@@ -44,6 +44,11 @@ namespace ConsoleTextRPG.Data
             Console.WriteLine($"Lv.{Level} | {Name} | HP : {CurHP}/{MaxHP}");
         }
 
-
+        public override void Attack(Character target)
+        {
+            int damage = this.Stat.TotalAttack;
+            Console.WriteLine($"{this.Name}의 공격!");
+            target.TakeDamage(damage); // 상대방의 TakeDamage 이벤트를 발동시킴
+        }
     }
 }

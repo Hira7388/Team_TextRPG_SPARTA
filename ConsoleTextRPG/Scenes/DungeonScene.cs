@@ -21,8 +21,8 @@ namespace ConsoleTextRPG.Scenes
 
         Player myPlayer = GameManager.Instance.Player; // 플레이어 객체 가져오기
 
-        Queue<Monster> monsterQueue;   // 몬스터 공격 순서를 저장하는 큐
-        public List<Monster> currentMonsters { get; set; } = new List<Monster>();
+        Queue<Monster> monsterQueue = new Queue<Monster>();   // 몬스터 공격 순서를 저장하는 큐
+        List<Monster> currentMonsters= new List<Monster>();
 
 
         public override void RenderMenu()
@@ -102,21 +102,21 @@ namespace ConsoleTextRPG.Scenes
                 case 1:
                     Info("왼쪽길로 갑니다");
                     DungeonEvent();
-                    Thread.Sleep(200);
+                    Thread.Sleep(100);
                     break;
                 case 2:
                     Info("앞으로 갑니다");
                     DungeonEvent();
-                    Thread.Sleep(200);
+                    Thread.Sleep(100);
                     break;
                 case 3:
                     Info("오른쪽길로 갑니다");
                     DungeonEvent();
-                    Thread.Sleep(200);
+                    Thread.Sleep(100);
                     break;
                 default:
                     Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                    Thread.Sleep(300);
+                    Thread.Sleep(200);
                     break;
             }
         }
@@ -208,7 +208,7 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 default:
                     Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                    Thread.Sleep(300);
+                    Thread.Sleep(200);
                     break;
             }
         }
@@ -218,7 +218,7 @@ namespace ConsoleTextRPG.Scenes
             Info("방어합니다");
             myPlayer.Defend(currentMonsters[i]);
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
-            Thread.Sleep(200);
+            Thread.Sleep(500);
         }
 
         void PlayerRun()
@@ -229,14 +229,14 @@ namespace ConsoleTextRPG.Scenes
                 {
                     GameManager.Instance.currentState = DungeonState.Idle;
                     Info("도망쳤습니다");
-                    Thread.Sleep(200);
+                    Thread.Sleep(500);
                     return;
                 }
                 else
                 {
                     Info("도망치지 못했습니다.");
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                    Thread.Sleep(200);
+                    Thread.Sleep(500);
                     return;
                 }
             }
@@ -279,40 +279,44 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerAttack(int index)
         {
+            // 중독상태 같은 상태이상 공격이 있을 경우는 플레이어 공격전에 DeadCheck를 먼저 실행해야함
+            myPlayer.Attack(currentMonsters[index]);
+            MonstersDeadCheck();
+                // 살아있는 몬스터들만 큐에 추가
+                foreach (var monster in currentMonsters)
+                {
+                    if (!monster.Stat.IsDead)               //  살아있는 몬스터 필터링
+                    {
+                        monsterQueue.Enqueue(monster);
+                    }
+                }
+
+                GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                Thread.Sleep(1000);
+        }
+
+        void MonstersDeadCheck()
+        {
             // 몬스터들 전부 죽었는지  확인
             foreach (var monster in currentMonsters)
             {
                 if (monster.Stat.IsDead)
                     deadCount++;
             }
+
             if (deadCount == currentMonsters.Count)
             {
                 GameManager.Instance.currentState = DungeonState.EndBattle;
-                 Info("모든 몬스터를 처치했습니다.");
-                Thread.Sleep(200);
-            }
-            else
-            {
-                myPlayer.Attack(currentMonsters[index]);
-                GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                Thread.Sleep(1000);
+                Info("모든 몬스터를 처치했습니다.");
+                Thread.Sleep(800);
+                return;
             }
         }
+
 
         // ==============[몬스터턴상태]==============// 여기부터 구현하면댐
         void EnemyTurnRender()
         {
-            // RPQueue 초기화
-            monsterQueue = new Queue<Monster>();
-            // 살아있는 몬스터들만 큐에 추가
-            foreach (var monster in currentMonsters)
-            {
-                if (!monster.Stat.IsDead)               //  살아있는 몬스터 필터링
-                {
-                    monsterQueue.Enqueue(monster);
-                }
-            }
-
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
             Print("\n============[몬스터]============");
@@ -336,22 +340,26 @@ namespace ConsoleTextRPG.Scenes
                 return;
             }
             if( index == 0)
-            {
-                if(monsterQueue.Count > 0)
+            {            
+
+
+                if (monsterQueue.Count > 0)
                 {
                     var nextMonster = monsterQueue.Dequeue(); // 큐에서 몬스터를 하나씩 꺼내서 공격
                     int idx = currentMonsters.IndexOf(nextMonster); //list.IndexOf : 리스트속 <T> 객체의 인덱스를 반환
                     EnemyAttack(idx); 
                 }
+
                 else
                 {
                     // 큐가 비어있다면 플레이어 턴으로 전환
                     GameManager.Instance.currentState = DungeonState.PlayerTrun;
                     Print("\ninfo : 몬스터의 공격이 끝났습니다");
-                    Thread.Sleep(200);
+                    Thread.Sleep(800);
                 }
             }
         }
+
         void EnemyAttack(int index)
         {
             if (currentMonsters[index].Stat.IsDead)
@@ -360,12 +368,12 @@ namespace ConsoleTextRPG.Scenes
             if (myPlayer.Stat.IsDead)
             {
                 GameManager.Instance.currentState = DungeonState.EndBattle;
-                Thread.Sleep(200);
+                Thread.Sleep(800);
             }
             else
             {
                 currentMonsters[index].Attack(myPlayer);
-                Thread.Sleep(200);
+                Thread.Sleep(800);
             }
         }
 
