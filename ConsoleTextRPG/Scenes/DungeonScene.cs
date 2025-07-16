@@ -76,7 +76,7 @@ namespace ConsoleTextRPG.Scenes
                     EnemyAttackMove(index); // 몬스터 턴 행동 선택
                     break;
                 case DungeonState.EndBattle:
-
+                    EndTrunMove(index); // 전투 종료 행동 선택
                     break;
             }                
         }
@@ -141,8 +141,8 @@ namespace ConsoleTextRPG.Scenes
                 Console.WriteLine("\ninfo : 던전을 클리어했습니다.");
                 Console.WriteLine("\ninfo : 마을로 돌아갑니다");
                 GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
-                Thread.Sleep(1000);
                 walkCount = 0;// 이동 횟수 초기화
+                Thread.Sleep(1000);
                 return;
             }
         }
@@ -357,7 +357,7 @@ namespace ConsoleTextRPG.Scenes
                 {
                     var nextMonster = monsterQueue.Dequeue(); // 큐에서 몬스터를 하나씩 꺼내서 공격
                     int idx = currentMonsters.IndexOf(nextMonster); //list.IndexOf : 리스트속 <T> 객체의 인덱스를 반환
-                    EnemyAttack(idx); 
+                    EnemyAttack(idx);
                 }
 
                 else
@@ -377,6 +377,7 @@ namespace ConsoleTextRPG.Scenes
 
             if (myPlayer.Stat.IsDead)
             {
+                isWin = false; // 플레이어가 죽었을 때 패배 상태로 변경
                 GameManager.Instance.currentState = DungeonState.EndBattle;
                 Thread.Sleep(800);
             }
@@ -406,6 +407,7 @@ namespace ConsoleTextRPG.Scenes
         {
             Print("◎Battle!! - Result◎", ConsoleColor.DarkYellow);
             Print($"\nVictory!\n", ConsoleColor.Green);
+
             Print($"던전에서 몬스터 {currentMonsters.Count}마리를 잡았습니다.\n");
             Print($"Lv.{myPlayer.Stat.Level} | {myPlayer.Name}");
             Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
@@ -423,7 +425,7 @@ namespace ConsoleTextRPG.Scenes
 
             Print($"Lv.{myPlayer.Stat.Level} | {myPlayer.Name}\n");
             Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
-
+            
             Print(0, "다음", ConsoleColor.DarkCyan);
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
@@ -436,20 +438,28 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(300);
                 return;
             }
-            if(myPlayer.Stat.IsDead)
-            {
-                GameManager.Instance.currentState = DungeonState.Idle;
-                int loseHP = myPlayer.Stat.MaxHp / 3; // 플레이어가 죽었을 때 체력 감소
-                myPlayer.Stat.CurrentHp = loseHP;
-                return;
-            }
             if (index == 0)
             {
-                GameManager.Instance.currentState = DungeonState.Idle;
-                currentMonsters.Clear(); // 몬스터 목록 초기화
-                dungeonHP = 0;
-                Print("\ninfo : 전투를 종료합니다.");
-                Thread.Sleep(300);
+                if (isWin)
+                {
+                    GameManager.Instance.currentState = DungeonState.Idle;
+                    currentMonsters.Clear(); // 몬스터 목록 초기화
+                    dungeonHP = 0;
+                    Print("\ninfo : 전투를 종료합니다.");
+                    Thread.Sleep(300);
+                }
+                else
+                {
+                    int loseHP = (int)(dungeonHP * 0.5f); // 플레이어가 죽었을 때 체력 감소
+                    myPlayer.Stat.CurrentHp += loseHP;
+                    dungeonHP = 0;
+                    Print("\ninfo : 쓰러진 당신은 던전마법으로 마을로 돌아갑니다.");
+                    Print($"패배 패널티로 체력이 {myPlayer.Stat.CurrentHp}/{myPlayer.Stat.MaxHp}이 됩니다.");
+                    GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
+                    walkCount = 0;// 이동 횟수 초기화
+                    Thread.Sleep(1000);
+                    return;
+                }
             }
         }
     }
