@@ -13,7 +13,6 @@ namespace ConsoleTextRPG.Data
     {
         public string Name;
         public string Image;
-        public int CurHP;
         public int MaxHP;
         public int ATK;
         public int DFP;
@@ -21,16 +20,19 @@ namespace ConsoleTextRPG.Data
         public int Gold;
         public virtual void PrintMonster( int no, ConsoleColor c1, ConsoleColor c2)
         {
-            if (CurHP <= 0)
+            if (this.Stat.IsDead)
             {
                 Console.ForegroundColor = c2;
-                Console.WriteLine($"# {no}.  Lv.{Level} | {Name} | Dead");
+                Console.WriteLine($" {no}.  Lv.{Level} | {Name} | Dead");
                 Console.ResetColor();// 기본 색 복원
             }
-            Console.ForegroundColor = c1;   // 번호 색
-            Console.Write($"# {no}. ");
-            Console.ResetColor();// 기본 색 복원
-            Console.WriteLine($"Lv.{Level} | {Name} | HP : {CurHP}/{MaxHP}");
+            else
+            {
+                Console.ForegroundColor = c1;   // 번호 색
+                Console.Write($" {no}. ");
+                Console.ResetColor();// 기본 색 복원
+                Console.WriteLine($"Lv.{Level} | {Name} | HP : {this.Stat.CurrentHp}/{MaxHP}");
+            }
         }
         public virtual void PrintMonster(ConsoleColor c)
         {
@@ -41,7 +43,7 @@ namespace ConsoleTextRPG.Data
 
         public virtual void PrintMonster()
         {
-            Console.WriteLine($"Lv.{Level} | {Name} | HP : {CurHP}/{MaxHP}");
+            Console.WriteLine($"Lv.{Level} | {Name} | HP : {this.Stat.CurrentHp}/{MaxHP}");
         }
 
         public override void Attack(Character target)

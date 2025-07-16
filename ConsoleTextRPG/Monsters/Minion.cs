@@ -21,8 +21,8 @@ namespace ConsoleTextRPG.Monsters
             Level = 2;
             ATK = 5;
             DFP = 1;
+
             Gold = 15;
-            CurHP = MaxHP;
             // 전투 상호작용을 위한 스탯 초기화 설정
             this.Stat = new CharacterStat(Level, ATK, DFP, MaxHP);
         }
