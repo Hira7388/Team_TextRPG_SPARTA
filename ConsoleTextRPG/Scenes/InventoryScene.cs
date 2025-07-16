@@ -66,14 +66,12 @@ namespace ConsoleTextRPG.Scenes
 
                     if (targetItem.IsEquipped)
                     {
-                        targetItem.IsEquipped = false;
                         myPlayer.UnequipItem(targetItem);   
                         Print($"[ {targetItem.Name} ] 을(를) 해제했습니다.");
                         Thread.Sleep(800);
                     }
                     else
                     {
-                        targetItem.IsEquipped = true;
                         myPlayer.EquipItem(targetItem);
                         Print($"[ {targetItem.Name} ] 을(를) 장착했습니다.");
                         Thread.Sleep(800);

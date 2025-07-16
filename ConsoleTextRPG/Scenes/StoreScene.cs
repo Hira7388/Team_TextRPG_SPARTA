@@ -248,7 +248,10 @@ namespace ConsoleTextRPG.Scenes
                     if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
                         myPlayer.AddGold(sellPrice);               // 플레이어 골드 증가
-                        myPlayer.UnequipItem(itemToSell);           // 판매시 장착해제  
+                        if (itemToSell.IsEquipped == true) 
+                        { 
+                            myPlayer.UnequipItem(itemToSell);       // 판매중 장착시 장착해제  
+                        }
                         myPlayer.Inventory.RemoveItem(itemToSell);   // 인벤토리 아이템 제거
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
