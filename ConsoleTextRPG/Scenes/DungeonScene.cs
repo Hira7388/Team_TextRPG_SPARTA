@@ -301,7 +301,6 @@ namespace ConsoleTextRPG.Scenes
                     PlayerAttack(index - 1);
                 }
             }
-
         }
 
         void PlayerAttack(int index)
