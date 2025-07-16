@@ -6,7 +6,7 @@
     "Type": 1,
     "StatType": "방어력",
     "StatusBonus": 5,
-    "Price": 1000
+    "Price": 100
   },
   {
     "Id": 1,
@@ -15,7 +15,7 @@
     "Type": 1,
     "StatType": "방어력",
     "StatusBonus": 9,
-    "Price": 2000
+    "Price": 200
   },
   {
     "Id": 2,
@@ -24,7 +24,7 @@
     "Type": 1,
     "StatType": "방어력",
     "StatusBonus": 15,
-    "Price": 3500
+    "Price": 350
   },
   {
     "Id": 3,
@@ -33,7 +33,7 @@
     "Type": 0,
     "StatType": "공격력",
     "StatusBonus": 2,
-    "Price": 600
+    "Price": 60
   },
   {
     "Id": 4,
@@ -42,7 +42,7 @@
     "Type": 0,
     "StatType": "공격력",
     "StatusBonus": 5,
-    "Price": 1500
+    "Price": 150
   },
   {
     "Id": 5,
