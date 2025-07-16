@@ -44,5 +44,6 @@ namespace ConsoleTextRPG.Data
             Console.WriteLine($"Lv.{Level} | {Name} | HP : {CurHP}/{MaxHP}");
         }
 
+
     }
 }

@@ -29,7 +29,6 @@ namespace ConsoleTextRPG.Managers
         private DungeonState _currentState;
         public DungeonState currentState { get;  set; }
 
-
         // 싱글톤
         private static GameManager _instance;
         public static GameManager Instance
