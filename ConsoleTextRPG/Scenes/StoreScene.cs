@@ -208,9 +208,9 @@ namespace ConsoleTextRPG.Scenes
                     else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
                     else
                     {
-                        player.AddGold(-itemToBuy.Price); //플레이어 골드 차감
-                        itemToBuy.IsEquipped = true; //구매시 장착완료
-                        player.Inventory.AddItem(itemToBuy.Clone());
+                        player.AddGold(-itemToBuy.Price);            // 플레이어 골드 차감
+                        player.Inventory.AddItem(itemToBuy.Clone());  // 인벤토리에 아이템 추가
+                        player.EquipItem(itemToBuy);                   // 구매시 바로 장착
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
                     Thread.Sleep(900);
@@ -249,7 +249,7 @@ namespace ConsoleTextRPG.Scenes
                     {
                         myPlayer.AddGold(sellPrice);               // 플레이어 골드 증가
                         myPlayer.Inventory.RemoveItem(itemToSell);  // 인벤토리 아이템 제거
-                        itemToSell.IsEquipped = false;               // 판매시 장착해제
+                        myPlayer.UnequipItem(itemToSell);            // 판매시 장착해제          
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
                     Thread.Sleep(900);

@@ -4,6 +4,7 @@ using ConsoleTextRPG.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace ConsoleTextRPG.Scenes
                     Thread.Sleep(500);
                     GameManager.Instance.SwitchScene(GameState.TownScene);
                 }
-                else if(index > 0 && index <=items.Count)
+                else if(index > 0 && index <=items.Count) //인벤토리와 입력한 숫자를 비교해서 아이템을 장착하거나 해제합니다.
                 {
                     int itemIndex = index - 1;
                     Item targetItem = items[itemIndex];
@@ -66,12 +67,14 @@ namespace ConsoleTextRPG.Scenes
                     if (targetItem.IsEquipped)
                     {
                         targetItem.IsEquipped = false;
+                        myPlayer.UnequipItem(targetItem);   
                         Print($"[ {targetItem.Name} ] 을(를) 해제했습니다.");
                         Thread.Sleep(800);
                     }
                     else
                     {
                         targetItem.IsEquipped = true;
+                        myPlayer.EquipItem(targetItem);
                         Print($"[ {targetItem.Name} ] 을(를) 장착했습니다.");
                         Thread.Sleep(800);
                     }
@@ -115,5 +118,6 @@ namespace ConsoleTextRPG.Scenes
 
             Print("");
         }
+
     }
 }
