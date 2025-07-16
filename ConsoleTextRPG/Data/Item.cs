@@ -24,7 +24,6 @@ namespace ConsoleTextRPG.Data
 
         // 아래 속성은 플레이어가 소유한 복사본의 상태를 나타낸다. (아이템 자체의 원본 정보가 바뀌면 안된다.)
         public bool IsEquipped { get; set; }
-        //public bool IsSoldOut { get; set; }
 
         // Json 파일을 객체로 변환할 때 사용하는 생성자이다.
         // 빈 객체를 먼저 만들고 Json에 있는 정보를 넣는다.
@@ -40,7 +39,6 @@ namespace ConsoleTextRPG.Data
             Comment = comment;
             Price = price;
             IsEquipped = false;
-            //IsSoldOut = false;
 
             // Type에 따라 StatType 문자열을 자동으로 생성한다.
             if (type == ItemType.Weapon)

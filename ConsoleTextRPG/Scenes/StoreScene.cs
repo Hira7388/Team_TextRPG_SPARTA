@@ -23,6 +23,7 @@ namespace ConsoleTextRPG.Scenes
         private StoreMode _currentMode = StoreMode.Main; // 첫 시작은 메인 메뉴 모드로 시작한다.
         Player myPlayer = GameManager.Instance.Player; // 플레이어 객체를 받아온다.
         List<Item> allItems = GameManager.Instance.AllItems; // 모든 아이템 정보를 받아온다.
+        private float _StoreDiscountRate = 0.85f; //할인율
 
         // 화면 출력
         public override void RenderMenu()
@@ -126,7 +127,7 @@ namespace ConsoleTextRPG.Scenes
             {
                 Item item = playerItems[i];
                 // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
-                int sellPrice = (int)(item.Price * 0.85f);
+                int sellPrice = (int)(item.Price * _StoreDiscountRate);
 
                 Console.Write($"- {i + 1}. {item.Name,-15}");
                 Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
@@ -222,6 +223,30 @@ namespace ConsoleTextRPG.Scenes
         private void SellingModeInput(string input) 
         {
             // 로직 구현중
+            if (int.TryParse(input, out int itemIndex))
+            {
+                if(itemIndex == 0)
+                {
+                    _currentMode = StoreMode.Main;
+                    return;
+                }
+                Player player = GameManager.Instance.Player;
+                List<Item> playerItems = player.Inventory.Items;
+
+                if (itemIndex > 0 && itemIndex <= playerItems.Count)
+                {
+                    Item itemToSell = playerItems[itemIndex - 1];
+                    int sellPrice = (int)(itemToSell.Price * _StoreDiscountRate);
+
+                    if (player.Inventory.Items.Any(i => i.Id == itemToSell.Id))
+                    {
+                        player.AddGold(sellPrice);
+                        player.Inventory.RemoveItem(itemToSell);
+                        Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
+                    }
+                    Thread.Sleep(1000);
+                }
+            }
         }
     }
 }
