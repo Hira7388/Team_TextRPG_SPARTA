@@ -20,7 +20,7 @@ namespace ConsoleTextRPG.Monsters
             MaxHP = 15;
             Level = 2;
             ATK = 5;
-            DFP = 1;
+            DFP = 0;
 
             Gold = 15;
             // 전투 상호작용을 위한 스탯 초기화 설정

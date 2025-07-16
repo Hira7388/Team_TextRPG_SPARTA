@@ -18,6 +18,7 @@ namespace ConsoleTextRPG.Scenes
         int deadCount = 0; // 죽은 몬스터 수
         int dungeonHP = 0; // 결과창 확인용
 
+        bool isDF = false; // 방어 여부
         bool isWin = false; // 승리 여부
 
         double monsValue = 0.5f; // 몬스터 등장 확률(ex. 0.5f = 50% 확률로 몬스터 등장)
@@ -205,6 +206,7 @@ namespace ConsoleTextRPG.Scenes
                     GameManager.Instance.currentState = DungeonState.PlayerAttack;
                     break;
                 case 2:
+                    Info("방어합니다");
                     PlayerDefend(index - 1);
                     break;
                 case 3:
@@ -219,10 +221,9 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerDefend(int i)
         {
-            Info("방어합니다");
-            myPlayer.Defend(currentMonsters[i]);
+            isDF= true; // 방어 상태로 변경
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
-            Thread.Sleep(500);
+            MonstersDeadCheck();
         }
 
         void PlayerRun()
@@ -240,7 +241,7 @@ namespace ConsoleTextRPG.Scenes
                 {
                     Info("도망치지 못했습니다.");
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                    Thread.Sleep(500);
+                    MonstersDeadCheck();
                     return;
                 }
             }
@@ -259,12 +260,10 @@ namespace ConsoleTextRPG.Scenes
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             Print($"\n공격할 대상을 선택해주세요.\n");
             Print("\n============[몬스터]============");
-            foreach (var monster in currentMonsters)
+
+            for (int i = 0; i < currentMonsters.Count; i++)
             {
-                if (monster.Stat.IsDead)
-                    monster.PrintMonster(ConsoleColor.DarkGray);
-                else
-                    monster.PrintMonster();
+                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.DarkCyan, ConsoleColor.DarkGray);
             }
 
             Print(" ");
@@ -282,6 +281,14 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(300);
                 return;
             }
+            if( index == 0)
+            {
+                GameManager.Instance.currentState = DungeonState.PlayerTrun; // 공격 취소시 플레이어 턴으로 돌아감
+                Info("공격을 취소합니다.");
+                Thread.Sleep(300);
+                return;
+            }
+            else
             PlayerAttack(index - 1);
         }
 
@@ -290,7 +297,6 @@ namespace ConsoleTextRPG.Scenes
             // 중독상태 같은 상태이상 공격이 있을 경우는 플레이어 공격전에 DeadCheck를 먼저 실행해야함
             myPlayer.Attack(currentMonsters[index]);
             MonstersDeadCheck();
-
         }
 
         void MonstersDeadCheck()
@@ -298,7 +304,7 @@ namespace ConsoleTextRPG.Scenes
             // 다음 몬스터턴 행동에 사용될 살아있는 몬스터들 큐에 추가
             foreach (var monster in currentMonsters)
             {
-                if (!monster.Stat.IsDead)               //  살아있는 몬스터 필터링
+                if (monster.Stat.CurrentHp > 0)               //  살아있는 몬스터 필터링
                 {
                     monsterQueue.Enqueue(monster);
                 }
@@ -307,22 +313,21 @@ namespace ConsoleTextRPG.Scenes
             // 몬스터들 전부 죽었는지  확인
             foreach (var monster in currentMonsters)
             {
-                if (monster.Stat.IsDead)
+                if (monster.Stat.CurrentHp == 0)
                     deadCount++;
-            }
 
-            if (deadCount == currentMonsters.Count)
-            {
-                isWin = true; // 모든 몬스터를 처치했을 때 승리 상태로 변경
-                GameManager.Instance.currentState = DungeonState.EndBattle;
-                Info("모든 몬스터를 처치했습니다.");
-                Thread.Sleep(800);
-                return;
-            }
-            else
-            {
-                GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                Thread.Sleep(1000);
+                if (deadCount == currentMonsters.Count)
+                {
+                    isWin = true; // 모든 몬스터를 처치했을 때 승리 상태로 변경
+                    GameManager.Instance.currentState = DungeonState.EndBattle;
+                    Info("모든 몬스터를 처치했습니다.");
+                    Thread.Sleep(800);
+                }
+                else
+                {
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                    Thread.Sleep(800);
+                }
             }
         }
 
@@ -330,11 +335,14 @@ namespace ConsoleTextRPG.Scenes
         void EnemyTurnRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
-            Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
+            Print($"\n몬스터의 공격이 시작됩니다!\n");
             Print("\n============[몬스터]============");
-            for (int i = 0; i < currentMonsters.Count; i++)
+            foreach (var monster in currentMonsters)
             {
-                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.DarkCyan, ConsoleColor.DarkGray);
+                if (monster.isDead)
+                    monster.PrintMonster(ConsoleColor.DarkGray);
+                else
+                    monster.PrintMonster();
             }
             Print("===========[대상선택지]===========");
             Print(0, "다음", ConsoleColor.DarkCyan);
@@ -351,6 +359,7 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(300);
                 return;
             }
+
             if( index == 0)
             {            
                 if (monsterQueue.Count > 0)
@@ -363,6 +372,7 @@ namespace ConsoleTextRPG.Scenes
                 else
                 {
                     // 큐가 비어있다면 플레이어 턴으로 전환
+                    isDF = false; // 방어 상태 해제
                     GameManager.Instance.currentState = DungeonState.PlayerTrun;
                     Print("\ninfo : 몬스터의 공격이 끝났습니다");
                     Thread.Sleep(800);
@@ -372,24 +382,28 @@ namespace ConsoleTextRPG.Scenes
 
         void EnemyAttack(int index)
         {
-            if (currentMonsters[index].Stat.IsDead)
+            if (currentMonsters[index].Stat.CurrentHp==0)
                 return; // 몬스터가 죽어있다면 공격하지 않음
 
             if (myPlayer.Stat.IsDead)
             {
+                isDF= false; // 방어 상태 해제
                 isWin = false; // 플레이어가 죽었을 때 패배 상태로 변경
                 GameManager.Instance.currentState = DungeonState.EndBattle;
                 Thread.Sleep(800);
             }
             else
             {
-                currentMonsters[index].Attack(myPlayer);
-                Thread.Sleep(800);
+                if (isDF)
+                    myPlayer.Defend(currentMonsters[index]);
+
+                else
+                    currentMonsters[index].Attack(myPlayer);
+                Thread.Sleep(1000);
             }
         }
 
-
-        // ==============[몬스터턴상태]==============// 여기부터 구현하면댐
+        // ==============[전투 결과상태]==============// 여기부터 구현하면댐
 
         void EndBattleRender()
         {
@@ -464,6 +478,3 @@ namespace ConsoleTextRPG.Scenes
         }
     }
 }
-
-
-

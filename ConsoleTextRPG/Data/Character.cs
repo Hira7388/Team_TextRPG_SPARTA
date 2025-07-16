@@ -34,9 +34,10 @@ namespace ConsoleTextRPG.Data
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
             Stat.ApplyDamage(damage);
-
+            int finalDamage = damage - this.Stat.TotalDefense;
+            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
             // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
-            Console.WriteLine($"{this.Name}은(는) {damage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+            Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
 
             if (Stat.IsDead)
             {
@@ -49,6 +50,8 @@ namespace ConsoleTextRPG.Data
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
             Stat.DefecnDamage(damage);
+            int finalDamage = (this.Stat.TotalDefense * 2) - damage;
+            if (finalDamage < 1) this.Stat.CurrentHp += finalDamage; //  데미지가 방어력을 넘었다면 차이만큼 데미지입음
 
             if (damage >= 0)
             {
@@ -56,7 +59,7 @@ namespace ConsoleTextRPG.Data
             }
             else
             {
-                Console.WriteLine($"{this.Name}은(는) {damage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+                Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
             }
 
             if (Stat.IsDead)
