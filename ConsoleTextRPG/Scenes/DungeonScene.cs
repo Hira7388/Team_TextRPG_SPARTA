@@ -15,6 +15,7 @@ namespace ConsoleTextRPG.Scenes
         // 던전 클리어 조건
         int walkCount = 0; // 이동 횟수
         int dungeonClearCount = 15; // 던전 클리어 횟수
+        int deadCount = 0; // 죽은 몬스터 수
 
         double monsValue = 0.5f; // 몬스터 등장 확률(ex. 0.5f = 50% 확률로 몬스터 등장)
 
@@ -36,7 +37,7 @@ namespace ConsoleTextRPG.Scenes
                     PlayerAttackRender();
                     break;
                 case DungeonState.EnemyTurn:
-                    //
+                    EnemyTurnRender();
                     break;
                 case DungeonState.EndBattle:
                     //
@@ -67,7 +68,7 @@ namespace ConsoleTextRPG.Scenes
                     PlayerAttackMove(index); // 플레이어 공격 행동 선택
                     break;
                 case DungeonState.EnemyTurn:
-                    //
+
                     break;
                 case DungeonState.EndBattle:
                     //
@@ -173,7 +174,11 @@ namespace ConsoleTextRPG.Scenes
             Print("\n============[몬스터]============");
             for (int i = 0; i < currentMonsters.Count; i++)
             {
-                currentMonsters[i].PrintMonster();
+                
+                if( currentMonsters[i].Stat.IsDead)
+                    currentMonsters[i].PrintMonster(ConsoleColor.DarkGray);
+                else
+                    currentMonsters[i].PrintMonster();
             }
 
             Print("===========[선택지]===========");
@@ -232,9 +237,12 @@ namespace ConsoleTextRPG.Scenes
                     return;
                 }
             }
-            Info("도망쳤습니다.");
-            GameManager.Instance.currentState = DungeonState.Idle;
-            Thread.Sleep(200);
+            else
+            {
+                Info("도망쳤습니다.");
+                GameManager.Instance.currentState = DungeonState.Idle;
+                Thread.Sleep(200);
+            }
         }
 
 
@@ -246,7 +254,7 @@ namespace ConsoleTextRPG.Scenes
             Print("\n============[몬스터]============");
             for (int i = 0; i < currentMonsters.Count; i++)
             {
-                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green);
+                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green, ConsoleColor.DarkGray);
             }
             Print(" ");
             Print(0, "공격취소", ConsoleColor.DarkCyan);
@@ -257,33 +265,37 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerAttackMove(int index)
         {
-            switch (index)
+            if(index < 0 || index > currentMonsters.Count)
             {
-                case 1:
-                    PlayerAttack(index - 1);
-                    break;
-                case 2:
-                    PlayerAttack(index - 1);
-                    break;
-                case 3:
-                    PlayerAttack(index - 1);
-                    break;
-                case 0:
-                    GameManager.Instance.currentState = DungeonState.PlayerTrun;
-                    break;
-                default:
-                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                    Thread.Sleep(300);
-                    break;
+                Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                Thread.Sleep(300);
+                return;
             }
+            PlayerAttack(index - 1);
         }
 
-        void PlayerAttack(int i)
+        void PlayerAttack(int index)
         {
-            Info("공격합니다");
-            myPlayer.Attack(currentMonsters[i]);
-            GameManager.Instance.currentState = DungeonState.EnemyTurn;
-            Thread.Sleep(200);
+            // 몬스터들 전부 죽었는지  확인
+            for (int i = 0; i < currentMonsters.Count; i++)
+            {
+                if (currentMonsters[i].Stat.IsDead) // 몬스터가 죽어있다면
+                {
+                    deadCount++; // 죽은 몬스터 수 증가
+                    if (deadCount == currentMonsters.Count)
+                    {
+                        GameManager.Instance.currentState = DungeonState.EndBattle;
+                        Info("모든 몬스터를 처치했습니다.");
+                        Thread.Sleep(200);
+                    }
+                    else
+                    {
+                        myPlayer.Attack(currentMonsters[index]);
+                        GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                        Thread.Sleep(1000);
+                    }
+                }
+            }
         }
 
         // ==============[몬스터턴상태]==============// 여기부터 구현하면댐
@@ -294,16 +306,35 @@ namespace ConsoleTextRPG.Scenes
             Print("\n============[몬스터]============");
             for (int i = 0; i < currentMonsters.Count; i++)
             {
-                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green);
+                currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green, ConsoleColor.DarkGray);
             }
-
             Print("===========[대상선택지]===========");
-            Print(1, "공격", ConsoleColor.DarkCyan);
-            Print(2, "방어", ConsoleColor.DarkCyan);
-            Print(3, "종료", ConsoleColor.DarkCyan);
+            Print(0, "다음", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
+        }
+
+        void EnemyAttackMove(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    GameManager.Instance.currentState = DungeonState.PlayerTrun;
+                    break;
+                default:
+                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                    Thread.Sleep(300);
+                    break;
+            }
+        }
+
+        void EnemyAttack(int i)
+        {
+            currentMonsters[i].PrintMonster();
+            myPlayer.Attack(currentMonsters[i]);
+            GameManager.Instance.currentState = DungeonState.EnemyTurn;
+            Thread.Sleep(200);
         }
 
 
