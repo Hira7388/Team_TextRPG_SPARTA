@@ -21,9 +21,16 @@ namespace ConsoleTextRPG.Data
         public string Comment { get; set; }
         public int Price { get; set; }
         // 아이템이 장착되어 있는지 여부를 추적하는 속성
-        public bool IsEquipped { get; set; }
-        public bool IsSoldOut { get; set; }
 
+        // 아래 속성은 플레이어가 소유한 복사본의 상태를 나타낸다. (아이템 자체의 원본 정보가 바뀌면 안된다.)
+        public bool IsEquipped { get; set; }
+        //public bool IsSoldOut { get; set; }
+
+        // Json 파일을 객체로 변환할 때 사용하는 생성자이다.
+        // 빈 객체를 먼저 만들고 Json에 있는 정보를 넣는다.
+        public Item() { }
+
+        // 실제 아이템을 생성할 때 사용하는 생성자.
         public Item(int id, string name, ItemType type, int statusBonus, string comment, int price)
         {
             Id = id;
@@ -33,7 +40,7 @@ namespace ConsoleTextRPG.Data
             Comment = comment;
             Price = price;
             IsEquipped = false;
-            IsSoldOut = false;
+            //IsSoldOut = false;
 
             // Type에 따라 StatType 문자열을 자동으로 생성한다.
             if (type == ItemType.Weapon)
@@ -45,20 +52,9 @@ namespace ConsoleTextRPG.Data
                 StatType = "방어력";
             }
         }
-        //상점리스트를 표시해줌
-        public override string ToString()
+        public Item Clone()
         {
-            string priceDisplay;
-            if (IsSoldOut)
-            {
-                priceDisplay = "구매완료";
-            }
-            else
-            {
-                priceDisplay = $"{Price,6} G";
-            }
-            return $"{Id}.{Name,3} | {StatType} + {StatusBonus,2} | {Comment} | {priceDisplay}";
+            return (Item)this.MemberwiseClone();
         }
-
     }
 }
