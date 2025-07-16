@@ -136,7 +136,7 @@ namespace ConsoleTextRPG.Scenes
                 Item item = playerItems[i];
                 // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
-                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, _width, _statWidth, _commentWidth, _priceWidth);
+                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, item.IsEquipped, _width, _statWidth, _commentWidth, _priceWidth);
                 //Console.Write($"- {i + 1}. {item.Name,-15}");
                 //Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
                 //Console.Write($" | {item.Comment,-40}");
@@ -209,8 +209,8 @@ namespace ConsoleTextRPG.Scenes
                     else
                     {
                         player.AddGold(-itemToBuy.Price); //플레이어 골드 차감
+                        itemToBuy.IsEquipped = true; //구매시 장착완료
                         player.Inventory.AddItem(itemToBuy.Clone());
-                        
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
                     Thread.Sleep(900);
@@ -247,8 +247,9 @@ namespace ConsoleTextRPG.Scenes
 
                     if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
-                        myPlayer.AddGold(sellPrice);
-                        myPlayer.Inventory.RemoveItem(itemToSell);
+                        myPlayer.AddGold(sellPrice);               // 플레이어 골드 증가
+                        myPlayer.Inventory.RemoveItem(itemToSell);  // 인벤토리 아이템 제거
+                        itemToSell.IsEquipped = false;               // 판매시 장착해제
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
                     Thread.Sleep(900);

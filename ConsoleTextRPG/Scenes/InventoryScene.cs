@@ -76,6 +76,12 @@ namespace ConsoleTextRPG.Scenes
                         Thread.Sleep(800);
                     }
                 }
+                else
+                {
+                    Print("인벤토리가 비어있습니다. [타운으로 향합니다.]");
+                    Thread.Sleep(800);
+                    GameManager.Instance.SwitchScene(GameState.TownScene);
+                }
             }
             else
             {

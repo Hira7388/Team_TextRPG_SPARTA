@@ -39,7 +39,7 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 이름너비, 스텟너비, 설명너비
+        // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 장착여부, 이름너비, 스텟너비, 설명너비
         public static void DisplayInventory(int id, string name, string statType, int statusBouns, string comment, bool equipped, int Width, int statWidth, int commentWidth)
         {
             string equippedStatus = equipped ? "[E]" : "   ";
@@ -95,8 +95,11 @@ namespace ConsoleTextRPG.Scenes
         }
 
         // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 판매가격, 이름너비, 스텟너비, 설명너비, 판매가격너비
-        public static void DisplayShopItemSell(int id, string name, string statType, int statusBouns, string comment, int price, int Width, int statWidth, int commentWidth, int priceWidth)
+        public static void DisplayShopItemSell(int id, string name, string statType, int statusBouns, string comment, int price, bool equipped, int Width, int statWidth, int commentWidth, int priceWidth)
         {
+
+            string equippedStatus = equipped ? "[E]" : "   "; 
+
             string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
             string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
 
@@ -107,7 +110,14 @@ namespace ConsoleTextRPG.Scenes
 
             string pad_Price = price.ToString().PadLeft(priceWidth); // 판매가격 변환
 
-            Console.WriteLine($" {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price} G"); // 상점에서 판매시 보여줄 창
+            if (equipped)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
+            }
+
+            Console.WriteLine($" {equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price} G"); // 상점에서 판매시 보여줄 창
+
+            Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
         }
 
     }
