@@ -25,7 +25,7 @@ namespace ConsoleTextRPG.Scenes
         List<Item> allItems = GameManager.Instance.AllItems; // 모든 아이템 정보를 받아온다.
 
         private float _storeDiscountRate = 0.85f; //할인율
-        private int _Width = 18;                   //이름 너비 제한
+        private int _width = 18;                   //이름 너비 제한
         private int _statWidth = 12;                //스텟 너비 제한
         private int _commentWidth = 50;              //설명 너비 제한
         private int _priceWidth = 5;                  //가격 너비 제한
@@ -102,13 +102,13 @@ namespace ConsoleTextRPG.Scenes
                 {
                     // 번호 표시
                     //Console.Write($"- {i + 1}. {storeItem.Name,-15}");
-                    ConsoleHelper.DisplayShopItemBuy(i+1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _Width, _statWidth, _commentWidth, _priceWidth);
+                    ConsoleHelper.DisplayShopItemBuy(i+1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
                 }
                 else
                 {
                     // 번호 없이 표시
                     //Console.Write($"- {storeItem.Name,-18}");
-                    ConsoleHelper.DisplayShopItem(storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _Width, _statWidth, _commentWidth, _priceWidth);
+                    ConsoleHelper.DisplayShopItem(storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
                 }
 
                // Console.Write($" | {storeItem.StatType,6} +{storeItem.StatusBonus,-3}");
@@ -136,7 +136,7 @@ namespace ConsoleTextRPG.Scenes
                 Item item = playerItems[i];
                 // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
-                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, _Width, _statWidth, _commentWidth, _priceWidth);
+                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, _width, _statWidth, _commentWidth, _priceWidth);
                 //Console.Write($"- {i + 1}. {item.Name,-15}");
                 //Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
                 //Console.Write($" | {item.Comment,-40}");
@@ -210,6 +210,7 @@ namespace ConsoleTextRPG.Scenes
                     {
                         player.AddGold(-itemToBuy.Price); //플레이어 골드 차감
                         player.Inventory.AddItem(itemToBuy.Clone());
+                        
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
                     Thread.Sleep(900);
