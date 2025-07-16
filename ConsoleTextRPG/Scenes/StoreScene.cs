@@ -23,7 +23,12 @@ namespace ConsoleTextRPG.Scenes
         private StoreMode _currentMode = StoreMode.Main; // 첫 시작은 메인 메뉴 모드로 시작한다.
         Player myPlayer = GameManager.Instance.Player; // 플레이어 객체를 받아온다.
         List<Item> allItems = GameManager.Instance.AllItems; // 모든 아이템 정보를 받아온다.
-        private float _StoreDiscountRate = 0.85f; //할인율
+
+        private float _storeDiscountRate = 0.85f; //할인율
+        private int _Width = 18;                   //이름 너비 제한
+        private int _statWidth = 12;                //스텟 너비 제한
+        private int _commentWidth = 50;              //설명 너비 제한
+        private int _priceWidth = 5;                  //가격 너비 제한
 
         // 화면 출력
         public override void RenderMenu()
@@ -63,6 +68,7 @@ namespace ConsoleTextRPG.Scenes
             switch (_currentMode) // 현재 모드에 맞는 입력 요구 화면을 출력한다.
             {
                 case StoreMode.Main: // 메인 모드일 때
+                    Console.WriteLine();
                     Console.WriteLine("1. 아이템 구매");
                     Console.WriteLine("2. 아이템 판매");
                     Console.WriteLine("0. 나가기\n");
@@ -92,20 +98,22 @@ namespace ConsoleTextRPG.Scenes
 
                 Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
 
-                if (showNumbers) // 구매 or 판매 모드일 경우 아이템 앞에 번호를 출력한다.
+                if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
                     // 번호 표시
-                    Console.Write($"- {i + 1}. {storeItem.Name,-15}");
+                    //Console.Write($"- {i + 1}. {storeItem.Name,-15}");
+                    ConsoleHelper.DisplayShopItemBuy(i+1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _Width, _statWidth, _commentWidth, _priceWidth);
                 }
                 else
                 {
                     // 번호 없이 표시
-                    Console.Write($"- {storeItem.Name,-18}");
+                    //Console.Write($"- {storeItem.Name,-18}");
+                    ConsoleHelper.DisplayShopItem(storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _Width, _statWidth, _commentWidth, _priceWidth);
                 }
 
-                Console.Write($" | {storeItem.StatType} +{storeItem.StatusBonus,-3}");
-                Console.Write($" | {storeItem.Comment,-40}");
-                Console.WriteLine($" | {priceDisplay}");
+               // Console.Write($" | {storeItem.StatType,6} +{storeItem.StatusBonus,-3}");
+               // Console.Write($" | {storeItem.Comment,-40}");
+               // Console.WriteLine($" | {priceDisplay}");
 
                 Console.ResetColor();
             }
@@ -127,12 +135,12 @@ namespace ConsoleTextRPG.Scenes
             {
                 Item item = playerItems[i];
                 // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
-                int sellPrice = (int)(item.Price * _StoreDiscountRate);
-
-                Console.Write($"- {i + 1}. {item.Name,-15}");
-                Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
-                Console.Write($" | {item.Comment,-40}");
-                Console.WriteLine($" | {sellPrice} G");
+                int sellPrice = (int)(item.Price * _storeDiscountRate);
+                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, _Width, _statWidth, _commentWidth, _priceWidth);
+                //Console.Write($"- {i + 1}. {item.Name,-15}");
+                //Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
+                //Console.Write($" | {item.Comment,-40}");
+                //Console.WriteLine($" | {sellPrice} G");
             }
         }
 
@@ -173,7 +181,7 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 default:
                     Info("잘못된 입력입니다.");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(900);
                     break;
             }
         }
@@ -193,36 +201,35 @@ namespace ConsoleTextRPG.Scenes
 
                 if (itemIndex > 0 && itemIndex <= allItems.Count)
                 {
-                    Item itemToBuy = allItems[itemIndex - 1];
+                    Item itemToBuy = allItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
                     Player player = GameManager.Instance.Player;
 
                     if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id)) Info("이미 구매한 아이템입니다.");
                     else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
                     else
                     {
-                        player.AddGold(-itemToBuy.Price);
+                        player.AddGold(-itemToBuy.Price); //플레이어 골드 차감
                         player.Inventory.AddItem(itemToBuy.Clone());
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(900);
                 }
                 else
                 {
                     Info("잘못된 번호입니다.");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(900);
                 }
             }
             else
             {
                 Info("잘못된 입력입니다.");
-                Thread.Sleep(1000);
+                Thread.Sleep(900);
             }
         }
 
         // 판매 모드에서 입력 처리
         private void SellingModeInput(string input) 
         {
-            // 로직 구현중
             if (int.TryParse(input, out int itemIndex))
             {
                 if(itemIndex == 0)
@@ -234,8 +241,8 @@ namespace ConsoleTextRPG.Scenes
 
                 if (itemIndex > 0 && itemIndex <= playerItems.Count)
                 {
-                    Item itemToSell = playerItems[itemIndex - 1];
-                    int sellPrice = (int)(itemToSell.Price * _StoreDiscountRate);
+                    Item itemToSell = playerItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
+                    int sellPrice = (int)(itemToSell.Price * _storeDiscountRate); //판매가격
 
                     if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
@@ -243,7 +250,7 @@ namespace ConsoleTextRPG.Scenes
                         myPlayer.Inventory.RemoveItem(itemToSell);
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(900);
                 }
             }
         }
