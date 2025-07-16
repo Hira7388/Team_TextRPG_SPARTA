@@ -26,5 +26,10 @@ namespace ConsoleTextRPG.Data
         public int EquippedArmorId { get; set; } = -1;  // 장착 안했을 경우 -1
 
         // 던전 클리어 계층 관련 정보
+
+        // 플레이어가 진행중인 퀘스트 관련 정보
+        public List<PlayerQuest> InProgressQuestIds { get; set; } // 진행 중인 퀘스트 ID 목록
+        public List<int> CompletedQuestIds { get; set; } // 완료한 퀘스트 ID 목록
+        //public Dictionary<int, int> QuestProgress { get; set; } // 퀘스트 ID, 현재 카운트 개수
     }
 }

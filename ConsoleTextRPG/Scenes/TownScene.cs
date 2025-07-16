@@ -148,6 +148,7 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine("3. 내 정보 보기");
             Console.WriteLine("4. 인벤토리");
             Console.WriteLine("5. 저장하기");
+            Console.WriteLine("6. 퀘스트 보러가기");
             Console.WriteLine("0. 게임 종료하기");
 
             Console.Write("선택: ");
@@ -186,6 +187,11 @@ namespace ConsoleTextRPG.Scenes
                     GameManager.Instance.SaveGame();
                     Info("게임이 저장되었습니다.");
                     Thread.Sleep(500); 
+                    break;
+                case "6":
+                    Console.WriteLine("\n[퀘스트 공고로 향합니다.]");
+                    Thread.Sleep(500);
+                    GameManager.Instance.SwitchScene(GameState.QuestScene);
                     break;
                 case "0":
                     Console.WriteLine("\n게임을 종료합니다. 안녕히 가세요!");

@@ -13,6 +13,7 @@ namespace ConsoleTextRPG.Data
         InventoryScene, // 인벤토리 씬
         DungeonScene, // 던전 씬
         ViewStatueScene,  // 스텟창 씬
+        QuestScene // 퀘스트 씬
     }
 
     // 게임의 상태를 나타내는 열거형

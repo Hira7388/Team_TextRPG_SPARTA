@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleTextRPG.Data;
@@ -11,31 +13,36 @@ namespace ConsoleTextRPG.Scenes
 {
     public class StoreScene : BaseScene
     {
-        List<Item> shopItem = new List<Item>();
-        Player myPlayer = GameManager.Instance.Player;
-        //시작
+        public enum StoreMode
+        {
+            Main,   // 메인 메뉴 모드
+            Buying, // 구매 모드
+            Selling // 판매 모드
+        }
+
+        private StoreMode _currentMode = StoreMode.Main; // 첫 시작은 메인 메뉴 모드로 시작한다.
+        Player myPlayer = GameManager.Instance.Player; // 플레이어 객체를 받아온다.
+        List<Item> allItems = GameManager.Instance.AllItems; // 모든 아이템 정보를 받아온다.
+
+        private float _storeDiscountRate = 0.85f; //할인율
+        private int _Width = 18;                   //이름 너비 제한
+        private int _statWidth = 12;                //스텟 너비 제한
+        private int _commentWidth = 50;              //설명 너비 제한
+        private int _priceWidth = 5;                  //가격 너비 제한
+
+        // 화면 출력
         public override void RenderMenu()
         {
             Display();
         }
-        //업데이트
+        // 사용자 입력에 따른 액션
         public override void UpdateInput()
         {
             ItemDisplay();
         }
 
-        //진열할 아이템 추가
-        public StoreScene()
-        {
-            shopItem.Add(new Item(1, "수련자 갑옷    ", Item.ItemType.Armor, 5, "수련에 도움을 주는 갑옷입니다.                    ", 100));
-            shopItem.Add(new Item(2, "무쇠갑옷       ", Item.ItemType.Armor, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.                ", 200));
-            shopItem.Add(new Item(3, "스파르타의 갑옷", Item.ItemType.Armor, 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다. ", 350));
-            shopItem.Add(new Item(4, "낡은 검        ", Item.ItemType.Weapon, 2, "쉽게 볼 수 있는 낡은 검 입니다.                   ", 60));
-            shopItem.Add(new Item(5, "청동 도끼      ", Item.ItemType.Weapon, 5, "어디선가 사용됐던거 같은 도끼입니다.              ", 150));
-            shopItem.Add(new Item(6, "스파르타의 창  ", Item.ItemType.Weapon, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.   ", 300));
-        }
-
-        //아이템 상점 소개
+        // ------------------------------ 여기는 화면 출력을 담당
+        //아이템 상점 소개 출력
         public void Display()
         {
             Console.Clear();
@@ -45,173 +52,205 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             Console.WriteLine();
-            for (int i = 0; i < shopItem.Count; i++)
+
+            switch (_currentMode) // 현재 모드에 맞는 아이템 목록을 출력한다.
             {
-                if (shopItem[i].IsSoldOut)
+                case StoreMode.Selling:
+                    // 판매 모드에서는 플레이어의 인벤토리를 보여줍니다.
+                    DisplayPlayerItemsForSale();
+                    break;
+                default:
+                    // 메인 또는 구매 모드에서는 상점의 전체 아이템을 보여줍니다.
+                    DisplayStoreItems(_currentMode == StoreMode.Buying);
+                    break;
+            }
+
+            switch (_currentMode) // 현재 모드에 맞는 입력 요구 화면을 출력한다.
+            {
+                case StoreMode.Main: // 메인 모드일 때
+                    Console.WriteLine();
+                    Console.WriteLine("1. 아이템 구매");
+                    Console.WriteLine("2. 아이템 판매");
+                    Console.WriteLine("0. 나가기\n");
+                    Console.WriteLine("원하시는 행동을 입력해주세요.");
+                    Console.Write(">> ");
+                    break;
+                case StoreMode.Buying: // 구매 모드일 때
+                    Info("구매할 아이템의 번호를 입력해주세요. (취소: 0)");
+                    Console.Write(">> ");
+                    break;
+                case StoreMode.Selling: // 판매 모드일 때
+                    // TODO: 판매 모드 UI
+                    Info("판매할 아이템의 번호를 입력해주세요. (취소: 0)");
+                    Console.Write(">> ");
+                    break;
+            }
+        }
+
+        // 메인 or 구매 모드일 때 상점 아이템을 출력하는 모드 (상점의 아이템을 출력함)
+        public void DisplayStoreItems(bool showNumbers)
+        {
+            for (int i = 0; i < allItems.Count; i++)
+            {
+                Item storeItem = allItems[i];
+                bool isSoldOut = myPlayer.Inventory.Items.Any(item => item.Id == storeItem.Id);
+                string priceDisplay = isSoldOut ? "구매완료" : $"{storeItem.Price} G";
+
+                Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
+
+                if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkGray; // 판매완료 아이템은 회색으로
+                    // 번호 표시
+                    //Console.Write($"- {i + 1}. {storeItem.Name,-15}");
+                    ConsoleHelper.DisplayShopItemBuy(i+1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _Width, _statWidth, _commentWidth, _priceWidth);
                 }
                 else
                 {
-                    Console.ResetColor(); // 판매되지 않은 아이템은 기본 색상으로
+                    // 번호 없이 표시
+                    //Console.Write($"- {storeItem.Name,-18}");
+                    ConsoleHelper.DisplayShopItem(storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _Width, _statWidth, _commentWidth, _priceWidth);
                 }
-                Console.WriteLine($"{shopItem[i]}");
+
+               // Console.Write($" | {storeItem.StatType,6} +{storeItem.StatusBonus,-3}");
+               // Console.Write($" | {storeItem.Comment,-40}");
+               // Console.WriteLine($" | {priceDisplay}");
+
+                Console.ResetColor();
             }
-            Console.ResetColor(); // 다른 콘솔에 영향을 주지않도록 기본 색상으로
-            Console.WriteLine();
-            Console.WriteLine();
         }
 
-        //아이템 상점 구경하기
-        public void ItemDisplay()
+        // 아이템 판매 모드일 때 플레이어 인벤토리의 아이템을 출력하는 메서드 (플레이어 인벤토리의 아이템을 출력함)
+        private void DisplayPlayerItemsForSale()
         {
-            Console.WriteLine("1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매"); //미완성
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-            Console.Write("원하시는 행동을 입력해주세요.\n>>");
-            string input = Console.ReadLine();
-            if (input == "0")
+            Player player = GameManager.Instance.Player;
+            List<Item> playerItems = player.Inventory.Items;
+
+            if (playerItems.Count == 0)
             {
-                GameManager.Instance.SwitchScene(GameState.TownScene);
+                Info("  [판매할 아이템이 없습니다]");
                 return;
             }
-            else if (input == "1")
+
+            for (int i = 0; i < playerItems.Count; i++)
             {
-                Console.Clear();
-                Console.WriteLine("상품 흥정중....");
-                Thread.Sleep(700);
-                ItemBuy();
-            }
-            else if (input == "2") //미완성
-            {
-                Console.Clear();
-                Console.WriteLine("인벤토리 여는중....");
-                Thread.Sleep(700);
-                ItemSell();
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine("잘못된 입력입니다.");
-                Thread.Sleep(700);
+                Item item = playerItems[i];
+                // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
+                int sellPrice = (int)(item.Price * _storeDiscountRate);
+                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, _Width, _statWidth, _commentWidth, _priceWidth);
+                //Console.Write($"- {i + 1}. {item.Name,-15}");
+                //Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
+                //Console.Write($" | {item.Comment,-40}");
+                //Console.WriteLine($" | {sellPrice} G");
             }
         }
 
-        //아이템 구매창
-        public void ItemBuy()
+        // ---------------------------- 여기부터 사용자 입력 받는 메서드입니다.
+        // 상점 모드 이동 입력
+        public void ItemDisplay()
         {
-            while (true)
+            string input = Console.ReadLine();
+            switch (_currentMode)
             {
-                Display();
-                Console.WriteLine("번호로 아이템 구매 (1 ~ 6)");
-                Console.WriteLine();
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.Write("원하시는 행동을 입력해주세요.\n>>");
-                string input = Console.ReadLine();
-                if (input == "0")
+                case StoreMode.Main:
+                    MainModeInput(input);
+                    break;
+                case StoreMode.Buying:
+                    BuyingModeInput(input);
+                    break;
+                case StoreMode.Selling:
+                    SellingModeInput(input);
+                    break;
+            }
+        }
+
+
+        // 현재 메인 모드 상태일 때 입력받는 값 처리하는 메서드
+        private void MainModeInput(string input)
+        {
+            switch (input)
+            {
+                case "1":
+                    _currentMode = StoreMode.Buying;
+                    break;
+                case "2":
+                    _currentMode = StoreMode.Selling;
+                    break;
+                case "0":
+                    GameManager.Instance.SwitchScene(GameState.TownScene);
+                    _currentMode = StoreMode.Main;
+                    break;
+                default:
+                    Info("잘못된 입력입니다.");
+                    Thread.Sleep(900);
+                    break;
+            }
+        }
+
+        // 구매 모드에서 입력 처리
+        private void BuyingModeInput(string input) 
+        {
+            if (int.TryParse(input, out int itemIndex))
+            {
+                if (itemIndex == 0)
                 {
+                    _currentMode = StoreMode.Main;
                     return;
                 }
-                else if (int.TryParse(input, out int select))
+
+                List<Item> allItems = GameManager.Instance.AllItems;
+
+                if (itemIndex > 0 && itemIndex <= allItems.Count)
                 {
-                    if (select >= 1 && select <= shopItem.Count)
-                    {
-                        BuyCycle(input);
-                    }
+                    Item itemToBuy = allItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
+                    Player player = GameManager.Instance.Player;
+
+                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id)) Info("이미 구매한 아이템입니다.");
+                    else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
                     else
                     {
-                        Console.Clear();
-                        Console.WriteLine();
-                        Console.WriteLine("잘못된 입력입니다.");
-                        Thread.Sleep(700);
+                        player.AddGold(-itemToBuy.Price); //플레이어 골드 차감
+                        player.Inventory.AddItem(itemToBuy.Clone());
+                        Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
+                    Thread.Sleep(900);
                 }
                 else
                 {
-                    Console.Clear();
-                    Console.WriteLine();
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Thread.Sleep(700);
-                }
-            }
-        }
-
-        //구매 로직
-        public void BuyCycle(string select)
-        {
-            if (int.TryParse(select, out int selectnum))
-            {
-                selectnum--; //배열은 0부터 시작이니깐
-
-                if (shopItem[selectnum].IsSoldOut == true) //이미 구매한 경우
-                {
-                    Console.WriteLine("이미 구매한 상품입니다.");
-                    Thread.Sleep(700);
-                    return;
-                }
-                else if (myPlayer.Gold < shopItem[selectnum].Price) //골드가 부족할때
-                {
-                    Console.WriteLine("골드가 부족 합니다.");
-                    Thread.Sleep(700);
-                    return;
-                }
-                else //번호에 맞는 상품과 골드 비교
-                {
-                    shopItem[selectnum].IsSoldOut = true;
-                    Console.WriteLine();
-                    Console.WriteLine($"==== {shopItem[selectnum].Id}.{shopItem[selectnum].Name} 구매 완료 ====");
-                    myPlayer.Inventory.AddItem(shopItem[selectnum]);
-                    myPlayer.AddGold(-shopItem[selectnum].Price); //골드 차감
-                    Thread.Sleep(700);
-                    return;
+                    Info("잘못된 번호입니다.");
+                    Thread.Sleep(900);
                 }
             }
             else
             {
-                Console.WriteLine("잘못된 입력입니다.");
+                Info("잘못된 입력입니다.");
+                Thread.Sleep(900);
             }
-
         }
 
-        //아이템 판매창 만드는중..
-        public void ItemSell()
+        // 판매 모드에서 입력 처리
+        private void SellingModeInput(string input) 
         {
-            while (true)
+            if (int.TryParse(input, out int itemIndex))
             {
-                Display();
-                Console.WriteLine("번호로 아이템 판매");
-                Console.WriteLine();
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
-                Console.Write("원하시는 행동을 입력해주세요.\n>>");
-                string input = Console.ReadLine();
-                if (input == "0")
+                if(itemIndex == 0)
                 {
+                    _currentMode = StoreMode.Main;
                     return;
                 }
-                else if (int.TryParse(input, out int select))
+                List<Item> playerItems = myPlayer.Inventory.Items;
+
+                if (itemIndex > 0 && itemIndex <= playerItems.Count)
                 {
-                    if (select >= 1 && select <= shopItem.Count)
+                    Item itemToSell = playerItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
+                    int sellPrice = (int)(itemToSell.Price * _storeDiscountRate); //판매가격
+
+                    if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
-                        BuyCycle(input);
+                        myPlayer.AddGold(sellPrice);
+                        myPlayer.Inventory.RemoveItem(itemToSell);
+                        Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
-                    else
-                    {
-                        Console.Clear();
-                        Console.WriteLine();
-                        Console.WriteLine("잘못된 입력입니다.");
-                        Thread.Sleep(700);
-                    }
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine();
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Thread.Sleep(700);
+                    Thread.Sleep(900);
                 }
             }
         }

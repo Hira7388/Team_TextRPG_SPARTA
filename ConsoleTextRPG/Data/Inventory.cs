@@ -25,5 +25,11 @@ namespace ConsoleTextRPG.Data
         {
             Items.Remove(item);
         }
+
+        // 인벤토리를 비우는 메서드
+        public void Clear()
+        {
+            Items.Clear();
+        }
     }
 }

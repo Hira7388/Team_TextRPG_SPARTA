@@ -19,6 +19,10 @@ namespace ConsoleTextRPG.Data
         // 직업 속성
         public string Job { get; private set; }
 
+        // 퀘스트 속성
+        public List<PlayerQuest> Quests { get; private set; } // 현재 수락한 퀘스트 정보
+        public List<int> CompletedQuestIds { get; private set; } // 한 번 완료한 퀘스트는 더 이상 출력되지 않음
+
         // 플레이어 생성자
         public Player(string name)
         {
@@ -32,6 +36,10 @@ namespace ConsoleTextRPG.Data
 
             // Player에게 인벤토리 생성
             this.Inventory = new Inventory();
+
+            // 수락한 퀘스트와 완료한 퀘스트 정보
+            this.Quests = new List<PlayerQuest>();
+            this.CompletedQuestIds = new List<int>();
         }
 
         // 이름을 설정하는 전용 메서드
@@ -63,8 +71,13 @@ namespace ConsoleTextRPG.Data
             this.Gold = data.Gold;
             this.Stat.SetBaseStats(data.Level, data.BaseAttack, data.BaseDefense, data.MaxHp);
             this.Stat.LoadCurrentHp(data.CurrentHp);
-            // TODO : 저장된 인벤토리 정보도 불러오기
+            this.Quests.Clear();
+            if (data.InProgressQuestIds != null) this.Quests.AddRange(data.InProgressQuestIds);
+
+            this.CompletedQuestIds.Clear();
+            if (data.CompletedQuestIds != null) this.CompletedQuestIds.AddRange(data.CompletedQuestIds);
         }
+
         //Gold +하는 메서드
         public void AddGold(int amount)
         {
@@ -80,7 +93,42 @@ namespace ConsoleTextRPG.Data
             }
         }
 
+        // 아이템을 장착하는 메서드
+        public void EquipItem(Item item)
+        {
+            if (item.Type == Item.ItemType.Weapon)
+            {
+                if (this.EquippedWeapon != null) UnequipItem(this.EquippedWeapon);
+                this.EquippedWeapon = item;
+            }
+            else if (item.Type == Item.ItemType.Armor)
+            {
+                if (this.EquippedArmor != null) UnequipItem(this.EquippedArmor);
+                this.EquippedArmor = item;
+            }
 
+            item.IsEquipped = true;
+            this.Stat.AddBonusStats(item); // Stat에 보너스 능력치 적용 요청
+        }
 
+        // 아이템 장착을 해제하는 메서드
+        public void UnequipItem(Item item)
+        {
+            if (item.Type == Item.ItemType.Weapon) this.EquippedWeapon = null;
+            else if (item.Type == Item.ItemType.Armor) this.EquippedArmor = null;
+
+            item.IsEquipped = false;
+            this.Stat.RemoveBonusStats(item); // Stat에 보너스 능력치 제거 요청
+        }
+
+        // 퀘스트를 수락하는 메서드
+        public void AcceptQuest(int questId)
+        {
+            // 이미 완료했거나 진행중인 퀘스트가 아니라면 추가
+            if (!CompletedQuestIds.Contains(questId) && !Quests.Any(playerInProcessQuest => playerInProcessQuest.QuestId == questId))
+            {
+                Quests.Add(new PlayerQuest(questId));
+            }
+        }
     }
 }
