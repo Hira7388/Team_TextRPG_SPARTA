@@ -206,7 +206,7 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 case 2:
                     Info("방어합니다");
-                    PlayerDefend(index - 1);
+                    PlayerDefend();
                     break;
                 case 3:
                     PlayerRun();
@@ -218,7 +218,7 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        void PlayerDefend(int i)
+        void PlayerDefend()
         {
             isDF= true; // 방어 상태로 변경
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
@@ -290,7 +290,7 @@ namespace ConsoleTextRPG.Scenes
             }
             else
             {
-                if (currentMonsters[index].Stat.CurrentHp <= 0)
+                if (currentMonsters[index-1].Stat.CurrentHp <= 0)
                 {
                     Print("\ninfo : 이미 죽은 몬스터입니다.");
                     Thread.Sleep(300);
@@ -315,7 +315,7 @@ namespace ConsoleTextRPG.Scenes
             // 다음 몬스터턴 행동에 사용될 살아있는 몬스터들 큐에 추가
             foreach (var monster in currentMonsters)
             {
-                if (monster.Stat.CurrentHp > 0)               //  살아있는 몬스터 필터링
+                if (!monster.isDead)               //  살아있는 몬스터 필터링
                 {
                     monsterQueue.Enqueue(monster);
                 }
