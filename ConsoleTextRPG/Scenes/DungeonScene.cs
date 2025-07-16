@@ -28,7 +28,6 @@ namespace ConsoleTextRPG.Scenes
         Queue<Monster> monsterQueue = new Queue<Monster>();   // 몬스터 공격 순서를 저장하는 큐
         List<Monster> currentMonsters= new List<Monster>();
 
-
         public override void RenderMenu()
         {
             switch(GameManager.Instance.currentState)
@@ -281,6 +280,7 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(300);
                 return;
             }
+
             if( index == 0)
             {
                 GameManager.Instance.currentState = DungeonState.PlayerTrun; // 공격 취소시 플레이어 턴으로 돌아감
@@ -289,7 +289,19 @@ namespace ConsoleTextRPG.Scenes
                 return;
             }
             else
-            PlayerAttack(index - 1);
+            {
+                if (currentMonsters[index].Stat.CurrentHp <= 0)
+                {
+                    Print("\ninfo : 이미 죽은 몬스터입니다.");
+                    Thread.Sleep(300);
+                    return;
+                }
+                else
+                {
+                    PlayerAttack(index - 1);
+                }
+            }
+
         }
 
         void PlayerAttack(int index)
