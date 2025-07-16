@@ -18,14 +18,12 @@ namespace ConsoleTextRPG.Scenes
 
         double monsValue = 0.5f; // 몬스터 등장 확률(ex. 0.5f = 50% 확률로 몬스터 등장)
 
-        bool battleInitialized = false;                 // 수정: 전투 초기화 플래그 추가
         Player myPlayer = GameManager.Instance.Player; // 플레이어 객체 가져오기
 
         List<Monster> currentMonsters = new();
 
         public override void RenderMenu()
         {
-            Console.Clear(); // 콘솔 화면 초기화
             switch(GameManager.Instance.currentState)
             {
                 case DungeonState.Idle:
@@ -77,7 +75,7 @@ namespace ConsoleTextRPG.Scenes
             }                
         }
 
-        // ==============[던전상태]==============
+        // ============================[던전상태]============================
         // 던전 씬 랜더함수
         void DungeonRender()
         {
@@ -143,10 +141,7 @@ namespace ConsoleTextRPG.Scenes
 
         void SwapnMonster()
         {
-            if (battleInitialized) return; // 이미 배틀이 초기화된 경우, 중복 초기화를 방지
-            battleInitialized = true;
             currentMonsters.Clear(); // 몬스터 목록 초기화
-
             var rnd = new Random();
             var types = GameManager.Instance.monsType.Keys.ToList(); // 몬스터 타입 목록 가져오기
             int MonsterCount = new Random().Next(1, 4); // 최소 1, 최대 3 마리 까지 생성하도록 설정
@@ -170,7 +165,7 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        // ==============[플레이어턴상태]==============
+        // ============================[플레이어턴상태]============================
         void PlayerTurnRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
@@ -214,8 +209,8 @@ namespace ConsoleTextRPG.Scenes
         {
             Info("방어합니다");
             myPlayer.Defend(currentMonsters[i]);
-            Thread.Sleep(200);
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
+            Thread.Sleep(200);
         }
 
         void PlayerRun()
@@ -224,25 +219,26 @@ namespace ConsoleTextRPG.Scenes
             {
                 if (new Random().NextDouble() < 0.3f) // 30% 확률로 도망 성공
                 {
+                    GameManager.Instance.currentState = DungeonState.Idle;
                     Info("도망쳤습니다");
                     Thread.Sleep(200);
-                    GameManager.Instance.currentState = DungeonState.Idle;
                     return;
                 }
                 else
                 {
                     Info("도망치지 못했습니다.");
-                    Thread.Sleep(200);
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
+                    Thread.Sleep(200);
                     return;
                 }
             }
             Info("도망쳤습니다.");
-            Thread.Sleep(200);
             GameManager.Instance.currentState = DungeonState.Idle;
+            Thread.Sleep(200);
         }
 
-        // ==============[플레이어 공격 상태]==============
+
+        // ============================[플레이어 공격 상태]============================
         void PlayerAttackRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
@@ -252,11 +248,10 @@ namespace ConsoleTextRPG.Scenes
             {
                 currentMonsters[i].PrintMonster(i + 1, ConsoleColor.Green);
             }
+            Print(" ");
+            Print(0, "공격취소", ConsoleColor.DarkCyan);
 
-            Print("===========[선택지]===========");
-            Print(0, "취소", ConsoleColor.DarkCyan);
-
-            Print("\n원하시는 행동을 입력해주세요");
+            Print("\n원하시는 몬스터의 번호를 입력해주세요");
             Console.Write(">>");
         }
 
@@ -287,11 +282,11 @@ namespace ConsoleTextRPG.Scenes
         {
             Info("공격합니다");
             myPlayer.Attack(currentMonsters[i]);
-            Thread.Sleep(200);
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
+            Thread.Sleep(200);
         }
 
-        // ==============[몬스터턴상태]==============
+        // ==============[몬스터턴상태]==============// 여기부터 구현하면댐
         void EnemyTurnRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
