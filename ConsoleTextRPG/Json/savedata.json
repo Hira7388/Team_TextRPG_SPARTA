@@ -1,4 +1,4 @@
-{
+﻿{
   "PlayerName": "아니",
   "PlayerJob": "전사",
   "Gold": 1500,
@@ -11,5 +11,7 @@
     0
   ],
   "EquippedWeaponId": -1,
-  "EquippedArmorId": -1
+  "EquippedArmorId": -1,
+  "InProgressQuestIds": null,
+  "CompletedQuestIds": []
 }
