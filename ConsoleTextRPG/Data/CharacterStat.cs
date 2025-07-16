@@ -7,7 +7,7 @@ namespace ConsoleTextRPG.Data
     {
         public int Level { get; private set; }
         public int MaxHp { get; private set; }
-        public int CurrentHp { get; private set; }
+        public int CurrentHp { get; set; }
 
         // 초기 능력치
         public int BaseAttack { get; private set; }
@@ -40,6 +40,13 @@ namespace ConsoleTextRPG.Data
             if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
 
             CurrentHp -= finalDamage;
+            if (CurrentHp < 0) CurrentHp = 0;
+        }
+
+        public void DefecnDamage(int damage)
+        {
+            int finalDamage = (TotalDefense * 2)- damage;
+            if (finalDamage < 1) CurrentHp += finalDamage; //  데미지가 방어력을 넘었다면 차이만큼 데미지입음
             if (CurrentHp < 0) CurrentHp = 0;
         }
 

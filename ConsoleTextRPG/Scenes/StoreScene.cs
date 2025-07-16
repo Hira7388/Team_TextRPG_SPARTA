@@ -238,18 +238,17 @@ namespace ConsoleTextRPG.Scenes
                     _currentMode = StoreMode.Main;
                     return;
                 }
-                Player player = GameManager.Instance.Player;
-                List<Item> playerItems = player.Inventory.Items;
+                List<Item> playerItems = myPlayer.Inventory.Items;
 
                 if (itemIndex > 0 && itemIndex <= playerItems.Count)
                 {
                     Item itemToSell = playerItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
                     int sellPrice = (int)(itemToSell.Price * _storeDiscountRate); //판매가격
 
-                    if (player.Inventory.Items.Any(i => i.Id == itemToSell.Id))
+                    if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
-                        player.AddGold(sellPrice); //플레이어 골드 증가
-                        player.Inventory.RemoveItem(itemToSell);
+                        myPlayer.AddGold(sellPrice);
+                        myPlayer.Inventory.RemoveItem(itemToSell);
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
                     Thread.Sleep(900);

@@ -30,8 +30,7 @@ namespace ConsoleTextRPG.Managers
 
         // 현재 던전 상태
         private DungeonState _currentState;
-        public DungeonState currentState { get;  set; }
-
+        public DungeonState currentState { get; set; }
 
         // 싱글톤
         private static GameManager _instance;
@@ -78,6 +77,7 @@ namespace ConsoleTextRPG.Managers
             this.Player = new Player("");
             Console.CursorVisible = false;
             LoadItemDatabase();
+            QuestManager.Instance.LoadQuestDatabase();
             //BaseState.Init(); // 상태 목록 초기화
 
             // 임시 아이템 추가(테스트용)
@@ -90,6 +90,7 @@ namespace ConsoleTextRPG.Managers
             scenes[GameState.InventoryScene] = new InventoryScene();
             scenes[GameState.TownScene] = new TownScene();
             scenes[GameState.StoreScene] = new StoreScene();
+            scenes[GameState.QuestScene] = new QuestScene();
 
             // Monster등록
             monsType[MonsterType.Minion] = new Minion();
@@ -161,9 +162,11 @@ namespace ConsoleTextRPG.Managers
             // 플레이어가 직접 자신의 정보를 불러오는 것이 캡슐화에 좋다. (즉 다른 정보들도 있다면 해당 클래스에서 스스로 정보를 불러오는 것이 좋음)
             this.Player.LoadFromData(saveData);
 
-            // TODO: 인벤토리 및 장비 복원 로직 추가
-            // 이 부분은 Player 클래스 또는 GameManager에서 처리할 수 있다.
-            // 예를 들어, 모든 아이템 목록을 가진 GameManager가 ID를 기반으로 아이템을 찾아 플레이어에게 줍니다.
+            // Player 객체가 가진 완료한 퀘스트 id를 지우고 저장한 데이터를 넣어준다.
+            this.Player.CompletedQuestIds.Clear();
+            this.Player.CompletedQuestIds.AddRange(saveData.CompletedQuestIds);
+
+            // Player 객체가 가진 인벤토리를 비우고 저장한 보유 아이템 데이터를 넣어준다.
             this.Player.Inventory.Clear();
 
             // 인벤토리를 불러온다.
