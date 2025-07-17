@@ -122,7 +122,7 @@ namespace ConsoleTextRPG.Scenes
                 Item item = items[i];
 
                 // 아이템 능력치와 설명 출력 mode = 0으로 인벤토리 창
-                ConsoleHelper.DisplayHelper(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, "0", item.IsEquipped, i, 0);
+                ConsoleHelper.DisplayHelper(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, "0", item.IsEquipped, (int)item.Type, 0);
             }
 
             Print("");
