@@ -28,6 +28,10 @@ namespace ConsoleTextRPG.Managers
         // 모든 아이템 정보 불러오기
         public List<Item> AllItems { get; private set; }
 
+        // 현재 던전 난이도
+        private DungeonLevel _currentLevel;
+        public DungeonLevel currentLevel { get; set; }
+
         // 현재 던전 상태
         private DungeonState _currentState;
         public DungeonState currentState { get; set; }
@@ -97,12 +101,14 @@ namespace ConsoleTextRPG.Managers
             monsType[MonsterType.SigeMinion] = new SiegeMinion();
             monsType[MonsterType.Voidgrub] = new Voidgrub();
 
-
             // 초기 Scene 설정
             currentScene = GameState.TownScene;
 
             // 초기 던전 상태 설정
-            _currentState = DungeonState.Idle;
+            _currentState = DungeonState.Adventure;
+
+            // 초기 던전 난이도 설정
+            _currentLevel = DungeonLevel.Normal;
         }
 
         // 아이템 정보 불러오기

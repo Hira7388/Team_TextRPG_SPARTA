@@ -11,7 +11,8 @@ namespace ConsoleTextRPG.Data
         public enum ItemType
         {
             Weapon,
-            Armor
+            Armor,
+            Potion
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -40,6 +41,7 @@ namespace ConsoleTextRPG.Data
             Price = price;
             IsEquipped = isEquipped;
 
+
             // Type에 따라 StatType 문자열을 자동으로 생성한다.
             if (type == ItemType.Weapon)
             {
@@ -48,6 +50,10 @@ namespace ConsoleTextRPG.Data
             else if (type == ItemType.Armor)
             {
                 StatType = "방어력";
+            }
+            else if (type == ItemType.Potion)
+            {
+                StatType = "회복력";
             }
         }
         public Item Clone()

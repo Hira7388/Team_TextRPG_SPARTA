@@ -52,5 +52,18 @@
     "StatType": "공격력",
     "StatusBonus": 7,
     "Price": 3000
+  },
+  {
+    "Id": 6,
+    "Name": "빨간물약",
+    "Comment": "약간의 쓴맛과 과일맛이 나는 이상한 물약 체력이 30 찬다.",
+    "Type": 2,
+    "StatType": "회복력",
+    "StatusBonus": 30,
+    "Price": 100,
+    "IsEquipped" :  false
   }
+
+
+
 ]

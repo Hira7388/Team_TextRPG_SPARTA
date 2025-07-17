@@ -19,11 +19,20 @@ namespace ConsoleTextRPG.Data
     // 게임의 상태를 나타내는 열거형
     public enum DungeonState
     {
-        Idle,
+        Select,
+        Adventure,
         PlayerTrun,
         PlayerAttack,
         EnemyTurn,
         EndBattle,
+    }
+
+    // 던전 난이도 열거형
+    public enum DungeonLevel
+    {
+        Easy,
+        Normal,
+        Hard,
     }
 
     // 몬스터 종류 열거형

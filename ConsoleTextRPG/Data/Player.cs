@@ -107,6 +107,12 @@ namespace ConsoleTextRPG.Data
                 this.EquippedArmor = item;
             }
 
+            // 물약은 장착할 수 없으므로 예외 처리
+            else if (item.Type == Item.ItemType.Potion)
+            {
+                return; // 물약은 장착할 수 없음
+            }
+
             item.IsEquipped = true;
             this.Stat.AddBonusStats(item); // Stat에 보너스 능력치 적용 요청
         }
@@ -119,6 +125,17 @@ namespace ConsoleTextRPG.Data
 
             item.IsEquipped = false;
             this.Stat.RemoveBonusStats(item); // Stat에 보너스 능력치 제거 요청
+        }
+
+        // 물약 섭취 메서드 추가
+        public void EatPotion(Item potion)
+        {
+            if (potion.Type == Item.ItemType.Potion)
+            {
+                // 물약의 효과를 Stat에 적용
+                this.Stat.AddHPStats(potion);
+                Inventory.RemoveItem(potion);   // 인벤토리 아이템 제거
+            }
         }
 
         // 퀘스트를 수락하는 메서드
