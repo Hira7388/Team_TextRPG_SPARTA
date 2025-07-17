@@ -382,17 +382,15 @@ namespace ConsoleTextRPG.Scenes
         {
             if (currentMonsters.Count > 1)
             {
-                if (new Random().NextDouble() < 1f) // 10% 확률로 도망 성공
+                if (new Random().NextDouble() < 0.1f) // 10% 확률로 도망 성공
                 {
+                    if (new Random().NextDouble() < 0.3f) // 30% 확률로 돈 흘림
+                        LoseGold();
+
                     GameManager.Instance.currentState = DungeonState.Adventure;
                     Info("도망쳤습니다");
-                    // 입력 버퍼 비우기
-                    while (Console.KeyAvailable) Console.ReadKey(true);
-
                     Thread.Sleep(500);
-
-                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
-                    while (Console.KeyAvailable) Console.ReadKey(true); return;
+                    return;
                 }
                 else
                 {
@@ -403,22 +401,29 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
             else
+            {
+                if (new Random().NextDouble() < 0.3f)
+                LoseGold();
+                Info("도망쳤습니다.");
                 GameManager.Instance.currentState = DungeonState.Adventure;
-            Info("도망쳤습니다.");
-            GameManager.Instance.currentState = DungeonState.Adventure;
-
+                Thread.Sleep(200);
+            }
             // 입력 버퍼 비우기
             while (Console.KeyAvailable) Console.ReadKey(true);
 
             Thread.Sleep(500);
 
             // 또 한 번 비워주기 (남아있을 수도 있으니까)
-            while (Console.KeyAvailable) Console
+            while (Console.KeyAvailable) Console.ReadKey(true);
 
         }
-.ReadKey(true);
-        
-        
+        void LoseGold()
+        {
+            Info("도망치다가 소지금을 흘렸습니다");
+            myPlayer.Gold -= (int)(myPlayer.Gold * 0.05f); // 소지금 5% 감소
+        }
+
+
 
         // ============================[플레이어 공격 상태]============================
         void PlayerAttackRender()
