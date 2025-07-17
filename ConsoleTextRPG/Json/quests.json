@@ -3,30 +3,10 @@
     "Id": 1,
     "Name": "마을을 위협하는 미니언 처치",
     "Description": "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\n마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\n모험가인 자네가 좀 처치해주게!",
-    "Type": "Hunting",
-    "TargetName": "미니언",
-    "TargetCount": 5,
+    "ObjectiveType": "Kill",
+    "ObjectiveTargetName": "미니언",
+    "ObjectiveTargetCount": 5,
     "RewardGold": 500,
-    "RewardItemIds": []
-  },
-  {
-    "Id": 2,
-    "Name": "더 강한 위협, 공성 미니언",
-    "Description": "일반 미니언보다 훨씬 더 튼튼한 녀석들이 나타났다는군.\n마을 성벽에 위협이 되기 전에 자네가 먼저 처리해주게.",
-    "Type": "Hunting",
-    "TargetName": "공성 미니언",
-    "TargetCount": 2,
-    "RewardGold": 1000,
-    "RewardItemIds": []
-  },
-  {
-    "Id": 4,
-    "Name": "기묘한 생물체, 공허 유충",
-    "Description": "최근 숲에서 이상한 벌레들이 발견되고 있네. 껍질이 꽤나 단단해 보이던데...\n연구에 필요하니, 그 유충들을 잡아서 껍질을 좀 가져다주게.",
-    "Type": "Hunting",
-    "TargetName": "공허 유충",
-    "TargetCount": 3,
-    "RewardGold": 750,
-    "RewardItemIds": []
+    "RewardItemIds": [ 1 ]
   }
 ]
