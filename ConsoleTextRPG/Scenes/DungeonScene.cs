@@ -393,8 +393,11 @@ namespace ConsoleTextRPG.Scenes
         {
             if(currentMonsters.Count > 1)
             {
-                if (new Random().NextDouble() < 1f) // 10% 확률로 도망 성공
+                if (new Random().NextDouble() < 0.1f) // 10% 확률로 도망 성공
                 {
+                    if(new Random().NextDouble() < 0.3f) // 30% 확률로 돈 흘림
+                        LoseGold();
+
                     GameManager.Instance.currentState = DungeonState.Adventure;
                     Info("도망쳤습니다");
                     Thread.Sleep(500);
@@ -409,16 +412,21 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
             else
-                GameManager.Instance.currentState = DungeonState.Adventure;
+            {
+                if (new Random().NextDouble() < 0.3f) 
+                    LoseGold();
+
                 Info("도망쳤습니다.");
                 GameManager.Instance.currentState = DungeonState.Adventure;
                 Thread.Sleep(200);
+            }
             }
 
 
         void LoseGold()
         {
             Info("도망치다가 소지금을 흘렸습니다");
+            myPlayer.Gold -= (int)(myPlayer.Gold * 0.05f); // 소지금 5% 감소
         }
         
 
