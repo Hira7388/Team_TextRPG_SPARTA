@@ -105,10 +105,10 @@ namespace ConsoleTextRPG.Managers
             currentScene = GameState.TownScene;
 
             // 초기 던전 상태 설정
-            _currentState = DungeonState.Select;
+            _currentState = DungeonState.SelectStart;
 
             // 초기 던전 난이도 설정
-            _currentLevel = DungeonLevel.Easy;
+            _currentLevel = DungeonLevel.Normal;
 
         }
 

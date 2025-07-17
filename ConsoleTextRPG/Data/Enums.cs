@@ -19,7 +19,8 @@ namespace ConsoleTextRPG.Data
     // 게임의 상태를 나타내는 열거형
     public enum DungeonState
     {
-        Select,
+        SelectStart,
+        SelectLevel,
         Adventure,
         PlayerTrun,
         PlayerAttack,
