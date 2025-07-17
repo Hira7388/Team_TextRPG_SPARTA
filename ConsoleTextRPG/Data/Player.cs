@@ -8,7 +8,7 @@ namespace ConsoleTextRPG.Data
 {
     public class Player : Character
     {
-        public int Gold { get; private set; }
+        public int Gold { get;  set; }
 
         // 인벤토리
         public Inventory Inventory { get; private set; }

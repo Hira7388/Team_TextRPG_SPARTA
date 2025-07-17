@@ -380,7 +380,7 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerRun()
         {
-            if(currentMonsters.Count > 1)
+            if (currentMonsters.Count > 1)
             {
                 if (new Random().NextDouble() < 1f) // 10% 확률로 도망 성공
                 {
@@ -404,8 +404,8 @@ namespace ConsoleTextRPG.Scenes
             }
             else
                 GameManager.Instance.currentState = DungeonState.Adventure;
-                Info("도망쳤습니다.");
-                GameManager.Instance.currentState = DungeonState.Adventure;
+            Info("도망쳤습니다.");
+            GameManager.Instance.currentState = DungeonState.Adventure;
 
             // 입력 버퍼 비우기
             while (Console.KeyAvailable) Console.ReadKey(true);
@@ -413,8 +413,11 @@ namespace ConsoleTextRPG.Scenes
             Thread.Sleep(500);
 
             // 또 한 번 비워주기 (남아있을 수도 있으니까)
-            while (Console.KeyAvailable) Console.ReadKey(true);
+            while (Console.KeyAvailable) Console
+
         }
+.ReadKey(true);
+        
         
 
         // ============================[플레이어 공격 상태]============================
