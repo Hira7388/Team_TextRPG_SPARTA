@@ -59,7 +59,7 @@ namespace ConsoleTextRPG.Scenes
 
             if (mode == 0) //인벤토리에서 보여줄 창
             {
-                if (type == 6)
+                if (type >= 6)
                 {
                     string idAndName = $"{id.ToString()}. {name} (x{count}"; //번호를 string으로 변환 후 합침
                     string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
@@ -83,7 +83,7 @@ namespace ConsoleTextRPG.Scenes
             }
             else if(mode == 1) //상점에서 보여줄 창
             {
-                if (type == 6)
+                if (type >= 6)
                 {
                     string idAndName = $"{name} (x{count})"; //번호를 string으로 변환 후 합침
                     string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
@@ -101,7 +101,7 @@ namespace ConsoleTextRPG.Scenes
             }
             else if(mode == 2) //판매할때 보여줄 창
             {
-                if (type == 6)
+                if (type >= 6)
                 {
                     string idAndName = $"{id.ToString()}. {name} (x{count}"; //번호를 string으로 변환 후 합침
                     string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
@@ -125,7 +125,7 @@ namespace ConsoleTextRPG.Scenes
             }
             else //구매할때 보여줄 창
             {
-                if (type == 6)
+                if (type >= 6)
                 {
                     string idAndName = $"{id.ToString()}. {name} (x{count})"; //번호를 string으로 변환 후 합침
                     string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환

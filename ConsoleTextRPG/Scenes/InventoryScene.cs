@@ -74,7 +74,7 @@ namespace ConsoleTextRPG.Scenes
                         Thread.Sleep(800);
                         return;
                     }
-
+                    //아이템 장착/해제 로직
                     if (targetItem.IsEquipped)
                     {
                         targetItem.IsEquipped = false;

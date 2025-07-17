@@ -231,7 +231,7 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else
                 {
-                    Info("잘못된 번호입니다.");
+                    Info("잘못된 입력입니다.");
                     Thread.Sleep(900);
                 }
             }
