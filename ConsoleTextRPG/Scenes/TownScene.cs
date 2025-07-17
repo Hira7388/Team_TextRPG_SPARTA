@@ -102,7 +102,8 @@ namespace ConsoleTextRPG.Scenes
             {
                 myPlayer.SetName(input);
                 Console.WriteLine($"\n나의 이름은, {myPlayer.Name}...\n");
-                Console.ReadKey();
+                Thread.Sleep(1000);
+                Console.Clear();
             }
         }
 
@@ -116,6 +117,12 @@ namespace ConsoleTextRPG.Scenes
             Console.Write("선택: ");
             string choice = Console.ReadLine()?.Trim();
 
+
+
+            // 직업 선택 성공 여부 체크용 플래그
+            bool isValidChoice = false;
+
+
             if (choice == "1")
             {
                 myPlayer.SetJob("전사");
@@ -126,6 +133,8 @@ namespace ConsoleTextRPG.Scenes
                 //player.Defense = 10;
                 //player.Health = 120;
                 Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!\n");
+                isValidChoice = true;
+
 
             }
             else if (choice == "2")
@@ -137,14 +146,41 @@ namespace ConsoleTextRPG.Scenes
                 //player.Defense = 5;
                 //player.Health = 80;
                 Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!\n");
+                isValidChoice = true;
+
 
             }
             else
             {
                 Console.WriteLine("오류 : 올바른 번호를 선택해주세요.");
                 Console.ReadKey();
+
             }
+
+            if (choice == "1")
+            {
+                myPlayer.SetJob("전사");
+                Console.Clear();
+                Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!");
+                Console.WriteLine("\n이 길이 나를 발할라로 인도하기를...");
+                Thread.Sleep(3700);
+                Console.Clear();
+            }
+            else if (choice == "2")
+            {
+                myPlayer.SetJob("마법사");
+                Console.Clear();
+                Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!");
+                Console.WriteLine("\n저 눈부신 빛이 저를 인도할 것입니다...");
+                Thread.Sleep(3700);
+                Console.Clear();
+            }
+
+            ShowMenuOptions();
+            
+
         }
+        
 
         // 마을 메뉴 옵션
         private void ShowMenuOptions()
