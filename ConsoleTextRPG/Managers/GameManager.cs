@@ -102,7 +102,7 @@ namespace ConsoleTextRPG.Managers
             currentScene = GameState.TownScene;
 
             // 초기 던전 상태 설정
-            _currentState = DungeonState.Idle;
+            _currentState = DungeonState.Select;
         }
 
         // 아이템 정보 불러오기
