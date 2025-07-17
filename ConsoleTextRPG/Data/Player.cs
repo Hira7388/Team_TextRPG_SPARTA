@@ -94,51 +94,49 @@ namespace ConsoleTextRPG.Data
         }
 
         // 아이템을 장착하는 메서드
-        public void EquipItem(Item itemToEquip)
+        public void EquipItem(Item item)
         {
-            // 이미 장착된 아이템을 다시 장착하려는 경우, 아무것도 하지 않고 종료합니다.
-            if (itemToEquip.IsEquipped)
+            if (item.Type == Item.ItemType.Weapon)
             {
-                // 선택적으로 사용자에게 메시지를 보여줄 수 있습니다.
-                Console.WriteLine("이미 장착 중인 아이템입니다.");
-                return;
+                if (this.EquippedWeapon != null) UnequipItem(this.EquippedWeapon);
+                this.EquippedWeapon = item;
+            }
+            else if (item.Type == Item.ItemType.Armor)
+            {
+                if (this.EquippedArmor != null) UnequipItem(this.EquippedArmor);
+                this.EquippedArmor = item;
             }
 
-            if (itemToEquip.Type == Item.ItemType.Weapon)
+            // 물약은 장착할 수 없으므로 예외 처리
+            else if (item.Type == Item.ItemType.Potion)
             {
-                // 다른 무기를 끼고 있다면 먼저 해제합니다.
-                if (this.EquippedWeapon != null)
-                {
-                    UnequipItem(this.EquippedWeapon);
-                }
-                this.EquippedWeapon = itemToEquip;
-            }
-            else if (itemToEquip.Type == Item.ItemType.Armor)
-            {
-                if (this.EquippedArmor != null)
-                {
-                    UnequipItem(this.EquippedArmor);
-                }
-                this.EquippedArmor = itemToEquip;
+                return; // 물약은 장착할 수 없음
             }
 
-            itemToEquip.IsEquipped = true;
-            this.Stat.AddBonusStats(itemToEquip);
+            item.IsEquipped = true;
+            this.Stat.AddBonusStats(item); // Stat에 보너스 능력치 적용 요청
         }
 
         // 아이템 장착을 해제하는 메서드
-        public void UnequipItem(Item itemToUnequip)
+        public void UnequipItem(Item item)
         {
-            // 장착되지 않은 아이템을 해제하려는 경우, 아무것도 하지 않습니다.
-            if (!itemToUnequip.IsEquipped) return;
+            if (item.Type == Item.ItemType.Weapon) this.EquippedWeapon = null;
+            else if (item.Type == Item.ItemType.Armor) this.EquippedArmor = null;
 
-            if (itemToUnequip.Type == Item.ItemType.Weapon) this.EquippedWeapon = null;
-            else if (itemToUnequip.Type == Item.ItemType.Armor) this.EquippedArmor = null;
-
-            itemToUnequip.IsEquipped = false;
-            this.Stat.RemoveBonusStats(itemToUnequip);
+            item.IsEquipped = false;
+            this.Stat.RemoveBonusStats(item); // Stat에 보너스 능력치 제거 요청
         }
 
+        // 물약 섭취 메서드 추가
+        public void EatPotion(Item potion)
+        {
+            if (potion.Type == Item.ItemType.Potion)
+            {
+                // 물약의 효과를 Stat에 적용
+                this.Stat.AddHPStats(potion);
+                Inventory.RemoveItem(potion);   // 인벤토리 아이템 제거
+            }
+        }
 
         // 퀘스트를 수락하는 메서드
         public void AcceptQuest(int questId)

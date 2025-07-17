@@ -72,42 +72,56 @@ namespace ConsoleTextRPG.Scenes
             if (string.IsNullOrWhiteSpace(myPlayer.Name))
             {
                 AskPlayerName();
-                ChooseJob();
+                return; // 이름이 없으면 다음으로 안 넘어감
             }
-            else // 이름이 있다면, 메인 메뉴 입력을 받습니다.
+
+            if (string.IsNullOrWhiteSpace(myPlayer.Job))
             {
-                MenuInputActions(); // 메뉴 입력 처리
+                ChooseJob();
+                return; // 직업이 없으면 메뉴 입력 안 받음
             }
+
+            MenuInputActions(); // 이름과 직업이 모두 있으면 마을 메뉴로 이동
+
         }
 
         // 이름 입력
         private void AskPlayerName()
         {
+            Console.Clear();
             Console.Write("\n당신의 이름은 기억이 나십니까? ");
             Console.Write("\n>> ");
             string input = Console.ReadLine()?.Trim();
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("⚠️  유효하지 않은 이름입니다. 다시 입력해주세요.");
+                Console.WriteLine("오류 : 유효하지 않은 이름입니다. 다시 입력해주세요.");
                 Console.ReadKey();
             }
             else
             {
                 myPlayer.SetName(input);
-                Console.WriteLine($"나의 이름은, {myPlayer.Name}...\n");
+                Console.WriteLine($"\n나의 이름은, {myPlayer.Name}...\n");
+                Thread.Sleep(1000);
+                Console.Clear();
             }
         }
 
         // 직업 선택
         private void ChooseJob()
         {
-
+            Console.Clear();
             Console.WriteLine("직업을 선택하세요:");
             Console.WriteLine("1. 전사");
             Console.WriteLine("2. 마법사");
             Console.Write("선택: ");
-            string choice = Console.ReadLine();
+            string choice = Console.ReadLine()?.Trim();
+
+
+
+            // 직업 선택 성공 여부 체크용 플래그
+            bool isValidChoice = false;
+
 
             if (choice == "1")
             {
@@ -119,6 +133,8 @@ namespace ConsoleTextRPG.Scenes
                 //player.Defense = 10;
                 //player.Health = 120;
                 Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!\n");
+                isValidChoice = true;
+
 
             }
             else if (choice == "2")
@@ -130,14 +146,41 @@ namespace ConsoleTextRPG.Scenes
                 //player.Defense = 5;
                 //player.Health = 80;
                 Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!\n");
+                isValidChoice = true;
+
 
             }
             else
             {
-                Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                Console.WriteLine("오류 : 올바른 번호를 선택해주세요.");
                 Console.ReadKey();
+
             }
+
+            if (choice == "1")
+            {
+                myPlayer.SetJob("전사");
+                Console.Clear();
+                Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!");
+                Console.WriteLine("\n이 길이 나를 발할라로 인도하기를...");
+                Thread.Sleep(3700);
+                Console.Clear();
+            }
+            else if (choice == "2")
+            {
+                myPlayer.SetJob("마법사");
+                Console.Clear();
+                Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!");
+                Console.WriteLine("\n저 눈부신 빛이 저를 인도할 것입니다...");
+                Thread.Sleep(3700);
+                Console.Clear();
+            }
+
+            ShowMenuOptions();
+            
+
         }
+        
 
         // 마을 메뉴 옵션
         private void ShowMenuOptions()
@@ -197,7 +240,7 @@ namespace ConsoleTextRPG.Scenes
                     Console.WriteLine("\n게임을 종료합니다. 안녕히 가세요!");
                     break;
                 default:
-                    Console.WriteLine("⚠️  올바른 번호를 선택해주세요.");
+                    Console.WriteLine("올바른 번호를 선택해주세요.");
                     Console.ReadKey();
                     break;
             }
@@ -207,7 +250,7 @@ namespace ConsoleTextRPG.Scenes
         private void ShowStatus()
         {
             Console.Clear();
-            Console.WriteLine("📜 [내 정보]");
+            Console.WriteLine("[내 정보]");
             Console.WriteLine($"이름   : {myPlayer.Name}");
             Console.WriteLine($"레벨   : {myPlayer.Stat.Level}");
             Console.WriteLine($"직업   : {myPlayer.Job}");

@@ -36,7 +36,11 @@ namespace ConsoleTextRPG.Data
         // 데미지를 계산하고 적의 공격 데미지와 내 방어력을 계산해서 HP를 변경하는 로직
         public void ApplyDamage(int damage)
         {
-            int finalDamage = damage - TotalDefense;
+            int ten = (int)(damage * 0.1f);
+            int min = damage- ten;
+            int max = damage+ ten;
+            int rand= new Random().Next(min, max+1);
+            int finalDamage = rand - TotalDefense;
             if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
 
             CurrentHp -= finalDamage;
@@ -78,5 +82,25 @@ namespace ConsoleTextRPG.Data
             if (item.Type == Item.ItemType.Weapon) AdditionalAttack -= item.StatusBonus;
             if (item.Type == Item.ItemType.Armor) AdditionalDefense -= item.StatusBonus;
         }
+        public void AddHPStats(Item item) //체력함수 추가
+        {
+            int bonusHp = CurrentHp += item.StatusBonus;
+            if (item.Type == Item.ItemType.Potion)
+            {
+                if (bonusHp > MaxHp)
+                {
+                    CurrentHp = MaxHp; // 포션 사용 시 최대 체력을 넘지 않도록 보장
+                }
+                else
+                {
+                    CurrentHp = bonusHp; // 포션 사용 시 현재 체력에 보너스 체력을 추가
+                }
+
+            } 
+        }
+
+
+
+
     }
 }

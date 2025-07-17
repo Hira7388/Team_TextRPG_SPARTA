@@ -94,9 +94,13 @@ namespace ConsoleTextRPG.Scenes
             {
                 Item storeItem = allItems[i];
                 bool isSoldOut = myPlayer.Inventory.Items.Any(item => item.Id == storeItem.Id);
-                string priceDisplay = isSoldOut ? "구매완료" : $"{storeItem.Price} G";
+                if (storeItem.Type == Item.ItemType.Potion)
+                {
+                    isSoldOut = false; // 물약은 판매하지 않으므로 항상 구매 가능
+                }
 
-                Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
+                 string priceDisplay = isSoldOut ? "구매완료" : $"{storeItem.Price} G";
+                 Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
 
                 if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
@@ -204,13 +208,25 @@ namespace ConsoleTextRPG.Scenes
                     Item itemToBuy = allItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
                     Player player = GameManager.Instance.Player;
 
-                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id)) Info("이미 구매한 아이템입니다.");
+
+
+                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id)) 
+                    {
+                        if (itemToBuy.Type == Item.ItemType.Potion)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            Info("이미 구매한 아이템입니다.");
+                        }
+                    }
                     else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
                     else
                     {
                         player.AddGold(-itemToBuy.Price);            // 플레이어 골드 차감
-                        player.Inventory.AddItem(itemToBuy.Clone());  // 인벤토리에 아이템 추가
-                        player.EquipItem(itemToBuy);                   // 구매시 바로 장착
+                        player.EquipItem(itemToBuy);                  // 구매시 바로 장착
+                        player.Inventory.AddItem(itemToBuy.Clone());   // 인벤토리에 아이템 추가
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
                     Thread.Sleep(900);
@@ -248,8 +264,8 @@ namespace ConsoleTextRPG.Scenes
                     if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
                         myPlayer.AddGold(sellPrice);               // 플레이어 골드 증가
-                        myPlayer.Inventory.RemoveItem(itemToSell);  // 인벤토리 아이템 제거
-                        myPlayer.UnequipItem(itemToSell);            // 판매시 장착해제          
+                        myPlayer.UnequipItem(itemToSell);           // 판매시 장착해제  
+                        myPlayer.Inventory.RemoveItem(itemToSell);   // 인벤토리 아이템 제거
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
                     Thread.Sleep(900);

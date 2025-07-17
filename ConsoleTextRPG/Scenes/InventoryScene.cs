@@ -26,7 +26,6 @@ namespace ConsoleTextRPG.Scenes
         public override void UpdateInput()
         {
             InventoryInput();
-
         }
 
         Player myPlayer = GameManager.Instance.Player;
@@ -41,7 +40,7 @@ namespace ConsoleTextRPG.Scenes
             ShowInventoryItem();
 
             Print("");
-            Print("장착할 아이템의 번호를 입력해주세요. (1~9)");
+            Print("장착 또는 사용할 아이템의 번호를 입력해주세요. (1~9)"); //문구수정(이영신)
             Print("0. 나가기");
             Print("");
             Print("원하시는 행동을 입력해주세요");
@@ -63,18 +62,33 @@ namespace ConsoleTextRPG.Scenes
                 {
                     int itemIndex = index - 1;
                     Item targetItem = items[itemIndex];
+                    
+                    // 회복약 사용로직 추가
+                    if(items[itemIndex].Type == Item.ItemType.Potion)
+                    {
+                        int beforeHp = myPlayer.Stat.CurrentHp;
+                        Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
+                        Print($"체력을 {targetItem.StatusBonus} 만큼 회복합니다.");
+                        myPlayer.EatPotion(targetItem);
+                        Print($"[HP] {beforeHp} -> {myPlayer.Stat.CurrentHp}");
+                        Thread.Sleep(800);
+                    }
 
                     if (targetItem.IsEquipped)
                     {
                         targetItem.IsEquipped = false;
-                        myPlayer.UnequipItem(targetItem);   
+                        myPlayer.UnequipItem(targetItem);
+                        Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
                         Print($"[ {targetItem.Name} ] 을(를) 해제했습니다.");
                         Thread.Sleep(800);
                     }
                     else
                     {
+                        if (items[itemIndex].Type == Item.ItemType.Potion) return; // 물약은 장착할 수 없으므로 예외 처리
+
                         targetItem.IsEquipped = true;
                         myPlayer.EquipItem(targetItem);
+                        Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
                         Print($"[ {targetItem.Name} ] 을(를) 장착했습니다.");
                         Thread.Sleep(800);
                     }
@@ -113,7 +127,6 @@ namespace ConsoleTextRPG.Scenes
                 // 아이템 능력치와 설명 출력
 
                 ConsoleHelper.DisplayInventory(i + 1, item.Name, item.StatType, item.StatusBonus, item.Comment, item.IsEquipped, _width, _statWidth, _commentWidth);
-
             }
 
             Print("");
