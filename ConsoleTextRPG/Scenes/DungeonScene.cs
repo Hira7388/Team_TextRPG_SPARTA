@@ -14,7 +14,7 @@ namespace ConsoleTextRPG.Scenes
     {
         // 던전 클리어 조건
         int walkCount = 0; // 이동 횟수
-        int dungeonClearCount = 15; // 던전 클리어 횟수
+        int dungeonClearCount = 0; // 던전 클리어 횟수
         int deadCount = 0; // 죽은 몬스터 수
         int dungeonHP = 0; // 결과창 확인용
 
@@ -32,8 +32,11 @@ namespace ConsoleTextRPG.Scenes
         {
             switch(GameManager.Instance.currentState)
             {
-                case DungeonState.Idle:
-                    DungeonRender(); // 던전 씬 랜더링
+                case DungeonState.Select:
+                    SelectRender(); 
+                    break;
+                case DungeonState.Adventure:
+                    DungeonRender();
                     break;
                 case DungeonState.PlayerTrun:
                     PlayerTurnRender();
@@ -63,7 +66,11 @@ namespace ConsoleTextRPG.Scenes
 
             switch (GameManager.Instance.currentState)
             {
-                case DungeonState.Idle:
+                case DungeonState.Select:
+                    SelectMove(index);
+                    break;
+                case DungeonState.Adventure:
+                case DungeonState.Adventure:
                     DungeonMove(index); // 던전 행동 선택
                     break;
                 case DungeonState.PlayerTrun:
@@ -77,8 +84,49 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 case DungeonState.EndBattle:
                     EndTrunMove(index); // 전투 종료 행동 선택
-                    break;
             }                
+        }
+        // ============================[던전선택]============================
+        void SelectRender()
+        {
+            dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
+            deadCount = 0; // 죽은 몬스터 수 초기화
+            Print("◎던전선택◎", ConsoleColor.Red);
+            Print("던전의 난이도를 선택해주세요\n");
+
+            Print(1, "쉬움 모드 | 몬스터 최대 2마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(2, "보통 모드 | 몬스터 최대 3마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(3, "어려움모드 | 몬스터 최대 4마리 까지만 출현", ConsoleColor.DarkCyan);
+
+            Print("\n원하시는 행동을 입력해주세요");
+            Console.Write(">>");
+        }
+        void SelectMove(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    Info("왼쪽길로 갑니다");
+                    DungeonEvent();
+                    Thread.Sleep(100);
+                    break;
+                case 2:
+                    Info("앞으로 갑니다");
+                    DungeonEvent();
+                    Thread.Sleep(100);
+                    break;
+                case 3:
+                    Info("오른쪽길로 갑니다");
+                    DungeonEvent();
+                    Thread.Sleep(100);
+                    break;
+                default:
+                    Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                    Thread.Sleep(200);
+                    break;
+            }
+                    break;
+            }
         }
 
         // ============================[던전상태]============================
@@ -231,7 +279,7 @@ namespace ConsoleTextRPG.Scenes
             {
                 if (new Random().NextDouble() < 0.3f) // 30% 확률로 도망 성공
                 {
-                    GameManager.Instance.currentState = DungeonState.Idle;
+                    GameManager.Instance.currentState = DungeonState.Adventure;
                     Info("도망쳤습니다");
                     Thread.Sleep(500);
                     return;
@@ -245,7 +293,7 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
             else
-            {
+                GameManager.Instance.currentState = DungeonState.Adventure;
                 Info("도망쳤습니다.");
                 GameManager.Instance.currentState = DungeonState.Idle;
                 Thread.Sleep(200);
@@ -465,7 +513,7 @@ namespace ConsoleTextRPG.Scenes
             }
             if (index == 0)
             {
-                if (isWin)
+                    GameManager.Instance.currentState = DungeonState.Adventure;
                 {
                     GameManager.Instance.currentState = DungeonState.Idle;
                     currentMonsters.Clear(); // 몬스터 목록 초기화
