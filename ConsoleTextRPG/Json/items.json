@@ -60,8 +60,7 @@
     "Type": 2,
     "StatType": "회복력",
     "StatusBonus": 30,
-    "Price": 100,
-    "IsEquipped" :  false
+    "Price": 100
   }
 
 

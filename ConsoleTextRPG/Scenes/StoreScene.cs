@@ -27,7 +27,7 @@ namespace ConsoleTextRPG.Scenes
         private float _storeDiscountRate = 0.85f; //할인율
         private int _width = 18;                   //이름 너비 제한
         private int _statWidth = 12;                //스텟 너비 제한
-        private int _commentWidth = 50;              //설명 너비 제한
+        private int _commentWidth = 62;              //설명 너비 제한
         private int _priceWidth = 5;                  //가격 너비 제한
 
         // 화면 출력
@@ -99,25 +99,35 @@ namespace ConsoleTextRPG.Scenes
                     isSoldOut = false; // 물약은 판매하지 않으므로 항상 구매 가능
                 }
 
-                 string priceDisplay = isSoldOut ? "구매완료" : $"{storeItem.Price} G";
-                 Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
+                string priceDisplay = isSoldOut ? "구매완료" : $"{storeItem.Price} G";
+
+                Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
 
                 if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
                     // 번호 표시
-                    //Console.Write($"- {i + 1}. {storeItem.Name,-15}");
-                    ConsoleHelper.DisplayShopItemBuy(i+1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
+                    if (storeItem.Type == Item.ItemType.Potion)
+                    {
+                        ConsoleHelper.DisplayShopPotion(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
+                        continue;
+                    }
+                    else
+                    {
+                        ConsoleHelper.DisplayShopItemBuy(i + 1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
+                    }
+                    
+
                 }
                 else
                 {
                     // 번호 없이 표시
-                    //Console.Write($"- {storeItem.Name,-18}");
+                    if (storeItem.Type == Item.ItemType.Potion)
+                    {
+                        ConsoleHelper.DisplayShopPotion(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
+                        continue;
+                    }
                     ConsoleHelper.DisplayShopItem(storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
                 }
-
-               // Console.Write($" | {storeItem.StatType,6} +{storeItem.StatusBonus,-3}");
-               // Console.Write($" | {storeItem.Comment,-40}");
-               // Console.WriteLine($" | {priceDisplay}");
 
                 Console.ResetColor();
             }
@@ -138,13 +148,9 @@ namespace ConsoleTextRPG.Scenes
             for (int i = 0; i < playerItems.Count; i++)
             {
                 Item item = playerItems[i];
-                // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
+                // 구매가의 85%로 판매할 수 있다. (여기에서 보여주는 판매가를 수정하시면 됩니다.)
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
                 ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, item.IsEquipped, _width, _statWidth, _commentWidth, _priceWidth);
-                //Console.Write($"- {i + 1}. {item.Name,-15}");
-                //Console.Write($" | {item.StatType} +{item.StatusBonus,-3}");
-                //Console.Write($" | {item.Comment,-40}");
-                //Console.WriteLine($" | {sellPrice} G");
             }
         }
 
@@ -208,12 +214,17 @@ namespace ConsoleTextRPG.Scenes
                     Item itemToBuy = allItems[itemIndex - 1]; //Id는 0부터 시작하니 -1
                     Player player = GameManager.Instance.Player;
 
-
-
-                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id)) 
+                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id))
                     {
-                        if (itemToBuy.Type == Item.ItemType.Potion)
+                        if (itemToBuy.Type == Item.ItemType.Potion) //물약은 중복 구매가능
                         {
+                            player.Inventory.AddPotions(1);
+                            Item newItem = itemToBuy.Clone();            
+
+                            player.AddGold(-itemToBuy.Price);            
+                            player.EquipItem(newItem);                   
+                            player.Inventory.AddItem(newItem);           
+                            Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                             return;
                         }
                         else
@@ -221,12 +232,16 @@ namespace ConsoleTextRPG.Scenes
                             Info("이미 구매한 아이템입니다.");
                         }
                     }
-                    else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
+                    else if (player.Gold < itemToBuy.Price) 
+                    { Info("골드가 부족합니다."); }
                     else
                     {
-                        player.AddGold(-itemToBuy.Price);            // 플레이어 골드 차감
-                        player.EquipItem(itemToBuy);                  // 구매시 바로 장착
-                        player.Inventory.AddItem(itemToBuy.Clone());   // 인벤토리에 아이템 추가
+                        if(itemToBuy.Type == Item.ItemType.Potion) player.Inventory.AddPotions(1); //물약 구매시
+                        Item newItem = itemToBuy.Clone();                                           //나중에 계정 저장 및 중복방지를 위한 아이템 클론 생성
+
+                        player.AddGold(-itemToBuy.Price);                                           // 플레이어 골드 차감
+                        player.EquipItem(newItem);                                                  // 구매시 바로 장착
+                        player.Inventory.AddItem(newItem);                                          // 인벤토리에 아이템 추가
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
                     Thread.Sleep(900);
@@ -263,8 +278,12 @@ namespace ConsoleTextRPG.Scenes
 
                     if (myPlayer.Inventory.Items.Any(i => i.Id == itemToSell.Id))
                     {
+                        if (itemToSell.Type == Item.ItemType.Potion) myPlayer.Inventory.UsePotion();
                         myPlayer.AddGold(sellPrice);               // 플레이어 골드 증가
-                        myPlayer.UnequipItem(itemToSell);           // 판매시 장착해제  
+                        if (itemToSell.IsEquipped == true) 
+                        { 
+                            myPlayer.UnequipItem(itemToSell);       // 판매중 장착시 장착해제  
+                        }
                         myPlayer.Inventory.RemoveItem(itemToSell);   // 인벤토리 아이템 제거
                         Info($"{itemToSell.Name}을(를) {sellPrice} G 로 판매했습니다!");
                     }
@@ -272,5 +291,6 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
         }
+
     }
 }
