@@ -73,25 +73,26 @@ namespace ConsoleTextRPG.Scenes
                         Print($"[HP] {beforeHp} -> {myPlayer.Stat.CurrentHp}");
                         Thread.Sleep(800);
                     }
-
-                    if (targetItem.IsEquipped)
-                    {
-                        targetItem.IsEquipped = false;
-                        myPlayer.UnequipItem(targetItem);
-                        Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
-                        Print($"[ {targetItem.Name} ] 을(를) 해제했습니다.");
-                        Thread.Sleep(800);
-                    }
                     else
                     {
-                        if (items[itemIndex].Type == Item.ItemType.Potion) return; // 물약은 장착할 수 없으므로 예외 처리
-
-                        targetItem.IsEquipped = true;
-                        myPlayer.EquipItem(targetItem);
-                        Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
-                        Print($"[ {targetItem.Name} ] 을(를) 장착했습니다.");
-                        Thread.Sleep(800);
+                        if (targetItem.IsEquipped)
+                        {
+                            targetItem.IsEquipped = false;
+                            myPlayer.UnequipItem(targetItem);
+                            Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
+                            Print($"[ {targetItem.Name} ] 을(를) 해제했습니다.");
+                            Thread.Sleep(800);
+                        }
+                        else
+                        {
+                            targetItem.IsEquipped = true;
+                            myPlayer.EquipItem(targetItem);
+                            Print($"[ {targetItem.Name} ] 을(를) 선택했습니다.");
+                            Print($"[ {targetItem.Name} ] 을(를) 장착했습니다.");
+                            Thread.Sleep(800);
+                        }
                     }
+
                 }
                 else
                 {
