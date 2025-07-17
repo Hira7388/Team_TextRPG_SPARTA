@@ -11,7 +11,8 @@ namespace ConsoleTextRPG.Data
         public enum ItemType
         {
             Weapon,
-            Armor
+            Armor,
+            Potion
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -48,6 +49,10 @@ namespace ConsoleTextRPG.Data
             else if (type == ItemType.Armor)
             {
                 StatType = "방어력";
+            }
+            else if (type == ItemType.Potion)
+            {
+                StatType = "회복력";
             }
         }
         public Item Clone()
