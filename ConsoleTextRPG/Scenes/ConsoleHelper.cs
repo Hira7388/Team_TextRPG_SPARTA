@@ -1,6 +1,8 @@
 ﻿using ConsoleTextRPG.Data;
+using ConsoleTextRPG.Managers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,10 @@ namespace ConsoleTextRPG.Scenes
 {
     internal class ConsoleHelper
     {
+        private static int _width = 18;                   //이름 너비 제한
+        private static int _statWidth = 12;                //스텟 너비 제한
+        private static int _commentWidth = 62;              //설명 너비 제한
+        private static int _priceWidth = 5;                  //가격 너비 제한
 
         //콘솔창의 들쑥날쑥한 모습을 깔끔하게 정리하기 위해 글자수로 쪼개서 TEXT로 만든다음 너비를 제한합니다.
         public static string PadRightKorean(string text, int totalLength)
@@ -39,113 +45,102 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 장착여부, 이름너비, 스텟너비, 설명너비
-        public static void DisplayInventory(int id, string name, string statType, int statusBouns, string comment, bool equipped, int Width, int statWidth, int commentWidth)
+        // 아이템_번호, 아이템_이름, 물약_카운트, 스텟타입, 스텟보너스, 설명, 장착여부, 아이템_타임(아이템_번호-1), 모드
+        public static void DisplayHelper(int id, string name, int count, string statType, int statusBouns, string comment, string price, bool equipped, int type, int mode)
         {
-            string equippedStatus = equipped ? "[E]" : "   ";
-
-            string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
-            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
+            string equippedStatus = equipped ? "[E]" : "   "; //아이템 장착여부 표시
 
             string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
-            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
+            string pad_StatType = PadRightKorean(statAndBouns, _statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
 
-            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
+            string pad_Comment = PadRightKorean(comment, _commentWidth); //설명 변환
 
-            if (equipped)
+            string pad_Price = PadRightKorean(price, _priceWidth); // 가격 변환
+
+            if (mode == 0) //인벤토리에서 보여줄 창
             {
-                Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
+                if (type == 6)
+                {
+                    string idAndName = $"{id.ToString()}. {name} (x{count}"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    Console.WriteLine($"{pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 물약이 보여줄 창 
+                }
+                else
+                {
+                    string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    if (equipped)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
+                    }
+
+                        Console.WriteLine($"{equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 보여줄 창 
+
+                        Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
+                }
+            }
+            else if(mode == 1) //상점에서 보여줄 창
+            {
+                if (type == 6)
+                {
+                    string idAndName = $"{name} (x{count})"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    Console.WriteLine($"- {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 물약이 보여줄 창 
+                }
+                else
+                {
+                    string idAndName = $"{name}";
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    Console.WriteLine($"- {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 보여줄 창
+
+                }
+            }
+            else if(mode == 2) //판매할때 보여줄 창
+            {
+                if (type == 6)
+                {
+                    string idAndName = $"{id.ToString()}. {name} (x{count}"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    Console.WriteLine($" {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 물약을 판매시 보여줄 창 
+                }
+                else
+                {
+                    string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    if (equipped)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
+                    }
+
+                        Console.WriteLine($"{equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 판매시 보여줄 창
+
+                        Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
+                }
+            }
+            else //구매할때 보여줄 창
+            {
+                if (type == 6)
+                {
+                    string idAndName = $"{id.ToString()}. {name} (x{count})"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    Console.WriteLine($"{pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price} "); // 상점에서 물약을 구매시 보여줄 창 
+                }
+                else
+                {
+                    string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
+                    string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
+
+                    Console.WriteLine($"{pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price} "); // 상점에서 구매시 보여줄 창
+                }
             }
 
-            Console.WriteLine($" {equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 보여줄 창 
-
-            Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
-        }
-
-
-        // 상품 이름, 스텟타입, 스텟보너스, 설명, 가격, 이름너비, 스텟너비, 설명너비, 가격너비
-        public static void DisplayShopItem( string name, string statType, int statusBouns, string comment, string price, int Width, int statWidth, int commentWidth, int priceWidth)
-        {
-            string pad_Id = PadRightKorean(name, Width); //이름을 변환
-
-            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
-            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 둘을 합쳐서 변환
-
-            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
-
-            string pad_Price = PadRightKorean(price, priceWidth); // 가격 변환
-
-            Console.WriteLine($"-   {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 보여줄 창
-        }
-
-        // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 가격, 이름너비, 스텟너비, 설명너비, 가격너비
-        public static void DisplayShopItemBuy(int id, string name, string statType, int statusBouns, string comment, string price, int Width, int statWidth, int commentWidth, int priceWidth)
-        {
-            string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
-            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
-
-            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
-            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
-
-            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
-
-            string pad_Price = PadRightKorean(price, priceWidth); // 가격 변환
-
-            Console.WriteLine($" {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 물약을 보여줄 창 
-        }
-
-        public static void DisplayShopPotion(int id, string name, int count, string statType, int statusBouns, string comment, string price, int Width, int statWidth, int commentWidth, int priceWidth)
-        {
-            string idAndName = $"{id.ToString()}. {name} (x{count})"; //번호를 string으로 변환 후 합침
-            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
-
-            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
-            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
-
-            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
-
-            string pad_Price = PadRightKorean(price, priceWidth); // 가격 변환
-
-            Console.WriteLine($" {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 구매시 보여줄 창 
-        }
-
-        public static void DisplayInventoryPotion(int id, string name, int count, string statType, int statusBouns, string comment, int Width, int statWidth, int commentWidth)
-        {
-            string idAndName = $"{id.ToString()}. {name} (x{count})"; //번호를 string으로 변환 후 합침
-            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
-
-            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
-            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
-
-            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
-
-            Console.WriteLine($"     {pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 물약이 보여줄 창 
-        }
-
-        // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 판매가격, 이름너비, 스텟너비, 설명너비, 판매가격너비
-        public static void DisplayShopItemSell(int id, string name, string statType, int statusBouns, string comment, int price, bool equipped, int Width, int statWidth, int commentWidth, int priceWidth)
-        {
-
-            string equippedStatus = equipped ? "[E]" : "   "; 
-
-            string idAndName = $"{id.ToString()}. {name}"; //번호를 string으로 변환 후 합침
-            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
-
-            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
-            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
-
-            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
-
-            string pad_Price = price.ToString().PadLeft(priceWidth); // 판매가격 변환
-
-            if (equipped)
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
-            }
-
-            Console.WriteLine($" {equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price} G"); // 상점에서 판매시 보여줄 창
-
-            Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
         }
 
     }

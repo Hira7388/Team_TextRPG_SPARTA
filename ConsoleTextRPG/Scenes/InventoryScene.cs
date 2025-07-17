@@ -13,9 +13,6 @@ namespace ConsoleTextRPG.Scenes
 {
     public class InventoryScene : BaseScene
     {
-        private int _width = 18;                   //이름 너비 제한
-        private int _statWidth = 12;                //스텟 너비 제한
-        private int _commentWidth = 62;              //설명 너비 제한
         List<Item> items = GameManager.Instance.Player.Inventory.Items;
 
         public override void RenderMenu()
@@ -124,13 +121,8 @@ namespace ConsoleTextRPG.Scenes
             {
                 Item item = items[i];
 
-                // 아이템 능력치와 설명 출력
-                if (item.Id == 6)
-                {
-                    ConsoleHelper.DisplayInventoryPotion(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, _width, _statWidth, _commentWidth);
-                    continue;
-                }
-                ConsoleHelper.DisplayInventory(i + 1, item.Name, item.StatType, item.StatusBonus, item.Comment, item.IsEquipped, _width, _statWidth, _commentWidth);
+                // 아이템 능력치와 설명 출력 mode = 0으로 인벤토리 창
+                ConsoleHelper.DisplayHelper(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, "0", item.IsEquipped, i, 0);
             }
 
             Print("");
