@@ -266,7 +266,7 @@ namespace ConsoleTextRPG.Scenes
                     GameManager.Instance.SwitchScene(GameState.QuestScene);
                     break;
                 case "0":
-                    Console.WriteLine("\n게임을 종료합니다. 안녕히 가세요!");
+                    GameManager.Instance.GameOver("\ninfo : 게임을 종료합니다. 안녕히 가세요!");
                     break;
                 default:
                     Console.WriteLine("올바른 번호를 선택해주세요.");
