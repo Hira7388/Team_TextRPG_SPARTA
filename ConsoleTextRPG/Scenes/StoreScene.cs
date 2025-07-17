@@ -28,7 +28,7 @@ namespace ConsoleTextRPG.Scenes
         private int _width = 18;                   //이름 너비 제한
         private int _statWidth = 12;                //스텟 너비 제한
         private int _commentWidth = 62;              //설명 너비 제한
-        private int _priceWidth = 5;                  //가격 너비 제한
+        private int _priceWidth = 5;                  //가격 너비 제한 공사중
 
         // 화면 출력
         public override void RenderMenu()
@@ -105,28 +105,13 @@ namespace ConsoleTextRPG.Scenes
 
                 if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
-                    // 번호 표시
-                    if (storeItem.Type == Item.ItemType.Potion)
-                    {
-                        ConsoleHelper.DisplayShopPotion(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
-                        continue;
-                    }
-                    else
-                    {
-                        ConsoleHelper.DisplayShopItemBuy(i + 1, storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
-                    }
-                    
-
+                    // 번호 표시 및 mode = 3 상점 구매창
+                    ConsoleHelper.DisplayHelper(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, storeItem.IsEquipped, i, 3);
                 }
                 else
                 {
-                    // 번호 없이 표시
-                    if (storeItem.Type == Item.ItemType.Potion)
-                    {
-                        ConsoleHelper.DisplayShopPotion(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
-                        continue;
-                    }
-                    ConsoleHelper.DisplayShopItem(storeItem.Name, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, _width, _statWidth, _commentWidth, _priceWidth);
+                    // 번호 없이 표시 및 mode = 1로 상점 전시창
+                    ConsoleHelper.DisplayHelper(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, storeItem.IsEquipped, i, 1);
                 }
 
                 Console.ResetColor();
@@ -148,9 +133,11 @@ namespace ConsoleTextRPG.Scenes
             for (int i = 0; i < playerItems.Count; i++)
             {
                 Item item = playerItems[i];
-                // 구매가의 85%로 판매할 수 있다. (여기에서 보여주는 판매가를 수정하시면 됩니다.)
+                // 판매가
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
-                ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, item.IsEquipped, _width, _statWidth, _commentWidth, _priceWidth);
+                string priceSell = $"{sellPrice} G";
+                // mode = 2로 판매창
+                ConsoleHelper.DisplayHelper(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, priceSell, item.IsEquipped, i, 2);
             }
         }
 
