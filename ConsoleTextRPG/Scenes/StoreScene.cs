@@ -25,10 +25,6 @@ namespace ConsoleTextRPG.Scenes
         List<Item> allItems = GameManager.Instance.AllItems; // 모든 아이템 정보를 받아온다.
 
         private float _storeDiscountRate = 0.85f; //할인율
-        private int _width = 18;                   //이름 너비 제한
-        private int _statWidth = 12;                //스텟 너비 제한
-        private int _commentWidth = 62;              //설명 너비 제한
-        private int _priceWidth = 5;                  //가격 너비 제한 공사중
 
         // 화면 출력
         public override void RenderMenu()
