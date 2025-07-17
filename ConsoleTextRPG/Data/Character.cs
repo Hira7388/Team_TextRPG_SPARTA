@@ -51,9 +51,7 @@ namespace ConsoleTextRPG.Data
         public virtual void TakeDamage(int damage)
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
-            Stat.ApplyDamage(damage);
-            int finalDamage = damage - this.Stat.TotalDefense;
-            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
+            int finalDamage = Stat.ApplyDamage(damage);
             // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
             Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
 
@@ -62,6 +60,21 @@ namespace ConsoleTextRPG.Data
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
             }
         }
+
+        // 몬스터가 Player에게 damage를 주는 행동
+        public virtual void MosTakeDamage(int damage)
+        {
+            // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
+            int finalDamage = Stat.MosApplyDamage(damage);
+            // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
+            Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+
+            if (Stat.IsDead)
+            {
+                Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
+            }
+        }
+
 
         // 자신이 damage를 받는 행동
         public virtual void TakeDefendDamage(int damage)

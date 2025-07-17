@@ -553,9 +553,6 @@ namespace ConsoleTextRPG.Scenes
                 {
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
                 }
-
-
-
             }
                             Console.WriteLine("계속하려면 아무 키나 누르세요...");
                 Console.ReadKey(true); // true: 입력된 키를 콘솔에 표시하지 않음

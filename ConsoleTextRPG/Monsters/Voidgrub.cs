@@ -15,7 +15,7 @@ namespace ConsoleTextRPG.Monsters
             Name = "공허충";
             MaxHP = 10;
             Level = 3;
-            ATK = 9;
+            ATK = 16;
             DFP = 0;
             Gold = 20;
             // 전투 상호작용을 위한 스탯 초기화 설정

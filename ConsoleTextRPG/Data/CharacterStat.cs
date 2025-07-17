@@ -34,7 +34,7 @@ namespace ConsoleTextRPG.Data
         }
 
         // 데미지를 계산하고 적의 공격 데미지와 내 방어력을 계산해서 HP를 변경하는 로직
-        public void ApplyDamage(int damage)
+        public int ApplyDamage(int damage)
         {
             int ten = (int)(damage * 0.1f);
             int min = damage- ten;
@@ -42,9 +42,19 @@ namespace ConsoleTextRPG.Data
             int rand= new Random().Next(min, max+1);
             int finalDamage = rand - TotalDefense;
             if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
-
             CurrentHp -= finalDamage;
             if (CurrentHp < 0) CurrentHp = 0;
+
+            return finalDamage; // 최종 데미지를 반환
+        }
+
+        public int MosApplyDamage(int damage)
+        {
+            int finalDamage = damage - TotalDefense;
+            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
+            CurrentHp -= finalDamage;
+            if (CurrentHp < 0) CurrentHp = 0;
+            return finalDamage; // 최종 데미지를 반환
         }
 
         public void DefecnDamage(int damage)

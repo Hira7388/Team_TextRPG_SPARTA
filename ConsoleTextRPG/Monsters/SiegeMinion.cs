@@ -15,7 +15,7 @@ namespace ConsoleTextRPG.Monsters
             Name = "대포미니언";
             MaxHP = 25;
             Level = 5;
-            ATK = 8;
+            ATK = 25;
             DFP = 0;
 
             Gold = 50;
