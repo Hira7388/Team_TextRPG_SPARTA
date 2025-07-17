@@ -296,10 +296,26 @@ namespace ConsoleTextRPG.Scenes
 
         void SwapnMonster()
         {
+            // 난이도별 몬스터수 조정
+            int  max = 0;
+            int min = 1;
+            switch (GameManager.Instance.currentLevel)
+            {
+                case DungeonLevel.Easy:
+                    max = 3;
+                    break;
+                case DungeonLevel.Normal:
+                    max = 4;
+                    break;
+                case DungeonLevel.Hard:
+                    min = 2; // 최소 2마리
+                    max = 5;
+                    break;
+            }
             currentMonsters.Clear(); // 몬스터 목록 초기화
             var rnd = new Random();
             var types = GameManager.Instance.monsType.Keys.ToList(); // 몬스터 타입 목록 가져오기
-            int MonsterCount = new Random().Next(1, 4); // 최소 1, 최대 3 마리 까지 생성하도록 설정
+            int MonsterCount = new Random().Next(min, max); // 최소 1, 최대 3 마리 까지 생성하도록 설정
 
             for (int i = 0; i < MonsterCount; i++)
             {
@@ -398,6 +414,12 @@ namespace ConsoleTextRPG.Scenes
                 GameManager.Instance.currentState = DungeonState.Adventure;
                 Thread.Sleep(200);
             }
+
+
+        void LoseGold()
+        {
+            Info("도망치다가 소지금을 흘렸습니다");
+        }
         
 
         // ============================[플레이어 공격 상태]============================
