@@ -1,5 +1,5 @@
 ﻿{
-  "PlayerName": "아니",
+  "PlayerName": "아니마",
   "PlayerJob": "전사",
   "Gold": 1500,
   "Level": 1,
@@ -12,6 +12,12 @@
   ],
   "EquippedWeaponId": -1,
   "EquippedArmorId": -1,
-  "InProgressQuestIds": null,
+  "InProgressQuestIds": [
+    {
+      "QuestId": 1,
+      "CurrentCount": 0,
+      "State": 1
+    }
+  ],
   "CompletedQuestIds": []
 }

@@ -102,6 +102,23 @@ namespace ConsoleTextRPG.Scenes
             Print("");
             Print($"{selectedQuest.Description}");
             Print("");
+            Print("[목표]", ConsoleColor.Green);
+            string objectiveText = "";
+            // 퀘스트 타입에 따라 다르게 출력한다.
+            switch (selectedQuest.Type)
+            {
+                case QuestType.Hunting:
+                    objectiveText = $"{selectedQuest.TargetName} 처치 ({currentCount} / {selectedQuest.TargetCount})";
+                    break;
+                case QuestType.Equip:
+                    objectiveText = $"{selectedQuest.TargetName} 장착 ({currentCount} / {selectedQuest.TargetCount})";
+                    break;
+                case QuestType.LevelUp:
+                    objectiveText = $"레벨 {selectedQuest.TargetCount} 달성 (현재 레벨: {questPlayer.Stat.Level})";
+                    break;
+            }
+            Print(objectiveText);
+            Print("");
             Print("@ 보상 @", ConsoleColor.Green);
             Print($"{selectedQuest.RewardGold} G");
             foreach (int itemId in selectedQuest.RewardItemIds)
