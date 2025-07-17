@@ -16,10 +16,28 @@ namespace ConsoleTextRPG.Data
         // 이후 데미지를 받는 로직을 실행하고(TakeDamage), 받은 데미지와 방어력을 통해 실제 입는 피해량 계산 로직이 실행됨(Stat.ApplyDamage);
         public virtual void Attack(Character target)
         {
-            int damage = this.Stat.TotalAttack;
-            Console.WriteLine($"{this.Name}의 공격!");
-            target.TakeDamage(damage); // 상대방의 TakeDamage 이벤트를 발동시킴
+            int baseDamage = this.Stat.TotalAttack;
+
+            Random rand = new Random();
+            bool isCritical = rand.Next(0, 3) == 0; // 1/3 확률
+
+            int finalDamage = baseDamage;
+
+            if (isCritical)
+            {
+                finalDamage *= 5;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{this.Name}의 치명타 공격!! 데미지 5배!!");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine($"{this.Name}의 공격!");
+            }
+
+            target.TakeDamage(finalDamage); // 타겟에게 데미지를 입힘
         }
+
 
         // 
         public virtual void Defend(Character target)

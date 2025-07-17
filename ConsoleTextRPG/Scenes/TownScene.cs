@@ -96,11 +96,18 @@ namespace ConsoleTextRPG.Scenes
             if (string.IsNullOrWhiteSpace(input))
             {
                 Console.WriteLine("오류 : 유효하지 않은 이름입니다. 다시 입력해주세요.");
-                Console.ReadKey();
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(300);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true);
             }
             else
             {
                 myPlayer.SetName(input);
+
                 Console.WriteLine($"\n나의 이름은, {myPlayer.Name}...\n");
                 Thread.Sleep(1000);
                 Console.Clear();
@@ -132,7 +139,10 @@ namespace ConsoleTextRPG.Scenes
                 //player.Attack = 15;
                 //player.Defense = 10;
                 //player.Health = 120;
+                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!\n");
+                Console.ResetColor();
+
                 isValidChoice = true;
 
 
@@ -145,7 +155,10 @@ namespace ConsoleTextRPG.Scenes
                 //player.Attack = 20;
                 //player.Defense = 5;
                 //player.Health = 80;
+                Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!\n");
+                Console.ResetColor();
+
                 isValidChoice = true;
 
 
@@ -153,7 +166,13 @@ namespace ConsoleTextRPG.Scenes
             else
             {
                 Console.WriteLine("오류 : 올바른 번호를 선택해주세요.");
-                Console.ReadKey();
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(200);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true);
 
             }
 
@@ -163,8 +182,13 @@ namespace ConsoleTextRPG.Scenes
                 Console.Clear();
                 Console.WriteLine($"{myPlayer.Name}님은 용맹한 전사가 되었습니다!");
                 Console.WriteLine("\n이 길이 나를 발할라로 인도하기를...");
-                Thread.Sleep(3700);
-                Console.Clear();
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(1000);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); Console.Clear();
             }
             else if (choice == "2")
             {
@@ -172,8 +196,13 @@ namespace ConsoleTextRPG.Scenes
                 Console.Clear();
                 Console.WriteLine($"{myPlayer.Name}님은 지혜로운 마법사가 되었습니다!");
                 Console.WriteLine("\n저 눈부신 빛이 저를 인도할 것입니다...");
-                Thread.Sleep(3700);
-                Console.Clear();
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(1000);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); Console.Clear();
             }
 
             ShowMenuOptions();
