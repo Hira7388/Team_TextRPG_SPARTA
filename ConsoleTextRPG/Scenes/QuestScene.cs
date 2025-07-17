@@ -102,6 +102,8 @@ namespace ConsoleTextRPG.Scenes
             Print("");
             Print($"{selectedQuest.Description}");
             Print("");
+            Print($"목표 : {selectedQuest.TargetName} X {selectedQuest.TargetCount}");
+            Print("");
             Print("@ 보상 @", ConsoleColor.Green);
             Print($"{selectedQuest.RewardGold} G");
             foreach (int itemId in selectedQuest.RewardItemIds)
