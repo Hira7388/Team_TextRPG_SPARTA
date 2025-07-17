@@ -98,16 +98,17 @@ namespace ConsoleTextRPG.Scenes
         // ============================[던전선택]============================
         void SelectStartRender()
         {
+         
             Print("◎던전◎", ConsoleColor.DarkYellow);
             Print("던전 진행을 선택해주세요\n");
             if (isAtive)
             {
-                Print(1, $"계속하기 | 진행도({(walkCount / dungeonClearCount) * 100})", ConsoleColor.DarkCyan);
+                int num = (walkCount *100) / dungeonClearCount;
+                Print(1, $"계속하기 | 진행도({num}%)", ConsoleColor.DarkCyan);
                 Print(2, "새로하기", ConsoleColor.DarkCyan);
             }
             else
-                Print(1, "새로하기", ConsoleColor.DarkCyan);
-
+            Print(1, "새로하기", ConsoleColor.DarkCyan);
             Print(0, "마을로 돌아가기", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
@@ -148,6 +149,7 @@ namespace ConsoleTextRPG.Scenes
                 {
                     case 1:
                         Info("던전 처음부터 진행합니다");
+                        walkCount = 0; // 이동 횟수 초기화
                         isAtive = false;
                         GameManager.Instance.currentLevel = DungeonLevel.Normal;
                         GameManager.Instance.currentState = DungeonState.SelectLevel;
@@ -223,7 +225,6 @@ namespace ConsoleTextRPG.Scenes
         // 던전 씬 랜더함수
         void DungeonRender()
         {
-            dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
             deadCount = 0; // 죽은 몬스터 수 초기화
             Print("◎던전◎", ConsoleColor.Red);
             Print("3가지 선택지를 보고 길을 선택해주세요\n");
@@ -322,6 +323,7 @@ namespace ConsoleTextRPG.Scenes
         // ============================[플레이어턴상태]============================
         void PlayerTurnRender()
         {
+            dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
             Print("\n============[몬스터]============");
@@ -375,7 +377,7 @@ namespace ConsoleTextRPG.Scenes
         {
             if(currentMonsters.Count > 1)
             {
-                if (new Random().NextDouble() < 0.1f) // 10% 확률로 도망 성공
+                if (new Random().NextDouble() < 1f) // 10% 확률로 도망 성공
                 {
                     GameManager.Instance.currentState = DungeonState.Adventure;
                     Info("도망쳤습니다");
@@ -529,6 +531,7 @@ namespace ConsoleTextRPG.Scenes
 
                 else
                 {
+                    dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
                     // 큐가 비어있다면 플레이어 턴으로 전환
                     isDF = false; // 방어 상태 해제
                     GameManager.Instance.currentState = DungeonState.PlayerTrun;
@@ -623,11 +626,10 @@ namespace ConsoleTextRPG.Scenes
 
                 else
                 {
-                    int loseHP = (int)(dungeonHP * 0.5f); // 플레이어가 죽었을 때 체력 감소
-                    myPlayer.Stat.CurrentHp += loseHP;
+                    int loseHP = (int)(myPlayer.Stat.MaxHp * 0.3f); // 플레이어가 죽었을 때 체력 감소
                     dungeonHP = 0;
                     Print("\ninfo : 쓰러진 당신은 던전마법으로 마을로 돌아갑니다.");
-                    Print($"패배 패널티로 체력이 {myPlayer.Stat.CurrentHp}/{myPlayer.Stat.MaxHp}이 됩니다.");
+                    Print($"패배 패널티로 체력이 {loseHP}/{myPlayer.Stat.MaxHp}이 됩니다.");
                     GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
                     walkCount = 0;// 이동 횟수 초기화
                     Thread.Sleep(1000);
