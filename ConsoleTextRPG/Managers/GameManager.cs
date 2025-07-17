@@ -106,6 +106,10 @@ namespace ConsoleTextRPG.Managers
 
             // 초기 던전 상태 설정
             _currentState = DungeonState.Select;
+
+            // 초기 던전 난이도 설정
+            _currentLevel = DungeonLevel.Easy;
+
         }
 
         // 아이템 정보 불러오기
