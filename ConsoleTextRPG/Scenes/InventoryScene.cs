@@ -17,6 +17,7 @@ namespace ConsoleTextRPG.Scenes
         private int _statWidth = 12;                //스텟 너비 제한
         private int _commentWidth = 50;              //설명 너비 제한
         List<Item> items = GameManager.Instance.Player.Inventory.Items;
+
         public override void RenderMenu()
         {
             ShowInventoryMenu();

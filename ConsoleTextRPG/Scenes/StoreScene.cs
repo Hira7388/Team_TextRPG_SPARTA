@@ -135,6 +135,7 @@ namespace ConsoleTextRPG.Scenes
             {
                 Item item = playerItems[i];
                 // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
+                
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
                 ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, item.IsEquipped, _width, _statWidth, _commentWidth, _priceWidth);
                 //Console.Write($"- {i + 1}. {item.Name,-15}");
@@ -208,9 +209,11 @@ namespace ConsoleTextRPG.Scenes
                     else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
                     else
                     {
+                        Item newItem = itemToBuy.Clone();            //나중에 저장을 위한 클론 생성
+
                         player.AddGold(-itemToBuy.Price);            // 플레이어 골드 차감
-                        player.EquipItem(itemToBuy);                  // 구매시 바로 장착
-                        player.Inventory.AddItem(itemToBuy.Clone());   // 인벤토리에 아이템 추가
+                        player.EquipItem(newItem);                   // 구매시 바로 장착
+                        player.Inventory.AddItem(newItem);           // 인벤토리에 아이템 추가
                         Info($"{itemToBuy.Name}을(를) 구매했습니다!");
                     }
                     Thread.Sleep(900);
@@ -259,5 +262,6 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
         }
+
     }
 }
