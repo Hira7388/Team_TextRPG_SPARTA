@@ -18,6 +18,8 @@ namespace ConsoleTextRPG.Scenes
         int deadCount = 0; // 죽은 몬스터 수
         int dungeonHP = 0; // 결과창 확인용
 
+        bool isAtive = false; // 던전 활성화 여부
+
         bool isDF = false; // 방어 여부
         bool isWin = false; // 승리 여부
 
@@ -32,8 +34,11 @@ namespace ConsoleTextRPG.Scenes
         {
             switch(GameManager.Instance.currentState)
             {
-                case DungeonState.Select:
-                    SelectRender(); 
+                case DungeonState.SelectStart:
+                    SelectStartRender();
+                    break;
+                case DungeonState.SelectLevel:
+                    SelectLevelRender(); 
                     break;
                 case DungeonState.Adventure:
                     DungeonRender();
@@ -66,9 +71,11 @@ namespace ConsoleTextRPG.Scenes
 
             switch (GameManager.Instance.currentState)
             {
-
-                case DungeonState.Select:
-                    SelectMove(index);
+                case DungeonState.SelectStart:
+                    SelectStartMove(index);
+                    break;
+                case DungeonState.SelectLevel:
+                    SelectLevelMove(index);
                     break;
                 case DungeonState.Adventure:
                     DungeonMove(index); // 던전 행동 선택
@@ -87,41 +94,126 @@ namespace ConsoleTextRPG.Scenes
                     break;
             }                
         }
+
         // ============================[던전선택]============================
-        void SelectRender()
+        void SelectStartRender()
         {
-            dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
-            deadCount = 0; // 죽은 몬스터 수 초기화
-            Print("◎던전◎", ConsoleColor.Red);
-            Print("3가지 선택지를 보고 길을 선택해주세요\n");
-            Print("이동횟수 : ", walkCount, ConsoleColor.DarkGreen);
-            Print("\n");
-            Print(1, "왼쪽길", ConsoleColor.DarkCyan);
-            Print(2, "앞으로", ConsoleColor.DarkCyan);
-            Print(3, "오른쪽길", ConsoleColor.DarkCyan);
+         
+            Print("◎던전◎", ConsoleColor.DarkYellow);
+            Print("던전 진행을 선택해주세요\n");
+            if (isAtive)
+            {
+                int num = (walkCount *100) / dungeonClearCount;
+                Print(1, $"계속하기 | 진행도({num}%)", ConsoleColor.DarkCyan);
+                Print(2, "새로하기", ConsoleColor.DarkCyan);
+            }
+            else
+            Print(1, "새로하기", ConsoleColor.DarkCyan);
+            Print(0, "마을로 돌아가기", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
         }
-        void SelectMove(int index)
+        void SelectStartMove(int index)
+        {
+            if (isAtive)
+            {
+                switch (index)
+                {
+                    case 1:
+                        Info("계속 진행합니다");
+                        GameManager.Instance.currentState = DungeonState.Adventure;
+                        Thread.Sleep(100);
+                        break;
+                    case 2:
+                        Info("던전 처음부터 진행합니다");
+                        isAtive = false;
+                        GameManager.Instance.currentLevel = DungeonLevel.Normal;
+                        GameManager.Instance.currentState = DungeonState.SelectLevel;
+                        Thread.Sleep(100);
+                        break;
+                    case 0:
+                        Info("마을로 돌아갑니다");
+                        GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
+                        Thread.Sleep(100);
+                        break;
+                    default:
+                        Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                        Thread.Sleep(200);
+                        break;
+                }
+            }
+            else
+            {
+                switch (index)
+                {
+                    case 1:
+                        Info("던전 처음부터 진행합니다");
+                        walkCount = 0; // 이동 횟수 초기화
+                        isAtive = false;
+                        GameManager.Instance.currentLevel = DungeonLevel.Normal;
+                        GameManager.Instance.currentState = DungeonState.SelectLevel;
+                        Thread.Sleep(100);
+                        break;
+                    case 0:
+                        Info("마을로 돌아갑니다");
+                        GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
+                        Thread.Sleep(100);
+                        break;
+                    default:
+                        Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                        Thread.Sleep(200);
+                        break;
+                }
+                 
+                }
+        }
+
+        // ============================[던전선택]============================
+        void SelectLevelRender()
+        {
+            Print("◎던전-난이도 선택◎", ConsoleColor.DarkYellow);
+            Print("던전의 난이도를 선택해주세요.\n");
+
+            Print(1, "쉬움 난이도 | 몬스터 최대 2마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(2, "보통 난이도 | 몬스터 최대 3마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(3, "어려움난이도 | 몬스터 최대 4마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(0, "마을로 돌아가기", ConsoleColor.DarkCyan);
+
+            Print("\n원하시는 행동을 입력해주세요");
+            Console.Write(">>");
+        }
+        void SelectLevelMove(int index)
         {
             switch (index)
             {
                 case 1:
-                    Info("왼쪽길로 갑니다");
-                    DungeonEvent();
-                    Thread.Sleep(100);
+                    Info("쉬움난이도로 진행합니다.");
+                    Info("전투보다 스토리를 더 중요시 여기는 분들에게 알맞는 난이도 입니다.");
+                    dungeonClearCount = 10;
+                    GameManager.Instance.currentLevel = DungeonLevel.Easy;
+                    GameManager.Instance.currentState = DungeonState.Adventure;
+                    Thread.Sleep(200);
                     break;
                 case 2:
-                    Info("앞으로 갑니다");
-                    DungeonEvent();
+                    Info("보통 난이도로 진행합니다.");
+                    dungeonClearCount = 15;
+                    GameManager.Instance.currentLevel = DungeonLevel.Normal;
+                    GameManager.Instance.currentState = DungeonState.Adventure;
                     Thread.Sleep(100);
                     break;
                 case 3:
-                    Info("오른쪽길로 갑니다");
-                    DungeonEvent();
+                    Info("어려움 난이도로 진행합니다.");
+                    dungeonClearCount = 20;
+                    GameManager.Instance.currentLevel = DungeonLevel.Hard;
+                    GameManager.Instance.currentState = DungeonState.Adventure;
                     Thread.Sleep(100);
                     break;
+                    case 0:
+                        Info("마을로 돌아갑니다");
+                        GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
+                        Thread.Sleep(100);
+                        break;
                 default:
                     Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
                     Thread.Sleep(200);
@@ -129,13 +221,10 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-
-
         // ============================[던전상태]============================
         // 던전 씬 랜더함수
         void DungeonRender()
         {
-            dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
             deadCount = 0; // 죽은 몬스터 수 초기화
             Print("◎던전◎", ConsoleColor.Red);
             Print("3가지 선택지를 보고 길을 선택해주세요\n");
@@ -144,6 +233,7 @@ namespace ConsoleTextRPG.Scenes
             Print(1, "왼쪽길", ConsoleColor.DarkCyan);
             Print(2, "앞으로", ConsoleColor.DarkCyan);
             Print(3, "오른쪽길", ConsoleColor.DarkCyan);
+            Print(0, "마을로 돌아가기", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
@@ -166,6 +256,13 @@ namespace ConsoleTextRPG.Scenes
                 case 3:
                     Info("오른쪽길로 갑니다");
                     DungeonEvent();
+                    Thread.Sleep(100);
+                    break;
+                case 0:
+                    Info("마을로 돌아갑니다");
+                    GameManager.Instance.currentState = DungeonState.SelectStart;
+                    GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
+                    isAtive = true;
                     Thread.Sleep(100);
                     break;
                 default:
@@ -226,6 +323,7 @@ namespace ConsoleTextRPG.Scenes
         // ============================[플레이어턴상태]============================
         void PlayerTurnRender()
         {
+            dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             Print($"\n몬스터가 {currentMonsters.Count}마리가 나타났습니다!\n");
             Print("\n============[몬스터]============");
@@ -263,8 +361,13 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 default:
                     Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                    Thread.Sleep(200);
-                    break;
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(300);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); break;
             }
         }
 
@@ -277,10 +380,13 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerRun()
         {
-            if(currentMonsters.Count > 1)
+            if (currentMonsters.Count > 1)
             {
-                if (new Random().NextDouble() < 0.3f) // 30% 확률로 도망 성공
+                if (new Random().NextDouble() < 0.1f) // 10% 확률로 도망 성공
                 {
+                    if (new Random().NextDouble() < 0.3f) // 30% 확률로 돈 흘림
+                        LoseGold();
+
                     GameManager.Instance.currentState = DungeonState.Adventure;
                     Info("도망쳤습니다");
                     Thread.Sleep(500);
@@ -295,12 +401,29 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
             else
-                GameManager.Instance.currentState = DungeonState.Adventure;
+            {
+                if (new Random().NextDouble() < 0.3f)
+                LoseGold();
                 Info("도망쳤습니다.");
                 GameManager.Instance.currentState = DungeonState.Adventure;
                 Thread.Sleep(200);
             }
-        
+            // 입력 버퍼 비우기
+            while (Console.KeyAvailable) Console.ReadKey(true);
+
+            Thread.Sleep(500);
+
+            // 또 한 번 비워주기 (남아있을 수도 있으니까)
+            while (Console.KeyAvailable) Console.ReadKey(true);
+
+        }
+        void LoseGold()
+        {
+            Info("도망치다가 소지금을 흘렸습니다");
+            myPlayer.Gold -= (int)(myPlayer.Gold * 0.05f); // 소지금 5% 감소
+        }
+
+
 
         // ============================[플레이어 공격 상태]============================
         void PlayerAttackRender()
@@ -326,24 +449,39 @@ namespace ConsoleTextRPG.Scenes
             if(index < 0 || index > currentMonsters.Count)
             {
                 Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
                 Thread.Sleep(300);
-                return;
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
 
             if( index == 0)
             {
                 GameManager.Instance.currentState = DungeonState.PlayerTrun; // 공격 취소시 플레이어 턴으로 돌아감
                 Info("공격을 취소합니다.");
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
                 Thread.Sleep(300);
-                return;
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
             else
             {
                 if (currentMonsters[index-1].Stat.CurrentHp <= 0)
                 {
                     Print("\ninfo : 이미 죽은 몬스터입니다.");
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
                     Thread.Sleep(300);
-                    return;
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); return;
                 }
                 else
                 {
@@ -372,10 +510,12 @@ namespace ConsoleTextRPG.Scenes
 
         void MonstersDeadCheck()
         {
+            deadCount = 0;
             // 다음 몬스터턴 행동에 사용될 살아있는 몬스터들 큐에 추가
+            monsterQueue.Clear();
             foreach (var monster in currentMonsters)
             {
-                if (!monster.isDead)               //  살아있는 몬스터 필터링
+                if (!monster.Stat.IsDead)               //  살아있는 몬스터 필터링
                 {
                     monsterQueue.Enqueue(monster);
                 }
@@ -384,7 +524,7 @@ namespace ConsoleTextRPG.Scenes
             // 몬스터들 전부 죽었는지  확인
             foreach (var monster in currentMonsters)
             {
-                if (monster.Stat.CurrentHp == 0)
+                if (monster.Stat.IsDead)
                     deadCount++;
 
                 if (deadCount == currentMonsters.Count)
@@ -392,14 +532,18 @@ namespace ConsoleTextRPG.Scenes
                     isWin = true; // 모든 몬스터를 처치했을 때 승리 상태로 변경
                     GameManager.Instance.currentState = DungeonState.EndBattle;
                     Info("모든 몬스터를 처치했습니다.");
-                    Thread.Sleep(800);
                 }
                 else
                 {
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                    Thread.Sleep(800);
                 }
+
+
+
             }
+                            Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                Console.ReadKey(true); // true: 입력된 키를 콘솔에 표시하지 않음
+
         }
 
         // ==============[몬스터턴상태]==============// 여기부터 구현하면댐
@@ -427,8 +571,13 @@ namespace ConsoleTextRPG.Scenes
             if (index < 0 || index > currentMonsters.Count)
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
-                Thread.Sleep(300);
-                return;
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(200);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
 
             if( index == 0)
@@ -442,11 +591,18 @@ namespace ConsoleTextRPG.Scenes
 
                 else
                 {
+                    dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
                     // 큐가 비어있다면 플레이어 턴으로 전환
                     isDF = false; // 방어 상태 해제
                     GameManager.Instance.currentState = DungeonState.PlayerTrun;
                     Print("\ninfo : 몬스터의 공격이 끝났습니다");
-                    Thread.Sleep(800);
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(300);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true);
                 }
             }
         }
@@ -461,7 +617,8 @@ namespace ConsoleTextRPG.Scenes
                 isDF= false; // 방어 상태 해제
                 isWin = false; // 플레이어가 죽었을 때 패배 상태로 변경
                 GameManager.Instance.currentState = DungeonState.EndBattle;
-                Thread.Sleep(800);
+                Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                Console.ReadKey(true); // 유저가 키를 누를 때까지 대기
             }
             else
             {
@@ -470,7 +627,8 @@ namespace ConsoleTextRPG.Scenes
 
                 else
                     currentMonsters[index].Attack(myPlayer);
-                Thread.Sleep(1000);
+                Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                Console.ReadKey(true); // 유저가 키를 누를 때까지 대기;
             }
         }
 
@@ -520,8 +678,13 @@ namespace ConsoleTextRPG.Scenes
             if (index < 0 || index > currentMonsters.Count)
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
-                Thread.Sleep(300);
-                return;
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(250);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
             if (index == 0)
             {
@@ -531,20 +694,30 @@ namespace ConsoleTextRPG.Scenes
                     currentMonsters.Clear(); // 몬스터 목록 초기화
                     dungeonHP = 0;
                     Print("\ninfo : 전투를 종료합니다.");
-                    Thread.Sleep(300);
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(200);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true);
                 }
 
                 else
                 {
-                    int loseHP = (int)(dungeonHP * 0.5f); // 플레이어가 죽었을 때 체력 감소
-                    myPlayer.Stat.CurrentHp += loseHP;
+                    int loseHP = (int)(myPlayer.Stat.MaxHp * 0.3f); // 플레이어가 죽었을 때 체력 감소
                     dungeonHP = 0;
                     Print("\ninfo : 쓰러진 당신은 던전마법으로 마을로 돌아갑니다.");
-                    Print($"패배 패널티로 체력이 {myPlayer.Stat.CurrentHp}/{myPlayer.Stat.MaxHp}이 됩니다.");
+                    Print($"패배 패널티로 체력이 {loseHP}/{myPlayer.Stat.MaxHp}이 됩니다.");
                     GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
                     walkCount = 0;// 이동 횟수 초기화
-                    Thread.Sleep(1000);
-                    return;
+                                  // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(1500);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); return;
                 }
             }
         }
