@@ -49,6 +49,7 @@ namespace ConsoleTextRPG.Managers
                 InventoryItemIds = player.Inventory.Items.Select(item => item.Id).ToList(), // 플레이어 인벤토리 아이템에서 id를 받아서 리스트로 저장한다.
                 EquippedWeaponId = player.EquippedWeapon?.Id ?? -1,
                 EquippedArmorId = player.EquippedArmor?.Id ?? -1,
+                InProgressQuestIds = player.Quests,
                 CompletedQuestIds = player.CompletedQuestIds // 플레이어가 완료한 퀘스트 id
             };
             string json = JsonConvert.SerializeObject(saveData, Formatting.Indented); // saveData의 내용을 Json문자열로 변환하는 기능
