@@ -27,7 +27,7 @@ namespace ConsoleTextRPG.Scenes
         private float _storeDiscountRate = 0.85f; //할인율
         private int _width = 18;                   //이름 너비 제한
         private int _statWidth = 12;                //스텟 너비 제한
-        private int _commentWidth = 50;              //설명 너비 제한
+        private int _commentWidth = 62;              //설명 너비 제한
         private int _priceWidth = 5;                  //가격 너비 제한
 
         // 화면 출력
@@ -100,7 +100,6 @@ namespace ConsoleTextRPG.Scenes
                 }
 
                  string priceDisplay = isSoldOut ? "구매완료" : $"{storeItem.Price} G";
-                 Console.ForegroundColor = isSoldOut ? ConsoleColor.DarkGray : ConsoleColor.White;
 
                 if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
@@ -138,8 +137,7 @@ namespace ConsoleTextRPG.Scenes
             for (int i = 0; i < playerItems.Count; i++)
             {
                 Item item = playerItems[i];
-                // 일단 임시로 구매가의 85%로 판매할 수 있다. (여기에서 판매가를 수정하시면 됩니다.)
-                
+                // 구매가의 85%로 판매할 수 있다. (여기에서 보여주는 판매가를 수정하시면 됩니다.)
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
                 ConsoleHelper.DisplayShopItemSell(i+1, item.Name, item.StatType, item.StatusBonus, item.Comment, sellPrice, item.IsEquipped, _width, _statWidth, _commentWidth, _priceWidth);
                 //Console.Write($"- {i + 1}. {item.Name,-15}");
@@ -211,11 +209,12 @@ namespace ConsoleTextRPG.Scenes
 
 
 
-                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id)) 
+                    if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id))
                     {
-                       Info("이미 구매한 아이템입니다.");
+                        Info("이미 구매한 아이템입니다.");
                     }
-                    else if (player.Gold < itemToBuy.Price) Info("골드가 부족합니다.");
+                    else if (player.Gold < itemToBuy.Price) 
+                    { Info("골드가 부족합니다."); }
                     else
                     {
                         Item newItem = itemToBuy.Clone();            //나중에 저장을 위한 클론 생성
