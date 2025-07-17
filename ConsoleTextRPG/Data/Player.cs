@@ -94,32 +94,51 @@ namespace ConsoleTextRPG.Data
         }
 
         // 아이템을 장착하는 메서드
-        public void EquipItem(Item item)
+        public void EquipItem(Item itemToEquip)
         {
-            if (item.Type == Item.ItemType.Weapon)
+            // 이미 장착된 아이템을 다시 장착하려는 경우, 아무것도 하지 않고 종료합니다.
+            if (itemToEquip.IsEquipped)
             {
-                if (this.EquippedWeapon != null) UnequipItem(this.EquippedWeapon);
-                this.EquippedWeapon = item;
-            }
-            else if (item.Type == Item.ItemType.Armor)
-            {
-                if (this.EquippedArmor != null) UnequipItem(this.EquippedArmor);
-                this.EquippedArmor = item;
+                // 선택적으로 사용자에게 메시지를 보여줄 수 있습니다.
+                Console.WriteLine("이미 장착 중인 아이템입니다.");
+                return;
             }
 
-            item.IsEquipped = true;
-            this.Stat.AddBonusStats(item); // Stat에 보너스 능력치 적용 요청
+            if (itemToEquip.Type == Item.ItemType.Weapon)
+            {
+                // 다른 무기를 끼고 있다면 먼저 해제합니다.
+                if (this.EquippedWeapon != null)
+                {
+                    UnequipItem(this.EquippedWeapon);
+                }
+                this.EquippedWeapon = itemToEquip;
+            }
+            else if (itemToEquip.Type == Item.ItemType.Armor)
+            {
+                if (this.EquippedArmor != null)
+                {
+                    UnequipItem(this.EquippedArmor);
+                }
+                this.EquippedArmor = itemToEquip;
+            }
+
+            itemToEquip.IsEquipped = true;
+            this.Stat.AddBonusStats(itemToEquip);
         }
 
         // 아이템 장착을 해제하는 메서드
-        public void UnequipItem(Item item)
+        public void UnequipItem(Item itemToUnequip)
         {
-            if (item.Type == Item.ItemType.Weapon) this.EquippedWeapon = null;
-            else if (item.Type == Item.ItemType.Armor) this.EquippedArmor = null;
+            // 장착되지 않은 아이템을 해제하려는 경우, 아무것도 하지 않습니다.
+            if (!itemToUnequip.IsEquipped) return;
 
-            item.IsEquipped = false;
-            this.Stat.RemoveBonusStats(item); // Stat에 보너스 능력치 제거 요청
+            if (itemToUnequip.Type == Item.ItemType.Weapon) this.EquippedWeapon = null;
+            else if (itemToUnequip.Type == Item.ItemType.Armor) this.EquippedArmor = null;
+
+            itemToUnequip.IsEquipped = false;
+            this.Stat.RemoveBonusStats(itemToUnequip);
         }
+
 
         // 퀘스트를 수락하는 메서드
         public void AcceptQuest(int questId)
