@@ -354,8 +354,19 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerAttack(int index)
         {
+            // ---- [정진규 추가]
+            bool wasAlive = !currentMonsters[index].Stat.IsDead; // 현재 공격하려는 몬스터가 살아있는지 확인한다.
+
             // 중독상태 같은 상태이상 공격이 있을 경우는 플레이어 공격전에 DeadCheck를 먼저 실행해야함
             myPlayer.Attack(currentMonsters[index]);
+
+            // ---- [정진규 추가]
+            bool isDeadNow = currentMonsters[index].Stat.IsDead; // 이번 공격으로 몬스터가 죽었나?
+            if(wasAlive && isDeadNow)
+            {
+                QuestManager.Instance.OnMonsterKilled(currentMonsters[index].Name);
+            }
+
             MonstersDeadCheck();
         }
 
