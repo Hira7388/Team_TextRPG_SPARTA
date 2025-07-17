@@ -41,6 +41,7 @@ namespace ConsoleTextRPG.Data
             Price = price;
             IsEquipped = isEquipped;
 
+
             // Type에 따라 StatType 문자열을 자동으로 생성한다.
             if (type == ItemType.Weapon)
             {
