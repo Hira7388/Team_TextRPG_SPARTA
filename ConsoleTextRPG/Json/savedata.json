@@ -6,7 +6,7 @@
   "BaseAttack": 15,
   "BaseDefense": 10,
   "MaxHp": 120,
-  "CurrentHp": 120,
+  "CurrentHp": 111,
   "InventoryItemIds": [
     0
   ],
@@ -15,7 +15,7 @@
   "InProgressQuestIds": [
     {
       "QuestId": 1,
-      "CurrentCount": 0,
+      "CurrentCount": 4,
       "State": 1
     }
   ],
