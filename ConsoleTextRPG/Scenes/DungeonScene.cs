@@ -189,11 +189,11 @@ namespace ConsoleTextRPG.Scenes
             {
                 case 1:
                     Info("쉬움난이도로 진행합니다.");
-                    Info("풉풉풉 허접허접");
+                    Info("전투보다 스토리를 더 중요시 여기는 분들에게 알맞는 난이도 입니다.");
                     dungeonClearCount = 10;
                     GameManager.Instance.currentLevel = DungeonLevel.Easy;
                     GameManager.Instance.currentState = DungeonState.Adventure;
-                    Thread.Sleep(100);
+                    Thread.Sleep(200);
                     break;
                 case 2:
                     Info("보통 난이도로 진행합니다.");
@@ -361,8 +361,13 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 default:
                     Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
-                    Thread.Sleep(200);
-                    break;
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(300);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); break;
             }
         }
 
@@ -381,8 +386,13 @@ namespace ConsoleTextRPG.Scenes
                 {
                     GameManager.Instance.currentState = DungeonState.Adventure;
                     Info("도망쳤습니다");
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
                     Thread.Sleep(500);
-                    return;
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); return;
                 }
                 else
                 {
@@ -396,8 +406,15 @@ namespace ConsoleTextRPG.Scenes
                 GameManager.Instance.currentState = DungeonState.Adventure;
                 Info("도망쳤습니다.");
                 GameManager.Instance.currentState = DungeonState.Adventure;
-                Thread.Sleep(200);
-            }
+
+            // 입력 버퍼 비우기
+            while (Console.KeyAvailable) Console.ReadKey(true);
+
+            Thread.Sleep(500);
+
+            // 또 한 번 비워주기 (남아있을 수도 있으니까)
+            while (Console.KeyAvailable) Console.ReadKey(true);
+        }
         
 
         // ============================[플레이어 공격 상태]============================
@@ -424,24 +441,39 @@ namespace ConsoleTextRPG.Scenes
             if(index < 0 || index > currentMonsters.Count)
             {
                 Console.WriteLine("\ninfo : 잘못 입력 하셨습니다.");
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
                 Thread.Sleep(300);
-                return;
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
 
             if( index == 0)
             {
                 GameManager.Instance.currentState = DungeonState.PlayerTrun; // 공격 취소시 플레이어 턴으로 돌아감
                 Info("공격을 취소합니다.");
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
                 Thread.Sleep(300);
-                return;
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
             else
             {
                 if (currentMonsters[index-1].Stat.CurrentHp <= 0)
                 {
                     Print("\ninfo : 이미 죽은 몬스터입니다.");
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
                     Thread.Sleep(300);
-                    return;
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); return;
                 }
                 else
                 {
@@ -481,14 +513,18 @@ namespace ConsoleTextRPG.Scenes
                     isWin = true; // 모든 몬스터를 처치했을 때 승리 상태로 변경
                     GameManager.Instance.currentState = DungeonState.EndBattle;
                     Info("모든 몬스터를 처치했습니다.");
-                    Thread.Sleep(800);
                 }
                 else
                 {
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
-                    Thread.Sleep(800);
                 }
+
+
+
             }
+                            Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                Console.ReadKey(true); // true: 입력된 키를 콘솔에 표시하지 않음
+
         }
 
         // ==============[몬스터턴상태]==============// 여기부터 구현하면댐
@@ -516,8 +552,13 @@ namespace ConsoleTextRPG.Scenes
             if (index < 0 || index > currentMonsters.Count)
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
-                Thread.Sleep(300);
-                return;
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(200);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
 
             if( index == 0)
@@ -536,7 +577,13 @@ namespace ConsoleTextRPG.Scenes
                     isDF = false; // 방어 상태 해제
                     GameManager.Instance.currentState = DungeonState.PlayerTrun;
                     Print("\ninfo : 몬스터의 공격이 끝났습니다");
-                    Thread.Sleep(800);
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(300);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true);
                 }
             }
         }
@@ -551,7 +598,8 @@ namespace ConsoleTextRPG.Scenes
                 isDF= false; // 방어 상태 해제
                 isWin = false; // 플레이어가 죽었을 때 패배 상태로 변경
                 GameManager.Instance.currentState = DungeonState.EndBattle;
-                Thread.Sleep(800);
+                Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                Console.ReadKey(true); // 유저가 키를 누를 때까지 대기
             }
             else
             {
@@ -560,7 +608,8 @@ namespace ConsoleTextRPG.Scenes
 
                 else
                     currentMonsters[index].Attack(myPlayer);
-                Thread.Sleep(1000);
+                Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                Console.ReadKey(true); // 유저가 키를 누를 때까지 대기;
             }
         }
 
@@ -610,8 +659,13 @@ namespace ConsoleTextRPG.Scenes
             if (index < 0 || index > currentMonsters.Count)
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
-                Thread.Sleep(300);
-                return;
+                // 입력 버퍼 비우기
+                while (Console.KeyAvailable) Console.ReadKey(true);
+
+                Thread.Sleep(250);
+
+                // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                while (Console.KeyAvailable) Console.ReadKey(true); return;
             }
             if (index == 0)
             {
@@ -621,7 +675,13 @@ namespace ConsoleTextRPG.Scenes
                     currentMonsters.Clear(); // 몬스터 목록 초기화
                     dungeonHP = 0;
                     Print("\ninfo : 전투를 종료합니다.");
-                    Thread.Sleep(300);
+                    // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(200);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true);
                 }
 
                 else
@@ -632,8 +692,13 @@ namespace ConsoleTextRPG.Scenes
                     Print($"패배 패널티로 체력이 {loseHP}/{myPlayer.Stat.MaxHp}이 됩니다.");
                     GameManager.Instance.SwitchScene(GameState.TownScene); // 마을로 돌아가기
                     walkCount = 0;// 이동 횟수 초기화
-                    Thread.Sleep(1000);
-                    return;
+                                  // 입력 버퍼 비우기
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+
+                    Thread.Sleep(1500);
+
+                    // 또 한 번 비워주기 (남아있을 수도 있으니까)
+                    while (Console.KeyAvailable) Console.ReadKey(true); return;
                 }
             }
         }

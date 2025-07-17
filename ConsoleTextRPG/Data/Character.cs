@@ -19,7 +19,7 @@ namespace ConsoleTextRPG.Data
             int baseDamage = this.Stat.TotalAttack;
 
             Random rand = new Random();
-            bool isCritical = rand.Next(0, 4) == 0; // 1/4 확률
+            bool isCritical = rand.Next(0, 3) == 0; // 1/3 확률
 
             int finalDamage = baseDamage;
 
