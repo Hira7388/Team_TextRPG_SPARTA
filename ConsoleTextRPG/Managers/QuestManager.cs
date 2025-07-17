@@ -62,7 +62,7 @@ namespace ConsoleTextRPG.Managers
             Player player = GameManager.Instance.Player;
 
             // 진행 중인 'Kill' 타입의 퀘스트를 찾습니다.
-            foreach (PlayerQuest pq in player.Quests.Where(q => q.State == QuestState.InProgress))
+            foreach (PlayerQuest pq in player.Quests.Where(q => q.State == QuestState.InProgress).ToList())
             {
                 Quest questInfo = AllQuests.FirstOrDefault(q => q.Id == pq.QuestId);
                 if (questInfo != null && questInfo.Type == QuestType.Hunting && questInfo.TargetName == monsterName)
