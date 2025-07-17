@@ -102,7 +102,8 @@ namespace ConsoleTextRPG.Scenes
             {
                 myPlayer.SetName(input);
                 Console.WriteLine($"\n나의 이름은, {myPlayer.Name}...\n");
-                Console.ReadKey();
+                Thread.Sleep(1000);
+                Console.Clear();
             }
         }
 
