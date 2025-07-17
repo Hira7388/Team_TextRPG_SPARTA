@@ -91,7 +91,35 @@ namespace ConsoleTextRPG.Scenes
 
             string pad_Price = PadRightKorean(price, priceWidth); // 가격 변환
 
+            Console.WriteLine($" {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 물약을 보여줄 창 
+        }
+
+        public static void DisplayShopPotion(int id, string name, int count, string statType, int statusBouns, string comment, string price, int Width, int statWidth, int commentWidth, int priceWidth)
+        {
+            string idAndName = $"{id.ToString()}. {name} (x{count})"; //번호를 string으로 변환 후 합침
+            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
+
+            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
+            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
+
+            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
+
+            string pad_Price = PadRightKorean(price, priceWidth); // 가격 변환
+
             Console.WriteLine($" {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 구매시 보여줄 창 
+        }
+
+        public static void DisplayInventoryPotion(int id, string name, int count, string statType, int statusBouns, string comment, int Width, int statWidth, int commentWidth)
+        {
+            string idAndName = $"{id.ToString()}. {name} (x{count})"; //번호를 string으로 변환 후 합침
+            string pad_Id = PadRightKorean(idAndName, Width); //번호+이름을 변환
+
+            string statAndBouns = $"{statType} + {statusBouns.ToString()}"; //스텟타입을 string으로 변환 후 합침
+            string pad_StatType = PadRightKorean(statAndBouns, statWidth); // 스텟타입 + 스텟보너스 둘을 합쳐서 변환
+
+            string pad_Comment = PadRightKorean(comment, commentWidth); //설명 변환
+
+            Console.WriteLine($"     {pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 물약이 보여줄 창 
         }
 
         // 번호, 상품 이름, 스텟타입, 스텟보너스, 설명, 판매가격, 이름너비, 스텟너비, 설명너비, 판매가격너비

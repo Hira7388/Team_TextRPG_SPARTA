@@ -10,6 +10,8 @@ namespace ConsoleTextRPG.Data
     {
         public List<Item> Items { get; private set; }
 
+        public int PotionCount = 0;
+
         // 플레이어 객체가 생성될 때 Inventory 객체도 생성하고, Inventory 객체가 생성될 때 비어있는 아이템 리스트를 만들어줌
         public Inventory()
         {
@@ -31,5 +33,28 @@ namespace ConsoleTextRPG.Data
         {
             Items.Clear();
         }
+
+        //포션 획득 메서드
+        public void AddPotions(int count)
+        {
+            if (count >= 0)
+            {
+                PotionCount += count;
+            }
+        }
+
+        //포션 사용 메서드
+        public void UsePotion()
+        {
+            if (PotionCount > 0)
+            {
+                PotionCount--;
+            }
+            else
+            {
+                Console.WriteLine("물약이 없습니다.");
+            }
+        }
+
     }
 }
