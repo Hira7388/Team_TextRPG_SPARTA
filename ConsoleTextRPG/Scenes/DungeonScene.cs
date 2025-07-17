@@ -66,10 +66,10 @@ namespace ConsoleTextRPG.Scenes
 
             switch (GameManager.Instance.currentState)
             {
+
                 case DungeonState.Select:
                     SelectMove(index);
                     break;
-                case DungeonState.Adventure:
                 case DungeonState.Adventure:
                     DungeonMove(index); // 던전 행동 선택
                     break;
@@ -84,6 +84,7 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 case DungeonState.EndBattle:
                     EndTrunMove(index); // 전투 종료 행동 선택
+                    break;
             }                
         }
         // ============================[던전선택]============================
@@ -91,12 +92,13 @@ namespace ConsoleTextRPG.Scenes
         {
             dungeonHP = myPlayer.Stat.CurrentHp; // 현재 플레이어 체력 저장
             deadCount = 0; // 죽은 몬스터 수 초기화
-            Print("◎던전선택◎", ConsoleColor.Red);
-            Print("던전의 난이도를 선택해주세요\n");
-
-            Print(1, "쉬움 모드 | 몬스터 최대 2마리 까지만 출현", ConsoleColor.DarkCyan);
-            Print(2, "보통 모드 | 몬스터 최대 3마리 까지만 출현", ConsoleColor.DarkCyan);
-            Print(3, "어려움모드 | 몬스터 최대 4마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print("◎던전◎", ConsoleColor.Red);
+            Print("3가지 선택지를 보고 길을 선택해주세요\n");
+            Print("이동횟수 : ", walkCount, ConsoleColor.DarkGreen);
+            Print("\n");
+            Print(1, "왼쪽길", ConsoleColor.DarkCyan);
+            Print(2, "앞으로", ConsoleColor.DarkCyan);
+            Print(3, "오른쪽길", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
@@ -125,9 +127,9 @@ namespace ConsoleTextRPG.Scenes
                     Thread.Sleep(200);
                     break;
             }
-                    break;
-            }
         }
+
+
 
         // ============================[던전상태]============================
         // 던전 씬 랜더함수
@@ -295,11 +297,10 @@ namespace ConsoleTextRPG.Scenes
             else
                 GameManager.Instance.currentState = DungeonState.Adventure;
                 Info("도망쳤습니다.");
-                GameManager.Instance.currentState = DungeonState.Idle;
+                GameManager.Instance.currentState = DungeonState.Adventure;
                 Thread.Sleep(200);
             }
-        }
-
+        
 
         // ============================[플레이어 공격 상태]============================
         void PlayerAttackRender()
@@ -513,14 +514,15 @@ namespace ConsoleTextRPG.Scenes
             }
             if (index == 0)
             {
-                    GameManager.Instance.currentState = DungeonState.Adventure;
+                if (isWin)
                 {
-                    GameManager.Instance.currentState = DungeonState.Idle;
+                    GameManager.Instance.currentState = DungeonState.Adventure;
                     currentMonsters.Clear(); // 몬스터 목록 초기화
                     dungeonHP = 0;
                     Print("\ninfo : 전투를 종료합니다.");
                     Thread.Sleep(300);
                 }
+
                 else
                 {
                     int loseHP = (int)(dungeonHP * 0.5f); // 플레이어가 죽었을 때 체력 감소

@@ -30,9 +30,9 @@ namespace ConsoleTextRPG.Data
     // 던전 난이도 열거형
     public enum DungeonLevel
     {
-        Easy,
-        Normal,
-        Hard,
+        First,
+        Second,
+        Third,
     }
 
     // 몬스터 종류 열거형

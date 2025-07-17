@@ -211,7 +211,14 @@ namespace ConsoleTextRPG.Scenes
 
                     if (player.Inventory.Items.Any(i => i.Id == itemToBuy.Id))
                     {
-                        Info("이미 구매한 아이템입니다.");
+                        if (itemToBuy.Type == Item.ItemType.Potion)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            Info("이미 구매한 아이템입니다.");
+                        }
                     }
                     else if (player.Gold < itemToBuy.Price) 
                     { Info("골드가 부족합니다."); }
