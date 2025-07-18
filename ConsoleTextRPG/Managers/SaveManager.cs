@@ -50,7 +50,8 @@ namespace ConsoleTextRPG.Managers
                 EquippedWeaponId = player.EquippedWeapon?.Id ?? -1,
                 EquippedArmorId = player.EquippedArmor?.Id ?? -1,
                 InProgressQuestIds = player.Quests,
-                CompletedQuestIds = player.CompletedQuestIds // 플레이어가 완료한 퀘스트 id
+                CompletedQuestIds = player.CompletedQuestIds, // 플레이어가 완료한 퀘스트 id
+                LearnedSkillIds = player.Skills.Select(skill => skill.Id).ToList()
             };
             string json = JsonConvert.SerializeObject(saveData, Formatting.Indented); // saveData의 내용을 Json문자열로 변환하는 기능
             Directory.CreateDirectory(_saveDirectoryPath); // 혹시 경로에 Json 폴더가 없으면 생성한다.

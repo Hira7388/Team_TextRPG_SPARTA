@@ -81,5 +81,10 @@ namespace ConsoleTextRPG.Managers
                 Console.WriteLine($"[디버그] {Name} 쿨타임 감소: {CurrentCooldown}턴 남음"); // 디버깅 로그
             }
         }
+
+        public Skill Clone()
+        {
+            return (Skill)this.MemberwiseClone();
+        }
     }
 }
