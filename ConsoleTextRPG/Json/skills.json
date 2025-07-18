@@ -10,12 +10,12 @@
   },
   {
     "Id": 2,
-    "Name": "방패 강타",
-    "Damage": 20,
-    "CriticalChance": 0.3,
+    "Name": "비상 식량",
+    "Damage": 5,
+    "CriticalChance": 0.0,
     "Cooldown": 3,
     "JobRestriction": "전사",
-    "Effect": "Stun"
+    "Effect": "Heal"
   },
   {
     "Id": 3,
@@ -51,6 +51,6 @@
     "CriticalChance": 0.6,
     "Cooldown": 1,
     "JobRestriction": "마법사",
-    "Effect": "Stun"
+    "Effect": null
   }
 ]

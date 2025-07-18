@@ -469,13 +469,23 @@ namespace ConsoleTextRPG.Scenes
             for (int i = 0; i < myPlayer.Skills.Count; i++)
             {
                 var skill = myPlayer.Skills[i];
-                if (skill.CurrentCooldown > 0)
+                string skillInfo;
+                if (skill.Effect == "Heal")
                 {
-                    Print(i + 1, $"{skill.Name} (데미지: {skill.Damage}, 쿨타임: {skill.CurrentCooldown}턴)", ConsoleColor.DarkGray);
+                    skillInfo = $"{skill.Name} (HP회복: {skill.Damage})";
                 }
                 else
                 {
-                    Print(i + 1, $"{skill.Name} (데미지: {skill.Damage})", ConsoleColor.DarkCyan);
+                    skillInfo = $"{skill.Name} (데미지: {skill.Damage})";
+                }
+
+                if (skill.CurrentCooldown > 0)
+                {
+                    Print(i + 1, $"{skillInfo} (쿨타임: {skill.CurrentCooldown}턴)", ConsoleColor.DarkGray);
+                }
+                else
+                {
+                    Print(i + 1, skillInfo, ConsoleColor.DarkCyan);
                 }
             }
             Print(0, "취소", ConsoleColor.DarkCyan);
@@ -518,18 +528,49 @@ namespace ConsoleTextRPG.Scenes
 
             if (selectedSkill.Effect == "Heal")
             {
-                // 힐 스킬: 바로 사용 (자신에게)
+                // 💡 체력이 가득 찼으면 힐 사용 불가 처리
+                if (myPlayer.Stat.CurrentHp >= myPlayer.Stat.MaxHp)
+                {
+                    Console.WriteLine("\ninfo : 이미 체력이 가득 찼습니다! 힐 스킬을 사용할 수 없습니다.");
+                    Console.WriteLine("계속하려면 아무 키나 누르세요...");
+                    Console.ReadKey(true);
+                    GameManager.Instance.currentState = DungeonState.PlayerTurn;
+                    return;
+                }
+
+                int beforeHP = myPlayer.Stat.CurrentHp;
                 bool used = selectedSkill.Use(myPlayer, myPlayer);
+
                 if (used)
                 {
-                    Console.WriteLine("힐 스킬을 사용했습니다! 계속하려면 아무 키나 누르세요...");
-                    Console.ReadKey(true);  // 메시지 확인을 위한 대기
+                    int afterHP = myPlayer.Stat.CurrentHp;
+                    int recovered = afterHP - beforeHP;
+
+                    Console.WriteLine($"\n<회복> 스킬을 사용했습니다!");
+                    Console.WriteLine($"HP가 {beforeHP} → {afterHP} ({recovered} 회복) 되었습니다.");
+                    Console.WriteLine("\n계속하려면 아무 키나 누르세요...");
+                    Console.ReadKey(true);
+
                     selectedSkillId = 0;
-                    GameManager.Instance.currentState = DungeonState.EnemyTurn;  // 바로 몬스터 턴으로 넘김
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
+
+                    // ✅ 여기 추가
+                    monsterQueue.Clear();
+                    foreach (var monster in currentMonsters)
+                    {
+                        if (!monster.Stat.IsDead)
+                        {
+                            monsterQueue.Enqueue(monster);
+                        }
+                    }
+
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;
+
+                    // 👉 몬스터 턴 시작
+                    EnemyAttackMove(0);
                 }
                 else
                 {
-                    // 사용 실패 시 다시 스킬 선택으로 돌아감
                     GameManager.Instance.currentState = DungeonState.PlayerSkill;
                 }
             }
@@ -683,7 +724,6 @@ namespace ConsoleTextRPG.Scenes
 
         void EnemyAttackMove(int index)
         {
-            // index 검사: 현재는 index 값이 필요 없으므로 무시해도 됨
             if (index < 0 || index > currentMonsters.Count)
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
@@ -692,36 +732,52 @@ namespace ConsoleTextRPG.Scenes
                 while (Console.KeyAvailable) Console.ReadKey(true);
                 return;
             }
-            // 몬스터가 남아있으면 차례대로 공격 실행
+
+            Console.Clear(); // ✅ 한 번만 화면 정리
+            Print("◎ 몬스터의 턴 ◎", ConsoleColor.DarkRed);
+            Print("==============================\n");
+
             while (monsterQueue.Count > 0)
             {
                 var nextMonster = monsterQueue.Dequeue();
                 int idx = currentMonsters.IndexOf(nextMonster);
-                EnemyAttack(idx);
 
-                Thread.Sleep(1500); // 공격 사이 딜레이 (선택사항)
+                if (nextMonster.Stat.IsDead)
+                    continue;
 
-                // 플레이어가 죽었으면 전투 종료
+                int prevHp = myPlayer.Stat.CurrentHp;
+
+                EnemyAttack(idx); // 실제 공격 처리만 수행
+
+                int damage = prevHp - myPlayer.Stat.CurrentHp;
+                if (damage < 0) damage = 0; // 안전 처리
+
+                //Console.WriteLine($"{nextMonster.Name}의 공격!");
+                //Console.WriteLine($"{myPlayer.Name}은(는) {damage}의 데미지를 받았습니다. (남은 체력: {myPlayer.Stat.CurrentHp})\n");
+
+                Thread.Sleep(500); // 템포 조절용 (선택사항)
+
                 if (myPlayer.Stat.IsDead)
                 {
                     isWin = false;
                     GameManager.Instance.currentState = DungeonState.EndBattle;
                     Info("플레이어가 쓰러졌습니다...");
+                    Console.WriteLine("\n계속하려면 아무 키나 누르세요...");
+                    Console.ReadKey(true);
                     return;
                 }
-
             }
-            // 모든 몬스터 공격 종료 후 플레이어 턴으로 전환
+
             dungeonHP = myPlayer.Stat.CurrentHp;
             isDF = false;
             GameManager.Instance.currentState = DungeonState.PlayerTurn;
-            Print("\ninfo : 몬스터의 공격이 끝났습니다.");
-            while (Console.KeyAvailable) Console.ReadKey(true);
-            Thread.Sleep(400);
-            while (Console.KeyAvailable) Console.ReadKey(true);
 
-            
+            Print("================================");
+            Print("\ninfo : 몬스터의 공격이 끝났습니다.");
+            Console.WriteLine("계속하려면 아무 키나 누르세요...");
+            Console.ReadKey(true);
         }
+
 
         void EnemyAttack(int index)
         {
@@ -729,21 +785,15 @@ namespace ConsoleTextRPG.Scenes
                 return;
 
             if (myPlayer.Stat.IsDead)
+                return;
+
+            if (isDF)
             {
-                isDF = false;
-                isWin = false;
-                GameManager.Instance.currentState = DungeonState.EndBattle;
-                Console.WriteLine("계속하려면 아무 키나 누르세요...");
-                Console.ReadKey(true);
+                myPlayer.Defend(currentMonsters[index]); // ← 여기 안에서 출력하면 안 됨!
             }
             else
             {
-                if (isDF)
-                    myPlayer.Defend(currentMonsters[index]);
-                else
-                    currentMonsters[index].Attack(myPlayer);
-                Console.WriteLine("계속하려면 아무 키나 누르세요...");
-                Console.ReadKey(true);
+                currentMonsters[index].Attack(myPlayer); // ← 여기 안에서 출력하면 안 됨!
             }
         }
 
