@@ -68,7 +68,7 @@ namespace ConsoleTextRPG.Data
             Thread.Sleep(250);
 
             // ⬇️ 데미지 주고 죽었는지 판단
-            bool isDead = target.TakeDamage(finalDamage);
+            bool isDead = target.MosTakeDamage(finalDamage);
 
             if (isDead)
             {
