@@ -67,6 +67,9 @@ namespace ConsoleTextRPG.Data
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
             int finalDamage = Stat.MosApplyDamage(damage);
             // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
+            if(finalDamage == 0)
+                Console.WriteLine($"{this.Name}은(는) 공격을 회피했습니다!");
+            else
             Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
 
             if (Stat.IsDead)

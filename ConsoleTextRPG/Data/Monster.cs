@@ -17,6 +17,7 @@ namespace ConsoleTextRPG.Data
         public int ATK;
         public int DFP;
         public int Level;
+        public int DEX;
         public int Gold;
         public bool isDead => Stat.CurrentHp <= 0;
         public virtual void PrintMonster( int no, ConsoleColor c1, ConsoleColor c2)
@@ -51,7 +52,7 @@ namespace ConsoleTextRPG.Data
         {
             int damage = this.Stat.BaseAttack;
             Console.WriteLine($"{Name}의 공격!");
-            target.MosTakeDamage(damage); // 상대방의 TakeDamage 이벤트를 발동시킴
+            target.MosTakeDamage(damage); 
         }
     }
 }
