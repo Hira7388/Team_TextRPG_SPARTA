@@ -18,4 +18,38 @@ namespace ConsoleTextRPG.Data
             ViewStatueScene  // 스텟창 씬
         }
     }
+<<<<<<< Updated upstream
+=======
+
+    // 게임의 상태를 나타내는 열거형
+    public enum DungeonState
+    {
+        SelectStart,
+        SelectLevel,
+        Adventure,
+        PlayerTrun,
+        PlayerAttack,
+        PlayerSkill,     // 새로 추가
+        EnemyTurn,
+        EndBattle,
+    }
+
+    // 던전 난이도 열거형
+    public enum DungeonLevel
+    {
+        Easy,
+        Normal,
+        Hard,
+    }
+
+    // 몬스터 종류 열거형
+    public enum MonsterType
+    {
+        Minion,
+        SigeMinion,
+        Voidgrub,
+    }
+
+
+>>>>>>> Stashed changes
 }

@@ -13,6 +13,7 @@ namespace ConsoleTextRPG.Data
         public string Name;
         public string Image;
         public int MaxHP;
+        public int MaxMP;
         public int ATK;
         public int DFP;
         public int Level;

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ConsoleTextRPG.Scenes
 {
     public class DungeonScene : BaseScene
@@ -45,6 +46,9 @@ namespace ConsoleTextRPG.Scenes
                 case DungeonState.PlayerAttack:
                     PlayerAttackRender();
                     break;
+                case DungeonState.PlayerSkill:
+                    PlayerSkillRender();
+                    break;
                 case DungeonState.EnemyTurn:
                     EnemyTurnRender();
                     break;
@@ -79,6 +83,9 @@ namespace ConsoleTextRPG.Scenes
                     break;
                 case DungeonState.PlayerAttack:
                     PlayerAttackMove(index); // 플레이어 공격 행동 선택
+                    break;
+                case DungeonState.PlayerSkill: // 플레이어 스킬 행동 선택
+                    PlayerSkillMove(index);
                     break;
                 case DungeonState.EnemyTurn:
                     EnemyAttackMove(index); // 몬스터 턴 행동 선택
@@ -240,9 +247,10 @@ namespace ConsoleTextRPG.Scenes
             }
 
             Print("===========[선택지]===========");
-            Print(1, "공격", ConsoleColor.DarkCyan);
-            Print(2, "방어", ConsoleColor.DarkCyan);
-            Print(3, "도망", ConsoleColor.DarkCyan);
+            Print(1, "기본 공격", ConsoleColor.DarkCyan);
+            Print(2, "스킬 사용", ConsoleColor.DarkCyan);
+            Print(3, "방어", ConsoleColor.DarkCyan);
+            Print(4, "도망", ConsoleColor.DarkCyan);
 
             Print("\n원하시는 행동을 입력해주세요");
             Console.Write(">>");
@@ -256,10 +264,13 @@ namespace ConsoleTextRPG.Scenes
                     GameManager.Instance.currentState = DungeonState.PlayerAttack;
                     break;
                 case 2:
+                    GameManager.Instance.currentState = DungeonState.PlayerSkill;
+                    break;
+                case 3:
                     Info("방어합니다");
                     PlayerDefend();
                     break;
-                case 3:
+                case 4:
                     PlayerRun();
                     break;
                 default:
@@ -269,7 +280,55 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        void PlayerDefend()
+        void ShowSkillList()
+        {
+            Console.Clear();
+            Console.WriteLine("==Skill 사용==");
+            Console.WriteLine("사용할 스킬을 선택해주세요\n");
+            Console.WriteLine("0. 취소");
+
+            for (int i = 0; i < GameManager.Instance.Player.Skills.Count; i++)
+            {
+                SkillManager skill = GameManager.Instance.Player.Skills[i];
+                Console.WriteLine($"{i + 1}. {skill.Name} (MP {skill.ManaCost})");
+            }
+
+            Console.Write(">> ");
+        }
+
+        void PlayerSkillRender()
+        {
+            Print("==Skill 사용==", ConsoleColor.Cyan);
+            Print("사용할 스킬을 선택해주세요\n");
+
+            for (int i = 0; i < GameManager.Instance.Player.Skills.Count; i++)
+            {
+                var skill = GameManager.Instance.Player.Skills[i];
+                Print(i + 1, $"{skill.Name} (MP {skill.ManaCost}) - {skill.Description}");
+            }
+
+            Print(0, "취소", ConsoleColor.DarkGray);
+            Console.Write("\n>> ");
+        }
+
+        void PlayerSkillMove(int index)
+        {
+            if (index == 0)
+            {
+                Info("스킬 선택을 취소합니다.");
+                GameManager.Instance.currentState = DungeonState.PlayerTrun;
+                return;
+            }
+
+
+            // player 객체와 몬스터 리스트를 사용
+            SkillManager.UseSkill(myPlayer, index - 1, currentMonsters[0]);
+
+            MonstersDeadCheck();
+            GameManager.Instance.currentState = DungeonState.EnemyTurn;
+
+
+            void PlayerDefend()
         {
             isDF= true; // 방어 상태로 변경
             GameManager.Instance.currentState = DungeonState.EnemyTurn;

@@ -11,4 +11,10 @@
     <Folder Include="scene\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Json\skills.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

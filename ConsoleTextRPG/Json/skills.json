@@ -1,0 +1,34 @@
+[
+  {
+    "Id": "slash",
+    "Name": "강한 베기",
+    "Description": "강하게 한 번 벤다.",
+    "Damage": 20,
+    "ManaCost": 5,
+    "CharacterClass": "Warrior"
+  },
+  {
+    "Id": "power_strike",
+    "Name": "파워 스트라이크",
+    "Description": "무거운 일격으로 큰 피해를 준다.",
+    "Damage": 60,
+    "ManaCost": 20,
+    "CharacterClass": "Warrior"
+  },
+  {
+    "Id": "fireball",
+    "Name": "파이어볼",
+    "Description": "불덩이를 날려 마법 피해를 입힌다.",
+    "Damage": 20,
+    "ManaCost": 10,
+    "CharacterClass": "Mage"
+  },
+  {
+    "Id": "ice_shard",
+    "Name": "얼음 파편",
+    "Description": "얼음 조각으로 적을 찌른다.",
+    "Damage": 30,
+    "ManaCost": 40,
+    "CharacterClass": "Mage"
+  }
+]
