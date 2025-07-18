@@ -807,6 +807,7 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else
                 {
+                    GameManager.Instance.currentState = DungeonState.SelectStart;
                     int loseHP = (int)(myPlayer.Stat.MaxHp * 0.3f);
                     dungeonHP = 0;
                     Print("\ninfo : 쓰러진 당신은 던전마법으로 마을로 돌아갑니다.");
