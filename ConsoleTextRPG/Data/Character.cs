@@ -66,10 +66,7 @@ namespace ConsoleTextRPG.Data
             // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
             Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
             Thread.Sleep(250);
-
-
             return Stat.IsDead;
-
         }
 
         // 몬스터가 Player에게 damage를 주는 행동
@@ -81,14 +78,11 @@ namespace ConsoleTextRPG.Data
             if(finalDamage == 0)
             {
                 Console.WriteLine($"{this.Name}은(는) 공격을 회피했습니다!");
-                Thread.Sleep(1050);
+                Thread.Sleep(500);
                 return false;
-
             }
-
             Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
             Thread.Sleep(250);
-
             return Stat.IsDead;
         }
         
