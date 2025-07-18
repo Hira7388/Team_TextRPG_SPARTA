@@ -363,6 +363,68 @@ namespace ConsoleTextRPG.Scenes
         
 
         // ============================[플레이어 공격 상태]============================
+<<<<<<< Updated upstream
+=======
+        void PlayerSkillRender()
+        {
+            Print("==◎ Battle!! ◎==", ConsoleColor.DarkYellow);
+            Print($"\n사용할 스킬을 선택해주세요.\n");
+            Print("\n============[스킬]============");
+            for (int i = 0; i < myPlayer.Skills.Count; i++)
+            {
+                var skill = myPlayer.Skills[i];
+                if (skill.CurrentCooldown > 0)
+                {
+                    Print(i + 1, $"{skill.Name} (데미지: {skill.Damage}, 쿨타임: {skill.CurrentCooldown}턴)", ConsoleColor.DarkGray);
+                }
+                else
+                {
+                    Print(i + 1, $"{skill.Name} (데미지: {skill.Damage})", ConsoleColor.DarkCyan);
+                }
+            }
+            Print(0, "취소", ConsoleColor.DarkCyan);
+            Print("\n원하시는 스킬의 번호를 입력해주세요");
+            Console.Write(">>");
+        }
+
+        void PlayerSkillMove(int index)
+        {
+            {
+                Print("\ninfo : 잘못 입력 하셨습니다.");
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                Thread.Sleep(100);
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                GameManager.Instance.currentState = DungeonState.PlayerTurn;
+                return;
+            }
+
+            if (index == 0)
+            {
+                Print("스킬 사용을 취소합니다.");
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                Thread.Sleep(100);
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                GameManager.Instance.currentState = DungeonState.PlayerTurn;
+                return;
+            }
+
+            var selectedSkill = myPlayer.Skills[index - 1];
+            if (selectedSkill.CurrentCooldown > 0)
+            {
+                Print($"\ninfo : {selectedSkill.Name}은(는) 쿨타임 중입니다! (남은 턴: {selectedSkill.CurrentCooldown})");
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                Thread.Sleep(300);
+                while (Console.KeyAvailable) Console.ReadKey(true);
+                GameManager.Instance.currentState = DungeonState.PlayerTurn;
+                return;
+            }
+
+            selectedSkillId = selectedSkill.Id;
+            Console.WriteLine($"선택된 스킬 ID: {selectedSkillId}");
+            GameManager.Instance.currentState = DungeonState.PlayerAttack;
+        }
+
+>>>>>>> Stashed changes
         void PlayerAttackRender()
         {
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);

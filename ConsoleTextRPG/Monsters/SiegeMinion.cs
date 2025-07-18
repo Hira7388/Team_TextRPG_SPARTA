@@ -20,7 +20,12 @@ namespace ConsoleTextRPG.Monsters
             Gold = 50;
             DEX = 0;
             // 전투 상호작용을 위한 스탯 초기화 설정
+<<<<<<< Updated upstream
             this.Stat = new CharacterStat(Level, ATK, DFP, MaxHP, MaxMP, DEX);
+=======
+            this.Stat = new CharacterStat(Level, ATK, DFP, MaxHP, DEX);
+
+>>>>>>> Stashed changes
         }
     }
 }

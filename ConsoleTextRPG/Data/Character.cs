@@ -52,10 +52,20 @@ namespace ConsoleTextRPG.Data
         public virtual void TakeDamage(int damage, bool isCritical = false)
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
+<<<<<<< Updated upstream
             Stat.ApplyDamage(damage);
             int finalDamage = damage - this.Stat.TotalDefense;
             if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
                                                   // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
+=======
+            int finalDamage = Stat.ApplyDamage(damage);
+
+
+            Console.WriteLine($"[Debug] Damage Taken: 캐릭터 이름='{this.Name}' 데미지={finalDamage} 남은 체력={Stat.CurrentHp}");
+
+            // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
+            Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+>>>>>>> Stashed changes
 
             if (isCritical)
             {
