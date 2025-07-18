@@ -175,8 +175,8 @@ namespace ConsoleTextRPG.Scenes
         {
             Print("◎던전-난이도 선택◎", ConsoleColor.DarkYellow);
             Print("던전의 난이도를 선택해주세요.\n");
-            Print(1, "쉬움 난이도 | 몬스터 최대 2마리 까지만 출현", ConsoleColor.DarkCyan);
-            Print(2, "보통 난이도 | 몬스터 최대 3마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(1, "쉬움 난이도  | 몬스터 최대 2마리 까지만 출현", ConsoleColor.DarkCyan);
+            Print(2, "보통 난이도  | 몬스터 최대 3마리 까지만 출현", ConsoleColor.DarkCyan);
             Print(3, "어려움난이도 | 몬스터 최대 4마리 까지만 출현", ConsoleColor.DarkCyan);
             Print(0, "마을로 돌아가기", ConsoleColor.DarkCyan);
 
