@@ -102,12 +102,12 @@ namespace ConsoleTextRPG.Scenes
                 if (showNumbers) // 구매 모드일 경우 아이템 앞에 번호를 출력한다.
                 {
                     // 번호 표시 및 mode = 3 상점 구매창
-                    ConsoleHelper.DisplayHelper(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, storeItem.IsEquipped, i, 3);
+                    ConsoleHelper.DisplayHelper(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, storeItem.IsEquipped, (int)storeItem.Type, 3);
                 }
                 else
                 {
                     // 번호 없이 표시 및 mode = 1로 상점 전시창
-                    ConsoleHelper.DisplayHelper(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, storeItem.IsEquipped, i, 1);
+                    ConsoleHelper.DisplayHelper(i + 1, storeItem.Name, myPlayer.Inventory.PotionCount, storeItem.StatType, storeItem.StatusBonus, storeItem.Comment, priceDisplay, storeItem.IsEquipped, (int)storeItem.Type, 1);
                 }
 
                 Console.ResetColor();
@@ -133,7 +133,7 @@ namespace ConsoleTextRPG.Scenes
                 int sellPrice = (int)(item.Price * _storeDiscountRate);
                 string priceSell = $"{sellPrice} G";
                 // mode = 2로 판매창
-                ConsoleHelper.DisplayHelper(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, priceSell, item.IsEquipped, i, 2);
+                ConsoleHelper.DisplayHelper(i + 1, item.Name, myPlayer.Inventory.PotionCount, item.StatType, item.StatusBonus, item.Comment, priceSell, item.IsEquipped, (int)item.Type, 2);
             }
         }
 
@@ -219,7 +219,7 @@ namespace ConsoleTextRPG.Scenes
                     { Info("골드가 부족합니다."); }
                     else
                     {
-                        if(itemToBuy.Type == Item.ItemType.Potion) player.Inventory.AddPotions(1); //물약 구매시
+                        if(itemToBuy.Type == Item.ItemType.Potion) player.Inventory.AddPotions(1);  //물약 구매시
                         Item newItem = itemToBuy.Clone();                                           //나중에 계정 저장 및 중복방지를 위한 아이템 클론 생성
 
                         player.AddGold(-itemToBuy.Price);                                           // 플레이어 골드 차감
@@ -231,7 +231,7 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else
                 {
-                    Info("잘못된 번호입니다.");
+                    Info("잘못된 입력입니다.");
                     Thread.Sleep(900);
                 }
             }
