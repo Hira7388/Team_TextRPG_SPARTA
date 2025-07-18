@@ -58,39 +58,67 @@ namespace ConsoleTextRPG.Managers
         {
             Init();
 
-            if (File.Exists(SaveManager.Instance.SaveFilePath)) // 저장 파일이 있으면
+            if (File.Exists(SaveManager.Instance.SaveFilePath))
             {
                 while (true)
                 {
-                    Console.WriteLine("저장된 게임이 있습니다. 불러오시겠습니까? (Y/N)");
+                    Console.Clear();
+                    Console.WriteLine("저장된 게임이 있습니다. 불러오시겠습니까?");
+                    Console.WriteLine("1. 불러오기");
+                    Console.WriteLine("2. 새 게임 시작");
                     Console.Write(">> ");
-                    string input = Console.ReadLine()?.Trim().ToUpper();
+                    string input = Console.ReadLine()?.Trim();
 
-                    if (input == "Y")
+                    if (input == "1")
                     {
-                        LoadGame(); // 저장된 데이터 불러오기
-                        break;
+                        if (ConfirmWithNumbers("정말 저장된 게임을 불러오시겠습니까?", "불러오기"))
+                        {
+                            LoadGame();
+                            break;
+                        }
                     }
-                    else if (input == "N")
+                    else if (input == "2")
                     {
-                        Console.WriteLine("새 게임을 시작합니다.\n");
-                        // 마을로 진입하면 이름, 직업 설정은 TownScene에서 처리
-                        break;
+                        if (ConfirmWithNumbers("정말 새 게임을 시작하시겠습니까?", "시작하기"))
+                        {
+                            Console.WriteLine("새 게임을 시작합니다.\n");
+                            break;
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("잘못된 입력입니다. Y 또는 N을 입력해주세요.\n");
+                        Console.WriteLine("잘못된 입력입니다. 1 또는 2를 입력해주세요.");
+                        Thread.Sleep(1000);
                     }
                 }
             }
 
-            // 루프 진입 (마을로 진입하거나 저장된 상태에서 시작)
             while (running)
             {
                 RenderMenu();
                 UpdateInput();
             }
         }
+
+        private bool ConfirmWithNumbers(string message, string confirmActionName)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine($"{message}");
+                Console.WriteLine($"1. {confirmActionName}");
+                Console.WriteLine("2. 취소");
+                Console.Write(">> ");
+                string input = Console.ReadLine()?.Trim();
+
+                if (input == "1") return true;
+                if (input == "2") return false;
+
+                Console.WriteLine("잘못된 입력입니다. 1 또는 2를 입력해주세요.");
+                Thread.Sleep(1000);
+            }
+        }
+
 
         private void Init()
         {

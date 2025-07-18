@@ -26,24 +26,24 @@ namespace ConsoleTextRPG.Managers
             Effect = effect;
         }
 
-        public void Use(Character user, Character target)
+        public bool Use(Character user, Character target)
         {
             Player player = user as Player;
 
             if (player != null && JobRestriction != null && player.Job != JobRestriction)
             {
                 Console.WriteLine($"{user.Name}은(는) 이 스킬을 사용할 수 없습니다!");
-                return;
+                return false;
             }
 
             if (CurrentCooldown > 0)
             {
                 Console.WriteLine($"{Name}은(는) 쿨타임 중입니다! (남은 턴: {CurrentCooldown})");
-                return;
+                return false;
             }
 
             Console.WriteLine($"{user.Name}이(가) {Name} 스킬을 사용했습니다!");
-            CurrentCooldown = Cooldown; // 스킬 사용 후 쿨타임 설정
+            CurrentCooldown = Cooldown;
 
             Random rand = new Random();
             bool isCritical = rand.NextDouble() < CriticalChance;
@@ -57,21 +57,24 @@ namespace ConsoleTextRPG.Managers
                 Console.ResetColor();
             }
 
-            if (Effect == "Stun" && rand.NextDouble() < 0.3)
-            {
-                Console.WriteLine($"{target.Name}이(가) 스턴 상태에 걸렸습니다!");
-                // 스턴 구현은 추가 로직 필요
-            }
             else if (Effect == "Heal" && player != null)
             {
                 int healAmount = Damage;
                 player.Stat.CurrentHp = Math.Min(player.Stat.MaxHp, player.Stat.CurrentHp + healAmount);
                 Console.WriteLine($"{user.Name}이(가) {healAmount}만큼 회복했습니다! (현재 HP: {player.Stat.CurrentHp})");
-                return;
+                return true;
             }
 
             target.TakeDamage(finalDamage);
+            if (target.Stat.CurrentHp <= 0)
+            {
+                Console.WriteLine($"{target.Name}이(가) 쓰러졌습니다!");
+                QuestManager.Instance.OnMonsterKilled(target.Name); // 퀘스트 알림도 여기서 처리 가능
+            }
+
+            return true;
         }
+
 
         public void ReduceCooldown()
         {

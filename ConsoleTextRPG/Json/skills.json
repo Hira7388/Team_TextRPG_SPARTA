@@ -37,7 +37,7 @@
   },
   {
     "Id": 5,
-    "Name": "빛의 화살",
+    "Name": "회복의 빛",
     "Damage": 20,
     "CriticalChance": 0.0,
     "Cooldown": 4,

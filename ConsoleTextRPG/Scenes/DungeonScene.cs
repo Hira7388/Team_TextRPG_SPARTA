@@ -549,9 +549,24 @@ namespace ConsoleTextRPG.Scenes
 
             if (selectedSkillId != 0)
             {
-                myPlayer.UseSkill(selectedSkillId, currentMonsters[index - 1]);
-                selectedSkillId = 0;
+                var skill = myPlayer.Skills.Find(s => s.Id == selectedSkillId);
+                if (skill != null)
+                {
+                    bool used = skill.Use(myPlayer, currentMonsters[index - 1]);
+                    if (!used)
+                    {
+                        GameManager.Instance.currentState = DungeonState.PlayerSkill;
+                        return;
+                    }
+
+                    selectedSkillId = 0;
+                }
+                else
+                {
+                    Console.WriteLine("[DEBUG] 스킬 ID에 해당하는 스킬이 없습니다.");
+                }
             }
+
             else
             {
                 bool wasAlive = !currentMonsters[index - 1].Stat.IsDead;
