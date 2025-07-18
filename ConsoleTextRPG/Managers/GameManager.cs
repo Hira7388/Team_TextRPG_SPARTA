@@ -34,6 +34,7 @@ namespace ConsoleTextRPG.Managers
         public void GameRun()
         {
             Init();
+<<<<<<< Updated upstream
             if (File.Exists(SaveManager.Instance.SaveFilePath)) // 저장 파일이 있는지 확인
             {
                 Console.WriteLine("저장된 게임이 있습니다. 불러오시겠습니까? (Y/N)");
@@ -42,6 +43,37 @@ namespace ConsoleTextRPG.Managers
                 if (input.Trim().ToUpper() == "Y")
                 {
                     LoadGame();
+=======
+
+            // 저장된 파일 중 하나라도 있으면 불러오기 메뉴 띄우기
+            bool anySaveExists = SaveManager.Instance.SaveFilePaths.Any(path => File.Exists(path));
+
+            if (anySaveExists)
+            {
+                int? slotToLoad = ShowLoadMenu();
+                if (slotToLoad.HasValue)
+                {
+                    Console.WriteLine("정말 저장된 게임을 불러오시겠습니까?");
+                    Console.WriteLine("1. 불러오기");
+                    Console.WriteLine("2. 취소");
+                    Console.Write(">> ");
+                    string confirm = Console.ReadLine()?.Trim();
+
+                    if (confirm == "1")
+                    {
+                        LoadGame(slotToLoad.Value);
+                    }
+                    else
+                    {
+                        Console.WriteLine("새 게임을 시작합니다.\n");
+                        // 새 게임 시작 (이름 입력 등은 TownScene에서)
+                    }
+>>>>>>> Stashed changes
+                }
+                else
+                {
+                    Console.WriteLine("새 게임을 시작합니다.\n");
+                    // 새 게임 시작
                 }
             }
 
@@ -52,6 +84,7 @@ namespace ConsoleTextRPG.Managers
             }
         }
 
+<<<<<<< Updated upstream
         //스킬 클래스
         public static class SkillLoader
         {
@@ -60,6 +93,38 @@ namespace ConsoleTextRPG.Managers
                 string json = File.ReadAllText(filePath);
                 var skillDict = JsonConvert.DeserializeObject<Dictionary<string, List<SkillManager>>>(json);
                 return skillDict ?? new Dictionary<string, List<SkillManager>>();
+=======
+        private void LoadGame(int slotIndex)
+        {
+            SaveData saveData = SaveManager.Instance.LoadGame(slotIndex);
+            if (saveData == null) return;
+
+            this.Player.LoadFromData(saveData);
+
+            this.Player.CompletedQuestIds.Clear();
+            this.Player.CompletedQuestIds.AddRange(saveData.CompletedQuestIds);
+
+            this.Player.Inventory.Clear();
+
+            foreach (int itemId in saveData.InventoryItemIds)
+            {
+                Item item = AllItems.FirstOrDefault(i => i.Id == itemId);
+                if (item != null)
+                {
+                    this.Player.Inventory.AddItem(item.Clone());
+                }
+            }
+
+            if (saveData.EquippedWeaponId != -1)
+            {
+                Item weapon = this.Player.Inventory.Items.FirstOrDefault(i => i.Id == saveData.EquippedWeaponId);
+                if (weapon != null) this.Player.EquipItem(weapon);
+            }
+            if (saveData.EquippedArmorId != -1)
+            {
+                Item armor = this.Player.Inventory.Items.FirstOrDefault(i => i.Id == saveData.EquippedArmorId);
+                if (armor != null) this.Player.EquipItem(armor);
+>>>>>>> Stashed changes
             }
         }
 

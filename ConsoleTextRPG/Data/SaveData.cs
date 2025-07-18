@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
@@ -31,8 +28,15 @@ namespace ConsoleTextRPG.Data
         // 던전 클리어 계층 관련 정보
 
         // 플레이어가 진행중인 퀘스트 관련 정보
-        public List<PlayerQuest> InProgressQuestIds { get; set; } // 진행 중인 퀘스트 ID 목록
+        public List<PlayerQuest> InProgressQuestIds { get; set; } // 진행 중인 퀘스트 상태 목록
         public List<int> CompletedQuestIds { get; set; } // 완료한 퀘스트 ID 목록
-        //public Dictionary<int, int> QuestProgress { get; set; } // 퀘스트 ID, 현재 카운트 개수
+    }
+
+    // 플레이어의 퀘스트 진행 상태를 저장하는 클래스
+    public class PlayerQuest
+    {
+        public int QuestId { get; set; }      // 퀘스트 ID
+        public int CurrentCount { get; set; } // 현재 달성한 목표 수량
+        public int State { get; set; }        // 퀘스트 상태 (예: 0=진행전, 1=진행중, 2=완료 등)
     }
 }

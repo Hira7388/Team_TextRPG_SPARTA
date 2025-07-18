@@ -9,9 +9,7 @@
   "MaxMp": 50,
 
   "CurrentHp": 111,
-  "InventoryItemIds": [
-    0
-  ],
+  "InventoryItemIds": [ 0 ],
   "EquippedWeaponId": -1,
   "EquippedArmorId": -1,
   "InProgressQuestIds": [
