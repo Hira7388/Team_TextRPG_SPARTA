@@ -19,6 +19,7 @@ namespace ConsoleTextRPG.Data
         public int BaseDefense { get; set; }
         public int MaxHp { get; set; }
         public int CurrentHp { get; set; }
+        public int Dexterity { get; set; }
 
         // 인벤토리 및 장비 정보 (아이템 ID만 저장)
         public List<int> InventoryItemIds { get; set; }

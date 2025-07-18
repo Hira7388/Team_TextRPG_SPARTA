@@ -266,7 +266,7 @@ namespace ConsoleTextRPG.Scenes
                     GameManager.Instance.SwitchScene(GameState.QuestScene);
                     break;
                 case "0":
-                    Console.WriteLine("\n게임을 종료합니다. 안녕히 가세요!");
+                    GameManager.Instance.GameOver("\ninfo : 게임을 종료합니다. 안녕히 가세요!");
                     break;
                 default:
                     Console.WriteLine("올바른 번호를 선택해주세요.");
@@ -286,6 +286,7 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine($"소지금 : {myPlayer.Gold} G");
             Console.WriteLine($"공격력 : {myPlayer.Stat.BaseAttack}{(myPlayer.Stat.AdditionalAttack > 0 ? $"(+{myPlayer.Stat.AdditionalAttack})" : "")}");
             Console.WriteLine($"방어력 : {myPlayer.Stat.BaseDefense}{(myPlayer.Stat.AdditionalDefense > 0 ? $"(+{myPlayer.Stat.AdditionalDefense})" : "")}");
+            Console.WriteLine($"민첩 : {myPlayer.Stat.Dexterity}({myPlayer.Stat.MissingStat()*100}%)");
             Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}");
             // 아래는 아직 아이템으로 인한 추가 최대 체력이 없어서 잠시 비활성화 해두었습니다.
             //Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}{(myPlayer.Stat.AdditionalHp > 0 ? $"(+{myPlayer.ItemHealth})" : "")}"); 

@@ -8,6 +8,7 @@ namespace ConsoleTextRPG.Data
         public int Level { get; private set; }
         public int MaxHp { get; private set; }
         public int CurrentHp { get; set; }
+        public double Dexterity { get; private set; } // 민첩성
 
         // 초기 능력치
         public int BaseAttack { get; private set; }
@@ -24,27 +25,58 @@ namespace ConsoleTextRPG.Data
         // 사망 여부를 알려주는 bool형 변수 프로퍼티
         public bool IsDead => CurrentHp <= 0;
 
-        public CharacterStat(int level, int atk, int def, int hp)
+        public CharacterStat(int level, int atk, int def, int hp, double dex)
         {
             Level = level;
             BaseAttack = atk;
             BaseDefense = def;
             MaxHp = hp;
             CurrentHp = hp; // 처음에는 체력이 가득 찬 상태
+            Dexterity = dex; 
         }
 
         // 데미지를 계산하고 적의 공격 데미지와 내 방어력을 계산해서 HP를 변경하는 로직
-        public void ApplyDamage(int damage)
+        public int ApplyDamage(int damage)
         {
             int ten = (int)(damage * 0.1f);
             int min = damage- ten;
             int max = damage+ ten;
             int rand= new Random().Next(min, max+1);
             int finalDamage = rand - TotalDefense;
-            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
 
+
+            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
             CurrentHp -= finalDamage;
             if (CurrentHp < 0) CurrentHp = 0;
+
+            return finalDamage; // 최종 데미지를 반환
+        }
+
+
+        // 회피율에 대한 로직
+        public double MissingStat()
+        {
+            const double DexBalance = 250.0; // 민첩성 밸런스 조정 값(값이 클수록 회피율이 낮아짐, ex) Dexterity=30이면 회피율은 12%)
+            double balanceDex = Dexterity / DexBalance;
+            double minD = 0.02;
+            double maxD = 1.0;
+            balanceDex = Math.Clamp(balanceDex, minD, maxD); // 밸런스 조정 값의 범위를 제한
+            return (balanceDex);
+        }
+        public int MosApplyDamage(int damage)
+        {
+            Random Dexrng = new Random();
+            double evadeChance = MissingStat();      // ex) 0.12 → 12% 회피
+            if (Dexrng.NextDouble() < evadeChance)      // NextDouble은 0.0에서 1.0사이의 랜덤값 반환함
+            {
+                // 회피 성공: 데미지 0, HP 변화 없음
+                return 0;
+            }
+            int finalDamage = damage - TotalDefense;
+            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
+            CurrentHp -= finalDamage;
+            if (CurrentHp < 0) CurrentHp = 0;
+            return finalDamage; // 최종 데미지를 반환
         }
 
         public void DefecnDamage(int damage)
@@ -55,13 +87,14 @@ namespace ConsoleTextRPG.Data
         }
 
         // 기본 스탯을 설정하는 헬퍼 메서드
-        public void SetBaseStats(int level, int attack, int defense, int maxHp)
+        public void SetBaseStats(int level, int attack, int defense, int maxHp, double dex)
         {
             this.Level = level;
             this.BaseAttack = attack;
             this.BaseDefense = defense;
             this.MaxHp = maxHp;
             this.CurrentHp = maxHp; // 새 스탯 설정 시 체력을 최대로 회복
+            this.Dexterity = dex;
         }
 
         // 불러오기 시 저장된 현재 체력을 가져오는 메서드

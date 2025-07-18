@@ -19,11 +19,12 @@ namespace ConsoleTextRPG.Monsters
             Name = "미니언";
             MaxHP = 15;
             Level = 2;
-            ATK = 5;
+            ATK = 12;
             DFP = 0;
             Gold = 15;
+            DEX = 0;
             // 전투 상호작용을 위한 스탯 초기화 설정
-            this.Stat = new CharacterStat(Level, ATK, DFP, MaxHP);
+            this.Stat = new CharacterStat(Level, ATK, DFP, MaxHP, DEX);
         }
     }
 }
