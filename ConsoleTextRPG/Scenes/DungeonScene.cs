@@ -459,6 +459,7 @@ namespace ConsoleTextRPG.Scenes
                 Thread.Sleep(300);
                 return;
             }
+<<<<<<< Updated upstream
             else
             {
                 if (currentMonsters[index-1].Stat.CurrentHp <= 0)
@@ -466,12 +467,60 @@ namespace ConsoleTextRPG.Scenes
                     Print("\ninfo : 이미 죽은 몬스터입니다.");
                     Thread.Sleep(300);
                     return;
+=======
+
+            // 스킬이 선택된 경우
+            if (selectedSkillId != 0)
+            {
+                var skill = myPlayer.Skills.Find(s => s.Id == selectedSkillId);
+                if (skill != null)
+                {
+                    // 힐 스킬이면 대상 선택 없이 자기 자신에게 적용
+                    if (skill.Effect == "Heal")
+                    {
+                        bool used = skill.Use(myPlayer, myPlayer); // 대상은 자기 자신
+                        if (!used)
+                        {
+                            GameManager.Instance.currentState = DungeonState.PlayerSkill;
+                            return;
+                        }
+                        selectedSkillId = 0;
+                    }
+                    else
+                    {
+                        // 힐이 아니면 기존대로 몬스터 대상으로 사용
+                        if (index == 0)
+                        {
+                            Print("\ninfo : 공격 취소됨");
+                            GameManager.Instance.currentState = DungeonState.PlayerTurn;
+                            return;
+                        }
+
+                        if (currentMonsters[index - 1].Stat.CurrentHp <= 0)
+                        {
+                            Print("\ninfo : 이미 죽은 몬스터입니다.");
+                            while (Console.KeyAvailable) Console.ReadKey(true);
+                            Thread.Sleep(300);
+                            while (Console.KeyAvailable) Console.ReadKey(true);
+                            return;
+                        }
+
+                        bool used = skill.Use(myPlayer, currentMonsters[index - 1]);
+                        if (!used)
+                        {
+                            GameManager.Instance.currentState = DungeonState.PlayerSkill;
+                            return;
+                        }
+                        selectedSkillId = 0;
+                    }
+>>>>>>> Stashed changes
                 }
                 else
                 {
                     PlayerAttack(index - 1);
                 }
             }
+<<<<<<< Updated upstream
         }
 
         void PlayerAttack(int index)
@@ -510,6 +559,37 @@ namespace ConsoleTextRPG.Scenes
         }
 
 
+=======
+            else
+            {
+                if (index == 0)
+                {
+                    GameManager.Instance.currentState = DungeonState.PlayerTurn;
+                    Info("공격을 취소합니다.");
+                    return;
+                }
+
+                if (currentMonsters[index - 1].Stat.CurrentHp <= 0)
+                {
+                    Print("\ninfo : 이미 죽은 몬스터입니다.");
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+                    Thread.Sleep(300);
+                    while (Console.KeyAvailable) Console.ReadKey(true);
+                    return;
+                }
+
+                bool wasAlive = !currentMonsters[index - 1].Stat.IsDead;
+                myPlayer.Attack(currentMonsters[index - 1]);
+                if (wasAlive && currentMonsters[index - 1].Stat.IsDead)
+                {
+                    QuestManager.Instance.OnMonsterKilled(currentMonsters[index - 1].Name);
+                }
+            }
+
+            MonstersDeadCheck();
+        }
+
+>>>>>>> Stashed changes
         void MonstersDeadCheck()
         {
             // 다음 몬스터턴 행동에 사용될 살아있는 몬스터들 큐에 추가
