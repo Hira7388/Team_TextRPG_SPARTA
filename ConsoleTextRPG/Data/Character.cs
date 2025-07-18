@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleTextRPG.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,11 +38,22 @@ namespace ConsoleTextRPG.Data
                 Thread.Sleep(250);
             }
 
+            // 🔸 체력 변화 계산용 이전 체력 저장
+            int prevHp = target.Stat.CurrentHp;
 
-            // 🔥 여기서 반환값 확인!
-            bool isDead = target.TakeDamage(finalDamage);
+            // 데미지 처리 (실제 피해만 적용, 출력 없음)
+            target.TakeDamageWithoutPrint(finalDamage);
 
-            if (isDead)
+            // 🔸 실제 입힌 데미지 계산
+            int actualDamage = prevHp - target.Stat.CurrentHp;
+            if (actualDamage < 0) actualDamage = 0;
+
+            // 🔸 피해량 출력
+            Console.WriteLine($"{target.Name}은(는) {actualDamage}의 데미지를 받았습니다.");
+            Console.WriteLine($"(기존체력 {prevHp} => 남은 체력: {target.Stat.CurrentHp})");
+            Thread.Sleep(250);
+
+            if (target.Stat.IsDead)
             {
                 Console.WriteLine($"{target.Name}이(가) 쓰러졌습니다.");
                 Thread.Sleep(250);
@@ -49,14 +61,28 @@ namespace ConsoleTextRPG.Data
         }
 
 
+        public virtual bool TakeDamageWithoutPrint(int damage)
+{
+    int finalDamage = Stat.ApplyDamage(damage);
+    // 출력 생략
+    return Stat.IsDead;
+}
+
+
         // 
-        public virtual void Defend(Character target)
+        public virtual void Defend(Character attacker)
         {
-            int damage = this.Stat.TotalAttack;
-            Console.WriteLine($"{this.Name}의 방어!!");
-            this.TakeDefendDamage(damage); // 자신의 TakeDefendDamage 이벤트를 발동시킴
-            Thread.Sleep(250);
+            int damage = attacker.Stat.TotalAttack;
+            int finalDamage = TakeDefendDamage(damage);
+
+            //Console.WriteLine($"{this.Name}는 {attacker.Name}의 공격을 받았지만 방어했습니다!!");
+            //Console.WriteLine($"원래 데미지: {damage}, 방어력: {this.Stat.TotalDefense * 2}, 감소된 데미지: {finalDamage} (남은 체력: {Stat.CurrentHp})");
+            //Thread.Sleep(250);
+
+            // 상태 변경 신호
+            GameManager.Instance.currentState = DungeonState.PlayerTurn;
         }
+
 
         // target이 damage를 받는 행동
         public virtual bool TakeDamage(int damage)
@@ -81,37 +107,40 @@ namespace ConsoleTextRPG.Data
                 Thread.Sleep(500);
                 return false;
             }
-            Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
-            Thread.Sleep(250);
+            //Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+            //Thread.Sleep(250);
             return Stat.IsDead;
         }
-        
+
 
 
         // 자신이 damage를 받는 행동
-        public virtual void TakeDefendDamage(int damage)
+        public virtual int TakeDefendDamage(int damage)
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
-            Stat.DefecnDamage(damage);
-            int finalDamage = (this.Stat.TotalDefense * 2) - damage;
-            if (finalDamage < 1) this.Stat.CurrentHp += finalDamage; //  데미지가 방어력을 넘었다면 차이만큼 데미지입음
+            int originalDamage = damage;
 
-            if (damage >= 0)
-            {
-                Console.WriteLine($"{this.Name}은(는) 방어에 성공했습니다. (남은 체력: {Stat.CurrentHp})");
-                Thread.Sleep(250);
-            }
-            else
-            {
-                Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
-                Thread.Sleep(250);
-            }
+            // 방어력 적용 후 데미지 계산
+            int finalDamage = damage - (this.Stat.TotalDefense * 2);
+            if (finalDamage < 0) finalDamage = 0;
 
+            // 데미지 적용 (체력 차감)
+            this.Stat.CurrentHp -= finalDamage;
+            if (this.Stat.CurrentHp < 0) this.Stat.CurrentHp = 0;
+
+            // 출력: 방어 성공 메시지 + 데미지 감소 내용
+            //Console.WriteLine($"{this.Name}은(는) 방어에 성공했습니다!");
+            Console.WriteLine($"원래 데미지: {originalDamage}, 방어력: {this.Stat.TotalDefense * 2}, 감소된 데미지: {finalDamage}");
+            Thread.Sleep(250);
+
+            // 사망 여부 체크
             if (Stat.IsDead)
             {
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
                 Thread.Sleep(250);
             }
+
+            return finalDamage; // ✅ 이 한 줄 추가로 외부에서도 데미지 값 사용 가능
         }
     }
 }

@@ -63,7 +63,7 @@ namespace ConsoleTextRPG.Data
             }
             else
             {
-                Console.WriteLine($"{this.Name}의 공격!");
+                //Console.WriteLine($"{this.Name}의 공격!");
             }
             Thread.Sleep(250);
 

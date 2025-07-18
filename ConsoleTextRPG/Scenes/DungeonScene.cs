@@ -724,16 +724,7 @@ namespace ConsoleTextRPG.Scenes
 
         void EnemyAttackMove(int index)
         {
-            if (index < 0 || index > currentMonsters.Count)
-            {
-                Print("\ninfo : 잘못 입력 하셨습니다.");
-                while (Console.KeyAvailable) Console.ReadKey(true);
-                Thread.Sleep(200);
-                while (Console.KeyAvailable) Console.ReadKey(true);
-                return;
-            }
-
-            Console.Clear(); // ✅ 한 번만 화면 정리
+            Console.Clear();
             Print("◎ 몬스터의 턴 ◎", ConsoleColor.DarkRed);
             Print("==============================\n");
 
@@ -747,15 +738,26 @@ namespace ConsoleTextRPG.Scenes
 
                 int prevHp = myPlayer.Stat.CurrentHp;
 
-                EnemyAttack(idx); // 실제 공격 처리만 수행
+                EnemyAttack(idx); // 실제 공격 실행
 
                 int damage = prevHp - myPlayer.Stat.CurrentHp;
-                if (damage < 0) damage = 0; // 안전 처리
+                if (damage < 0) damage = 0;
 
-                //Console.WriteLine($"{nextMonster.Name}의 공격!");
-                //Console.WriteLine($"{myPlayer.Name}은(는) {damage}의 데미지를 받았습니다. (남은 체력: {myPlayer.Stat.CurrentHp})\n");
+                if (isDF)
+                {
+                    // 방어 중이라면 메시지 따로 처리 (TakeDefendDamage 내부 메시지 대신 명확히 출력)
+                    Console.WriteLine($"{myPlayer.Name}은(는) {nextMonster.Name}의 공격을 받았지만 방어했습니다!");
+                    Console.WriteLine($"{damage}의 데미지 (기존체력 {prevHp} => 남은 체력: {myPlayer.Stat.CurrentHp})\n");
+                }
+                else
+                {
+                    // 일반 공격일 경우만 메시지 출력
+                    Console.WriteLine($"{nextMonster.Name}의 공격!");
+                    Console.WriteLine($"{myPlayer.Name}은(는) {damage}의 데미지를 받았습니다.");
+                    Console.WriteLine($"(기존체력 {prevHp} => 남은 체력: {myPlayer.Stat.CurrentHp})\n");
+                }
 
-                Thread.Sleep(500); // 템포 조절용 (선택사항)
+                Thread.Sleep(500);
 
                 if (myPlayer.Stat.IsDead)
                 {
@@ -779,6 +781,7 @@ namespace ConsoleTextRPG.Scenes
         }
 
 
+
         void EnemyAttack(int index)
         {
             if (currentMonsters[index].Stat.CurrentHp == 0)
@@ -789,13 +792,15 @@ namespace ConsoleTextRPG.Scenes
 
             if (isDF)
             {
-                myPlayer.Defend(currentMonsters[index]); // ← 여기 안에서 출력하면 안 됨!
+                myPlayer.Defend(currentMonsters[index]); // 필요시 출력 조절
             }
             else
             {
-                currentMonsters[index].Attack(myPlayer); // ← 여기 안에서 출력하면 안 됨!
+                // 출력하지 않도록 Attack 안에서 출력 생략 / TakeDamageWithoutPrint 사용했기 때문에 출력 안 됨
+                currentMonsters[index].Attack(myPlayer);
             }
         }
+
 
         // ============================[전투 결과상태]============================
         void EndBattleRender()

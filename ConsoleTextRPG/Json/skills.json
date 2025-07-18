@@ -11,7 +11,7 @@
   {
     "Id": 2,
     "Name": "비상 식량",
-    "Damage": 5,
+    "Damage": 40,
     "CriticalChance": 0.0,
     "Cooldown": 3,
     "JobRestriction": "전사",
@@ -38,7 +38,7 @@
   {
     "Id": 5,
     "Name": "회복의 빛",
-    "Damage": 20,
+    "Damage": 60,
     "CriticalChance": 0.0,
     "Cooldown": 4,
     "JobRestriction": "마법사",
