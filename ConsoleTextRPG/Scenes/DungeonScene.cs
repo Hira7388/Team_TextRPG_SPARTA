@@ -408,26 +408,30 @@ namespace ConsoleTextRPG.Scenes
                 {
                     if (new Random().NextDouble() < 0.3f)
                         LoseGold();
-                    GameManager.Instance.currentState = DungeonState.Adventure;
-                    Info("도망쳤습니다");
-                    Thread.Sleep(500);
-                    return;
+                    else
+                    {
+                        GameManager.Instance.currentState = DungeonState.Adventure;
+                        Info("도망쳤습니다");
+                        Thread.Sleep(500);
+                    }
                 }
                 else
                 {
                     Info("도망치지 못했습니다.");
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
                     MonstersDeadCheck();
-                    return;
                 }
             }
             else
             {
                 if (new Random().NextDouble() < 0.3f)
                     LoseGold();
-                Info("도망쳤습니다.");
-                GameManager.Instance.currentState = DungeonState.Adventure;
-                Thread.Sleep(200);
+                else
+                {
+                    Info("도망쳤습니다.");
+                    GameManager.Instance.currentState = DungeonState.Adventure;
+                    Thread.Sleep(200);
+                }
             }
             while (Console.KeyAvailable) Console.ReadKey(true);
             Thread.Sleep(500);
@@ -438,6 +442,9 @@ namespace ConsoleTextRPG.Scenes
         {
             Info("도망치다가 소지금을 흘렸습니다");
             myPlayer.Gold -= (int)(myPlayer.Gold * 0.05f);
+            GameManager.Instance.currentState = DungeonState.Adventure;
+            Info("도망쳤습니다");
+            Thread.Sleep(500);
         }
 
         // ============================[플레이어 공격 상태]============================
@@ -575,19 +582,6 @@ namespace ConsoleTextRPG.Scenes
                 {
                     QuestManager.Instance.OnMonsterKilled(currentMonsters[index - 1].Name);
                 }
-            }
-
-            MonstersDeadCheck();
-        }
-
-        void PlayerAttack(int index)
-        {
-            bool wasAlive = !currentMonsters[index].Stat.IsDead;
-            myPlayer.Attack(currentMonsters[index]);
-            bool isDeadNow = currentMonsters[index].Stat.IsDead;
-            if (wasAlive && isDeadNow)
-            {
-                QuestManager.Instance.OnMonsterKilled(currentMonsters[index].Name);
             }
             MonstersDeadCheck();
         }

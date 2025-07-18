@@ -8,7 +8,7 @@ namespace ConsoleTextRPG.Data
         public int Level { get; private set; }
         public int MaxHp { get; private set; }
         public int CurrentHp { get; set; }
-        public double Dexterity { get; private set; } // 민첩성
+        public double Dexterity { get; set; } // 민첩성
 
         // 초기 능력치
         public int BaseAttack { get; private set; }
@@ -54,8 +54,9 @@ namespace ConsoleTextRPG.Data
 
 
         // 회피율에 대한 로직
-        public double MissingStat()
+        public double MissingStat(double dex)
         {
+            Dexterity = dex; // 외부에서 민첩성을 설정할 수 있도록 함
             const double DexBalance = 250.0; // 민첩성 밸런스 조정 값(값이 클수록 회피율이 낮아짐, ex) Dexterity=30이면 회피율은 12%)
             double balanceDex = Dexterity / DexBalance;
             double minD = 0.02;
@@ -63,20 +64,23 @@ namespace ConsoleTextRPG.Data
             balanceDex = Math.Clamp(balanceDex, minD, maxD); // 밸런스 조정 값의 범위를 제한
             return (balanceDex);
         }
-        public int MosApplyDamage(int damage)
+        public int MosApplyDamage(int damage, double dex)
         {
             Random Dexrng = new Random();
-            double evadeChance = MissingStat();      // ex) 0.12 → 12% 회피
-            if (Dexrng.NextDouble() < evadeChance)      // NextDouble은 0.0에서 1.0사이의 랜덤값 반환함
+            double evadeChance = MissingStat(dex);      // ex) 0.12 → 12% 회피
+            if (Dexrng.NextDouble() <= evadeChance)      // NextDouble은 0.0에서 1.0사이의 랜덤값 반환함
             {
                 // 회피 성공: 데미지 0, HP 변화 없음
                 return 0;
             }
-            int finalDamage = damage - TotalDefense;
-            if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
-            CurrentHp -= finalDamage;
-            if (CurrentHp < 0) CurrentHp = 0;
-            return finalDamage; // 최종 데미지를 반환
+            else
+            {
+                int finalDamage = damage - TotalDefense;
+                if (finalDamage < 1) finalDamage = 1; // 최소 1의 데미지는 받도록 보장
+                CurrentHp -= finalDamage;
+                if (CurrentHp < 0) CurrentHp = 0;
+                return finalDamage; // 최종 데미지를 반환
+            }
         }
 
         public void DefecnDamage(int damage)

@@ -28,11 +28,13 @@ namespace ConsoleTextRPG.Data
                 finalDamage *= 5;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{this.Name}의 치명타 공격!! 데미지 5배!!");
+                Thread.Sleep(250);
                 Console.ResetColor();
             }
             else
             {
                 Console.WriteLine($"{this.Name}의 공격!");
+                Thread.Sleep(250);
             }
 
             target.TakeDamage(finalDamage); // 타겟에게 데미지를 입힘
@@ -45,6 +47,7 @@ namespace ConsoleTextRPG.Data
             int damage = this.Stat.TotalAttack;
             Console.WriteLine($"{this.Name}의 방어!!");
             this.TakeDefendDamage(damage); // 자신의 TakeDefendDamage 이벤트를 발동시킴
+            Thread.Sleep(250);
         }
 
         // target이 damage를 받는 행동
@@ -54,10 +57,12 @@ namespace ConsoleTextRPG.Data
             int finalDamage = Stat.ApplyDamage(damage);
             // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
             Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+            Thread.Sleep(250);
 
             if (Stat.IsDead)
             {
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
+                Thread.Sleep(250);
             }
         }
 
@@ -65,16 +70,25 @@ namespace ConsoleTextRPG.Data
         public virtual void MosTakeDamage(int damage)
         {
             // 실제 데미지 계산 및 적용은 Stat 전문가에게 위임
-            int finalDamage = Stat.MosApplyDamage(damage);
+            int finalDamage = Stat.MosApplyDamage(damage, Stat.Dexterity);
             // 데미지를 받은 후의 결과(메시지 출력, 사망 확인 등)는 Character가 직접 처리
             if(finalDamage == 0)
+            {
                 Console.WriteLine($"{this.Name}은(는) 공격을 회피했습니다!");
+                Thread.Sleep(1050);
+            }
+
             else
-            Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+            {
+                Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+                Thread.Sleep(250);
+            }
+
 
             if (Stat.IsDead)
             {
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
+                Thread.Sleep(250);
             }
         }
 
@@ -90,15 +104,18 @@ namespace ConsoleTextRPG.Data
             if (damage >= 0)
             {
                 Console.WriteLine($"{this.Name}은(는) 방어에 성공했습니다. (남은 체력: {Stat.CurrentHp})");
+                Thread.Sleep(250);
             }
             else
             {
                 Console.WriteLine($"{this.Name}은(는) {finalDamage}의 데미지를 받았습니다. (남은 체력: {Stat.CurrentHp})");
+                Thread.Sleep(250);
             }
 
             if (Stat.IsDead)
             {
                 Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
+                Thread.Sleep(250);
             }
         }
     }
