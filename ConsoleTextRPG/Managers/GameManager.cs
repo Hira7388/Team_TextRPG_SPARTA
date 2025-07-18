@@ -198,5 +198,13 @@ namespace ConsoleTextRPG.Managers
                 if (armor != null) this.Player.EquipItem(armor);
             }
         }
+
+        // ==== 게임종료 문구출력 ====
+        public void GameOver(string text = "")
+        {
+            Console.Clear();
+            Console.WriteLine($"\n{text}");
+            running = false;
+        }
     }
 }

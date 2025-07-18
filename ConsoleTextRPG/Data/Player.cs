@@ -28,8 +28,8 @@ namespace ConsoleTextRPG.Data
         {
             // Character(부모)로부터 물려받은 속성 초기화
             this.Name = name;
-            // 플레이어의 초기 기본 능력치를 설정합니다. (레벨 1, 공격력 10, 방어력 5, 체력 100)
-            this.Stat = new CharacterStat(1, 10, 5, 100);
+            // 플레이어의 초기 기본 능력치를 설정합니다. (레벨 1, 공격력 10, 방어력 5, 체력 100, 민첩 5)
+            this.Stat = new CharacterStat(1, 10, 5, 100, 5);
 
             // Player만의 고유 속성 초기화
             this.Gold = 1500;
@@ -55,11 +55,11 @@ namespace ConsoleTextRPG.Data
             if (job == "전사")
             {
                 // 레벨, 공격력, 방어력, 최대체력
-                Stat.SetBaseStats(1, 15, 10, 120);
+                Stat.SetBaseStats(1, 15, 10, 120, 20);
             }
             else if (job == "마법사")
             {
-                Stat.SetBaseStats(1, 20, 5, 80);
+                Stat.SetBaseStats(1, 20, 5, 80, 10);
             }
         }
 
@@ -69,7 +69,7 @@ namespace ConsoleTextRPG.Data
             this.Name = data.PlayerName;
             this.Job = data.PlayerJob;
             this.Gold = data.Gold;
-            this.Stat.SetBaseStats(data.Level, data.BaseAttack, data.BaseDefense, data.MaxHp);
+            this.Stat.SetBaseStats(data.Level, data.BaseAttack, data.BaseDefense, data.MaxHp, data.Dexterity);
             this.Stat.LoadCurrentHp(data.CurrentHp);
             this.Quests.Clear();
             if (data.InProgressQuestIds != null) this.Quests.AddRange(data.InProgressQuestIds);
