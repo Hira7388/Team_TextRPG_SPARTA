@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ConsoleTextRPG.Scenes;
 using ConsoleTextRPG.Monsters;
 using Newtonsoft.Json;
 
@@ -81,8 +80,12 @@ namespace ConsoleTextRPG.Managers
             this.Player = new Player("");
             Console.CursorVisible = false;
             LoadItemDatabase();
+            if (SkillManager.Instance.AllSkills.Count == 0)
+            {
+                Console.WriteLine("경고: 스킬 데이터가 로드되지 않았습니다!");
+            }
             QuestManager.Instance.LoadQuestDatabase();
-            //BaseState.Init(); // 상태 목록 초기화
+
 
             // 임시 아이템 추가(테스트용)
             Item item;
@@ -95,6 +98,7 @@ namespace ConsoleTextRPG.Managers
             scenes[GameState.TownScene] = new TownScene();
             scenes[GameState.StoreScene] = new StoreScene();
             scenes[GameState.QuestScene] = new QuestScene();
+
 
             // Monster등록
             monsType[MonsterType.Minion] = new Minion();

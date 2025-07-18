@@ -22,8 +22,9 @@ namespace ConsoleTextRPG.Data
         SelectStart,
         SelectLevel,
         Adventure,
-        PlayerTrun,
+        PlayerTurn,
         PlayerAttack,
+        PlayerSkill,
         EnemyTurn,
         EndBattle,
     }

@@ -1,0 +1,56 @@
+[
+  {
+    "Id": 1,
+    "Name": "강력한 일격",
+    "Damage": 30,
+    "CriticalChance": 0.8,
+    "Cooldown": 5,
+    "JobRestriction": "전사",
+    "Effect": null
+  },
+  {
+    "Id": 2,
+    "Name": "방패 강타",
+    "Damage": 20,
+    "CriticalChance": 0.3,
+    "Cooldown": 3,
+    "JobRestriction": "전사",
+    "Effect": "Stun"
+  },
+  {
+    "Id": 3,
+    "Name": "돌진",
+    "Damage": 10,
+    "CriticalChance": 0.15,
+    "Cooldown": 2,
+    "JobRestriction": "전사",
+    "Effect": null
+  },
+  {
+    "Id": 4,
+    "Name": "화구",
+    "Damage": 10,
+    "CriticalChance": 0.25,
+    "Cooldown": 2,
+    "JobRestriction": "마법사",
+    "Effect": null
+  },
+  {
+    "Id": 5,
+    "Name": "빛의 화살",
+    "Damage": 20,
+    "CriticalChance": 0.0,
+    "Cooldown": 4,
+    "JobRestriction": "마법사",
+    "Effect": "Heal"
+  },
+  {
+    "Id": 6,
+    "Name": "얼음 창",
+    "Damage": 40,
+    "CriticalChance": 0.6,
+    "Cooldown": 6,
+    "JobRestriction": "마법사",
+    "Effect": "Stun"
+  }
+]
