@@ -1,12 +1,13 @@
 ﻿{
-  "PlayerName": "아니마",
+  "PlayerName": "세트",
   "PlayerJob": "전사",
   "Gold": 1500,
   "Level": 1,
   "BaseAttack": 15,
   "BaseDefense": 10,
   "MaxHp": 120,
-  "CurrentHp": 111,
+  "CurrentHp": 114,
+  "Dexterity": 0,
   "InventoryItemIds": [
     0
   ],
@@ -15,9 +16,14 @@
   "InProgressQuestIds": [
     {
       "QuestId": 1,
-      "CurrentCount": 4,
+      "CurrentCount": 0,
       "State": 1
     }
   ],
-  "CompletedQuestIds": []
+  "CompletedQuestIds": [],
+  "LearnedSkillIds": [
+    1,
+    2,
+    3
+  ]
 }

@@ -197,6 +197,22 @@ namespace ConsoleTextRPG.Managers
                 Item armor = this.Player.Inventory.Items.FirstOrDefault(i => i.Id == saveData.EquippedArmorId);
                 if (armor != null) this.Player.EquipItem(armor);
             }
+
+            // 스킬을 불러온다.
+            this.Player.Skills.Clear(); // 기존 스킬을 모두 비웁니다.
+            if (saveData.LearnedSkillIds != null)
+            {
+                foreach (int skillId in saveData.LearnedSkillIds)
+                {
+                    // SkillManager의 전체 스킬 목록에서 '원본'을 찾습니다.
+                    Skill originalSkill = SkillManager.Instance.AllSkills.FirstOrDefault(s => s.Id == skillId);
+                    if (originalSkill != null)
+                    {
+                        // 원본을 복사하여 플레이어에게 지급합니다.
+                        this.Player.Skills.Add(originalSkill.Clone());
+                    }
+                }
+            }
         }
 
         // ==== 게임종료 문구출력 ====

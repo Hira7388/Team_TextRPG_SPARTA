@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleTextRPG.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,5 +33,6 @@ namespace ConsoleTextRPG.Data
         public List<PlayerQuest> InProgressQuestIds { get; set; } // 진행 중인 퀘스트 ID 목록
         public List<int> CompletedQuestIds { get; set; } // 완료한 퀘스트 ID 목록
         //public Dictionary<int, int> QuestProgress { get; set; } // 퀘스트 ID, 현재 카운트 개수
+        public List<int> LearnedSkillIds { get; set; }
     }
 }
