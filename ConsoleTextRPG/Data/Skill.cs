@@ -68,7 +68,7 @@ namespace ConsoleTextRPG.Managers
             target.TakeDamage(finalDamage);
             if (target.Stat.CurrentHp <= 0)
             {
-                Console.WriteLine($"{target.Name}이(가) 쓰러졌습니다!");
+                Console.WriteLine($"{target.Name}이(가) 스킬에 의해 쓰러졌습니다!");
                 QuestManager.Instance.OnMonsterKilled(target.Name); // 퀘스트 알림도 여기서 처리 가능
             }
 
@@ -81,7 +81,6 @@ namespace ConsoleTextRPG.Managers
             if (CurrentCooldown > 0)
             {
                 CurrentCooldown--;
-                Console.WriteLine($"[디버그] {Name} 쿨타임 감소: {CurrentCooldown}턴 남음"); // 디버깅 로그
             }
         }
 

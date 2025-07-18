@@ -11,7 +11,6 @@ namespace ConsoleTextRPG.Data
 {
     public abstract class Monster : Character
     {
-        public string Name;
         public string Image;
         public int MaxHP;
         public int ATK;
@@ -50,9 +49,35 @@ namespace ConsoleTextRPG.Data
 
         public override void Attack(Character target)
         {
-            int damage = this.Stat.BaseAttack;
-            Console.WriteLine($"{Name}의 공격!");
-            target.MosTakeDamage(damage); 
+            int baseDamage = this.Stat.TotalAttack;
+            Random rand = new Random();
+            bool isCritical = rand.Next(0, 20) == 0;
+            int finalDamage = baseDamage;
+
+            if (isCritical)
+            {
+                finalDamage *= 5;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{this.Name}의 치명타 공격!! 데미지 5배!!");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine($"{this.Name}의 공격!");
+            }
+            Thread.Sleep(250);
+
+            // ⬇️ 데미지 주고 죽었는지 판단
+            bool isDead = target.TakeDamage(finalDamage);
+
+            if (isDead)
+            {
+                Console.WriteLine($"{target.Name}이(가) 쓰러졌습니다.");
+                Thread.Sleep(250);
+            }
         }
+
+
     }
+
 }

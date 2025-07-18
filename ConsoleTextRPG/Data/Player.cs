@@ -88,8 +88,19 @@ namespace ConsoleTextRPG.Data
                 Console.WriteLine("해당 스킬을 찾을 수 없습니다!");
                 return;
             }
+
             skill.Use(this, target);
+
+            if (target.Stat.IsDead)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"{target.Name}이(가) 스킬에 의해 쓰러졌습니다!");
+                Console.ResetColor();
+                Thread.Sleep(250);
+            }
         }
+
+        //쿨다운
         public void ReduceSkillCooldowns()
         {
             foreach (var skill in Skills)
@@ -97,6 +108,15 @@ namespace ConsoleTextRPG.Data
                 skill.ReduceCooldown();
             }
 
+        }
+        
+        //턴 엔드
+        public void EndTurn()
+        {
+            foreach (var skill in Skills)
+            {
+                skill.ReduceCooldown();
+            }
         }
 
 
