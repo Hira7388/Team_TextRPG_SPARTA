@@ -29,9 +29,9 @@
   {
     "Id": 4,
     "Name": "화구",
-    "Damage": 10,
+    "Damage": 40,
     "CriticalChance": 0.25,
-    "Cooldown": 2,
+    "Cooldown": 6,
     "JobRestriction": "마법사",
     "Effect": null
   },
@@ -47,9 +47,9 @@
   {
     "Id": 6,
     "Name": "얼음 창",
-    "Damage": 40,
+    "Damage": 10,
     "CriticalChance": 0.6,
-    "Cooldown": 6,
+    "Cooldown": 1,
     "JobRestriction": "마법사",
     "Effect": "Stun"
   }

@@ -88,31 +88,49 @@ namespace ConsoleTextRPG.Scenes
         // 이름 입력
         private void AskPlayerName()
         {
-            Console.Clear();
-            Console.Write("\n당신의 이름은 기억이 나십니까? ");
-            Console.Write("\n>> ");
-            string input = Console.ReadLine()?.Trim();
-
-            if (string.IsNullOrWhiteSpace(input))
+            while (true)
             {
-                Console.WriteLine("오류 : 유효하지 않은 이름입니다. 다시 입력해주세요.");
-                // 입력 버퍼 비우기
-                while (Console.KeyAvailable) Console.ReadKey(true);
-
-                Thread.Sleep(300);
-
-                // 또 한 번 비워주기 (남아있을 수도 있으니까)
-                while (Console.KeyAvailable) Console.ReadKey(true);
-            }
-            else
-            {
-                myPlayer.SetName(input);
-
-                Console.WriteLine($"\n나의 이름은, {myPlayer.Name}...\n");
-                Thread.Sleep(1000);
                 Console.Clear();
+                Console.Write("\n당신의 이름은 기억이 나십니까? ");
+                Console.Write("\n>> ");
+                string input = Console.ReadLine()?.Trim();
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("오류 : 유효하지 않은 이름입니다. 다시 입력해주세요.");
+                    Thread.Sleep(500);
+                    continue;
+                }
+
+                // 이름 확인 절차
+                Console.WriteLine($"\n입력한 이름은 '{input}'입니다. 이 이름이 확실한가요?");
+                Console.WriteLine("1. Yes");
+                Console.WriteLine("2. No");
+                Console.Write("선택 >> ");
+                string confirm = Console.ReadLine()?.Trim();
+
+                if (confirm == "1")
+                {
+                    myPlayer.SetName(input);
+                    Console.WriteLine($"\n나의 이름은, {myPlayer.Name}...\n");
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                    break; // 이름 확정 후 직업 선택으로 넘어감
+                }
+                else if (confirm == "2")
+                {
+                    Console.WriteLine("이름을 다시 입력해주세요.");
+                    Thread.Sleep(500);
+                    continue;
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다. 다시 시도해주세요.");
+                    Thread.Sleep(500);
+                }
             }
         }
+
 
         // 직업 선택
         private void ChooseJob()
