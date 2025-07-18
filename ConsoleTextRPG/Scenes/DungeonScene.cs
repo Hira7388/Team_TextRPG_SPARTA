@@ -485,7 +485,6 @@ namespace ConsoleTextRPG.Scenes
 
         void PlayerSkillMove(int index)
         {
-
             if (index < 0 || index > myPlayer.Skills.Count)
             {
                 Print("\ninfo : 잘못 입력 하셨습니다.");
@@ -517,10 +516,32 @@ namespace ConsoleTextRPG.Scenes
                 return;
             }
 
-            selectedSkillId = selectedSkill.Id;
-            Console.WriteLine($"선택된 스킬 ID: {selectedSkillId}");
-            GameManager.Instance.currentState = DungeonState.PlayerAttack;
+            if (selectedSkill.Effect == "Heal")
+            {
+                // 힐 스킬: 바로 사용 (자신에게)
+                bool used = selectedSkill.Use(myPlayer, myPlayer);
+                if (used)
+                {
+                    Console.WriteLine("힐 스킬을 사용했습니다! 계속하려면 아무 키나 누르세요...");
+                    Console.ReadKey(true);  // 메시지 확인을 위한 대기
+                    selectedSkillId = 0;
+                    GameManager.Instance.currentState = DungeonState.EnemyTurn;  // 바로 몬스터 턴으로 넘김
+                }
+                else
+                {
+                    // 사용 실패 시 다시 스킬 선택으로 돌아감
+                    GameManager.Instance.currentState = DungeonState.PlayerSkill;
+                }
+            }
+            else
+            {
+                // 그 외 스킬은 대상 선택 화면으로 이동
+                selectedSkillId = selectedSkill.Id;
+                Console.WriteLine($"선택된 스킬 ID: {selectedSkillId}");
+                GameManager.Instance.currentState = DungeonState.PlayerAttack;
+            }
         }
+
 
         void PlayerAttackRender()
         {

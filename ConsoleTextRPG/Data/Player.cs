@@ -98,6 +98,7 @@ namespace ConsoleTextRPG.Data
                 Console.ResetColor();
                 Thread.Sleep(250);
             }
+
         }
 
         //쿨다운
