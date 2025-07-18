@@ -50,7 +50,7 @@
     "Comment": "스파르타의 전사들이 사용했다는 전설의 창입니다.",
     "Type": 0,
     "StatType": "공격력",
-    "StatusBonus": 7,
+    "StatusBonus": 10,
     "Price": 300
   },
   {

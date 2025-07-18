@@ -1,13 +1,23 @@
-﻿using System;
+﻿using ConsoleTextRPG.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleTextRPG.Data
 {
+
+
     public class Player : Character
     {
+
+
+
+        //스킬
+        public List<Skill> Skills { get; private set; } // Skill 타입 사용
+
+
+
         public int Gold { get;  set; }
 
         // 인벤토리
@@ -40,6 +50,9 @@ namespace ConsoleTextRPG.Data
             // 수락한 퀘스트와 완료한 퀘스트 정보
             this.Quests = new List<PlayerQuest>();
             this.CompletedQuestIds = new List<int>();
+            this.Skills = new List<Skill>(); // 초기 스킬 리스트
+
+
         }
 
         // 이름을 설정하는 전용 메서드
@@ -52,16 +65,40 @@ namespace ConsoleTextRPG.Data
         public void SetJob(string job)
         {
             this.Job = job;
+            Skills.Clear(); // 기존 스킬 초기화
             if (job == "전사")
             {
-                // 레벨, 공격력, 방어력, 최대체력
+                // 레벨, 공격력, 방어력, 최대체력, 민첩
                 Stat.SetBaseStats(1, 15, 10, 120, 20);
+                Skills.AddRange(SkillManager.Instance.AllSkills.Where(s => s.JobRestriction == "전사"));
             }
             else if (job == "마법사")
             {
                 Stat.SetBaseStats(1, 20, 5, 80, 10);
+                Skills.AddRange(SkillManager.Instance.AllSkills.Where(s => s.JobRestriction == "마법사"));
             }
         }
+
+        // 스킬 사용 메서드
+        public void UseSkill(int skillId, Character target)
+        {
+            var skill = Skills.FirstOrDefault(s => s.Id == skillId);
+            if (skill == null)
+            {
+                Console.WriteLine("해당 스킬을 찾을 수 없습니다!");
+                return;
+            }
+            skill.Use(this, target);
+        }
+        public void ReduceSkillCooldowns()
+        {
+            foreach (var skill in Skills)
+            {
+                skill.ReduceCooldown();
+            }
+
+        }
+
 
         // 불러오기 시 불러온 데이터를 현재 플레이어 객체 데이터에 저장한다.
         public void LoadFromData(SaveData data)

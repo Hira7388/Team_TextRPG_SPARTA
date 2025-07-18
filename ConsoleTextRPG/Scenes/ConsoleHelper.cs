@@ -36,7 +36,6 @@ namespace ConsoleTextRPG.Scenes
             if (currentLength >= totalLength)
             {
                 // 길이가 이미 총 길이보다 길거나 같으면 잘라냄 (또는 그냥 반환)
-                // 여기서는 간단히 잘라내지 않고 반환합니다. 필요에 따라 substring 적용
                 return text;
             }
             else
@@ -45,7 +44,7 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
-        // 아이템_번호, 아이템_이름, 물약_카운트, 스텟타입, 스텟보너스, 설명, 장착여부, 아이템_타임(아이템_번호-1), 모드
+        // 아이템_번호, 아이템_이름, 물약_카운트, 스텟타입, 스텟보너스, 설명, 장착여부, 아이템_타입, 모드
         public static void DisplayHelper(int id, string name, int count, string statType, int statusBouns, string comment, string price, bool equipped, int type, int mode)
         {
             string equippedStatus = equipped ? "[E]" : "   "; //아이템 장착여부 표시
@@ -85,7 +84,7 @@ namespace ConsoleTextRPG.Scenes
             {
                 if (type == 2)
                 {
-                    string idAndName = $"{name} (x{count})"; //번호를 string으로 변환 후 합침
+                    string idAndName = $"{name} (x{count})"; 
                     string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
 
                     Console.WriteLine($"- {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 물약이 보여줄 창 
