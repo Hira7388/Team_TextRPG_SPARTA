@@ -218,10 +218,6 @@ namespace ConsoleTextRPG.Managers
             // 플레이어가 직접 자신의 정보를 불러오는 것이 캡슐화에 좋다. (즉 다른 정보들도 있다면 해당 클래스에서 스스로 정보를 불러오는 것이 좋음)
             this.Player.LoadFromData(saveData);
 
-            // Player 객체가 가진 완료한 퀘스트 id를 지우고 저장한 데이터를 넣어준다.
-            this.Player.CompletedQuestIds.Clear();
-            this.Player.CompletedQuestIds.AddRange(saveData.CompletedQuestIds);
-
             // Player 객체가 가진 인벤토리를 비우고 저장한 보유 아이템 데이터를 넣어준다.
             this.Player.Inventory.Clear();
 
