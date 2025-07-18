@@ -384,6 +384,10 @@ namespace ConsoleTextRPG.Scenes
                     while (Console.KeyAvailable) Console.ReadKey(true);
                     break;
             }
+
+        }
+        void Cooltime()
+        {
             // 플레이어 턴 종료 시 쿨타임 감소
             myPlayer.ReduceSkillCooldowns();
             if (GameManager.Instance.currentState != DungeonState.PlayerSkill &&
@@ -393,9 +397,11 @@ namespace ConsoleTextRPG.Scenes
             }
         }
 
+
         void PlayerDefend()
         {
             isDF = true;
+            Cooltime();
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
             MonstersDeadCheck();
         }
@@ -408,18 +414,19 @@ namespace ConsoleTextRPG.Scenes
                 {
                     if (new Random().NextDouble() < 0.3f)
                         LoseGold();
-                    else
-                    {
-                        GameManager.Instance.currentState = DungeonState.Adventure;
-                        Info("도망쳤습니다");
-                        Thread.Sleep(500);
-                    }
+
+                    GameManager.Instance.currentState = DungeonState.Adventure;
+                    Info("도망쳤습니다");
+                    Thread.Sleep(500);
+                    return;
                 }
                 else
                 {
                     Info("도망치지 못했습니다.");
+                    Cooltime();
                     GameManager.Instance.currentState = DungeonState.EnemyTurn;
                     MonstersDeadCheck();
+                    return;
                 }
             }
             else
@@ -431,8 +438,10 @@ namespace ConsoleTextRPG.Scenes
                     Info("도망쳤습니다.");
                     GameManager.Instance.currentState = DungeonState.Adventure;
                     Thread.Sleep(200);
+                    return;
                 }
             }
+
             while (Console.KeyAvailable) Console.ReadKey(true);
             Thread.Sleep(500);
             while (Console.KeyAvailable) Console.ReadKey(true);
@@ -445,6 +454,7 @@ namespace ConsoleTextRPG.Scenes
             GameManager.Instance.currentState = DungeonState.Adventure;
             Info("도망쳤습니다");
             Thread.Sleep(500);
+            return;
         }
 
         // ============================[플레이어 공격 상태]============================
