@@ -57,17 +57,34 @@ namespace ConsoleTextRPG.Managers
         public void GameRun()
         {
             Init();
-            if (File.Exists(SaveManager.Instance.SaveFilePath)) // 저장 파일이 있는지 확인
+
+            if (File.Exists(SaveManager.Instance.SaveFilePath)) // 저장 파일이 있으면
             {
-                Console.WriteLine("저장된 게임이 있습니다. 불러오시겠습니까? (Y/N)");
-                Console.Write(">> ");
-                string input = Console.ReadLine();
-                if (input.Trim().ToUpper() == "Y")
+                while (true)
                 {
-                    LoadGame();
+                    Console.WriteLine("저장된 게임이 있습니다. 불러오시겠습니까? (Y/N)");
+                    Console.Write(">> ");
+                    string input = Console.ReadLine()?.Trim().ToUpper();
+
+                    if (input == "Y")
+                    {
+                        LoadGame(); // 저장된 데이터 불러오기
+                        break;
+                    }
+                    else if (input == "N")
+                    {
+                        Console.WriteLine("새 게임을 시작합니다.\n");
+                        // 마을로 진입하면 이름, 직업 설정은 TownScene에서 처리
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("잘못된 입력입니다. Y 또는 N을 입력해주세요.\n");
+                    }
                 }
             }
 
+            // 루프 진입 (마을로 진입하거나 저장된 상태에서 시작)
             while (running)
             {
                 RenderMenu();
