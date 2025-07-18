@@ -115,7 +115,7 @@ namespace ConsoleTextRPG.Data
 
             if (Stat.IsDead)
             {
-                Console.WriteLine($"{this.Name}이(가) 쓰z`러졌습니다.");
+                Console.WriteLine($"{this.Name}이(가) 쓰러졌습니다.");
                 Thread.Sleep(250);
             }
         }
