@@ -19,22 +19,27 @@ namespace ConsoleTextRPG.Data
         public int DEX;
         public int Gold;
         public bool isDead => Stat.CurrentHp <= 0;
-        public virtual void PrintMonster( int no, ConsoleColor c1, ConsoleColor c2)
+
+        public bool IsDefending { get; set; } = false;
+
+        public virtual void PrintMonster(int no, ConsoleColor c1, ConsoleColor c2)
         {
             if (isDead)
             {
                 Console.ForegroundColor = c2;
                 Console.WriteLine($" {no}.  Lv.{Level} | {Name} | Dead");
-                Console.ResetColor();// 기본 색 복원
+                Console.ResetColor();
             }
             else
             {
-                Console.ForegroundColor = c1;   // 번호 색
+                Console.ForegroundColor = c1;
                 Console.Write($" {no}. ");
-                Console.ResetColor();// 기본 색 복원
-                Console.WriteLine($"Lv.{Level} | {Name} | HP : {this.Stat.CurrentHp}/{MaxHP}");
+                Console.ResetColor();
+                string defenseText = IsDefending ? " [방어 중]" : "";
+                Console.WriteLine($"Lv.{Level} | {Name} | HP : {this.Stat.CurrentHp}/{MaxHP}{defenseText}");
             }
         }
+
         public virtual void PrintMonster(ConsoleColor c)
         {
             Console.ForegroundColor = c;
@@ -44,7 +49,8 @@ namespace ConsoleTextRPG.Data
 
         public virtual void PrintMonster()
         {
-            Console.WriteLine($"Lv.{Level} | {Name} | HP : {this.Stat.CurrentHp}/{MaxHP}");
+            string defenseText = IsDefending ? " [방어 중]" : "";
+            Console.WriteLine($"Lv.{Level} | {Name} | HP : {this.Stat.CurrentHp}/{MaxHP}{defenseText}");
         }
 
         public override void Attack(Character target)

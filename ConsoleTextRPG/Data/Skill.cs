@@ -42,7 +42,7 @@ namespace ConsoleTextRPG.Managers
                 return false;
             }
 
-            Console.WriteLine($"{user.Name}이(가) {Name} 스킬을 사용했습니다!");
+            Console.WriteLine($"\n{user.Name}이(가) {Name} 스킬을 사용했습니다!");
             CurrentCooldown = Cooldown;
 
             Random rand = new Random();
@@ -53,7 +53,7 @@ namespace ConsoleTextRPG.Managers
             {
                 finalDamage *= 2;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{Name} 치명타 발동!! 데미지 2배!");
+                Console.WriteLine($"\n{Name} 치명타 발동!! 데미지 2배!");
                 Console.ResetColor();
             }
 
@@ -61,14 +61,14 @@ namespace ConsoleTextRPG.Managers
             {
                 int healAmount = Damage;
                 player.Stat.CurrentHp = Math.Min(player.Stat.MaxHp, player.Stat.CurrentHp + healAmount);
-                Console.WriteLine($"{user.Name}이(가) {healAmount}만큼 회복했습니다! (현재 HP: {player.Stat.CurrentHp})");
+                Console.WriteLine($"\n           <MaxHP: {player.Stat.MaxHp}>\n   -- HP를 {healAmount} 회복 시도합니다. --");
                 return true;
             }
 
             target.TakeDamage(finalDamage);
             if (target.Stat.CurrentHp <= 0)
             {
-                Console.WriteLine($"{target.Name}이(가) 스킬에 의해 쓰러졌습니다!");
+                Console.WriteLine($"\n{target.Name}이(가) 스킬에 의해 쓰러졌습니다!");
                 QuestManager.Instance.OnMonsterKilled(target.Name); // 퀘스트 알림도 여기서 처리 가능
             }
 

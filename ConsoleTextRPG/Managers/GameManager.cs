@@ -259,6 +259,9 @@ namespace ConsoleTextRPG.Managers
                 }
             }
         }
+        // 던전에서 적 처리가 끝났는지 여부를 저장하는 변수
+        public bool IsEnemyTurnAlreadyProcessed = false;
+
 
         // ==== 게임종료 문구출력 ====
         public void GameOver(string text = "")
