@@ -859,7 +859,8 @@ namespace ConsoleTextRPG.Scenes
             Print("◎Battle!! - Result◎", ConsoleColor.DarkYellow);
             Print($"\nVictory!\n", ConsoleColor.Green);
             Print($"던전에서 몬스터 {currentMonsters.Count}마리를 잡았습니다.\n");
-            Print($"Lv.{myPlayer.Stat.Level} |Exp: {myPlayer.CurrentExp} |Name: {myPlayer.Name}");
+            Print($"소지금: {myPlayer.Gold} G");
+            Print($" Lv.{myPlayer.Stat.Level} |Exp: {myPlayer.CurrentExp} |Name: {myPlayer.Name}");
             Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
             Print(0, "다음", ConsoleColor.DarkCyan);
             Print("\n원하시는 행동을 입력해주세요");
@@ -870,7 +871,8 @@ namespace ConsoleTextRPG.Scenes
         {
             Print("◎Battle!! - Result◎", ConsoleColor.DarkYellow);
             Print($"\nYou Lose!\n", ConsoleColor.Green);
-            Print($"Lv.{myPlayer.Stat.Level}|Exp: {myPlayer.CurrentExp} | {myPlayer.Name}\n");
+            Print($"소지금: {myPlayer.Gold} G");
+            Print($" Lv.{myPlayer.Stat.Level}|Exp: {myPlayer.CurrentExp} | {myPlayer.Name}\n");
             Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
             Print(0, "다음", ConsoleColor.DarkCyan);
             Print("\n원하시는 행동을 입력해주세요");
