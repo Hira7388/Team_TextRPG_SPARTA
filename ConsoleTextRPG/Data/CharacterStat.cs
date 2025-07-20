@@ -145,7 +145,7 @@ namespace ConsoleTextRPG.Data
             BaseDefense += amount;         // 레벨업 시 방어력 증가 
 
             CurrentHp = MaxHp;              //레벨업 시 체력 회복
-            Console.WriteLine($" Level UP! -> 공격력 : {BaseAttack}, 방어력 : {BaseDefense}, 체력 : {CurrentHp}이 되었습니다.");
+            Console.WriteLine($" Level UP! -> 공격력 : {BaseAttack}, 방어력 : {BaseDefense}, 체력 : {CurrentHp} 되었습니다.");
         }
         public int RequiredExp() //레벨업에 필요한 exp양
         {
