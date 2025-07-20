@@ -212,6 +212,7 @@ namespace ConsoleTextRPG.Data
 
             if(CurrentExp >= Stat.RequiredExp()) //레벨업에 필요한 경험치에 도달할 경우
             {
+                Console.WriteLine();
                 Console.WriteLine($"{Name}가 {exp}의 exp를 획득하였습니다!");
                 CurrentExp -= Stat.RequiredExp(); //사용한 경험치 감소
                 Stat.LevelUp(1); // 레벨 1 증가

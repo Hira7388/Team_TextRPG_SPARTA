@@ -308,6 +308,13 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}");
             // 아래는 아직 아이템으로 인한 추가 최대 체력이 없어서 잠시 비활성화 해두었습니다.
             //Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}{(myPlayer.Stat.AdditionalHp > 0 ? $"(+{myPlayer.ItemHealth})" : "")}"); 
+            Console.WriteLine($"=====스킬창=====");
+            //스킬번호, 스킬이름, 스킬정보, 스킬데미지/회복력, 쿨타임
+            for (int i =0; i< myPlayer.Skills.Count; i++)
+            {
+                Console.WriteLine();
+                ConsoleHelper.DisplaySkill(i + 1, myPlayer.Skills[i].Name, myPlayer.Skills[i].Effect, myPlayer.Skills[i].Damage, myPlayer.Skills[i].Cooldown);
+            }
             Console.WriteLine("\n메뉴로 돌아가려면 아무 키나 누르세요...");
             Console.ReadKey();
         }

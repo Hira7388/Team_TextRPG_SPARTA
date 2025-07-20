@@ -75,16 +75,16 @@ namespace ConsoleTextRPG.Scenes
                         Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
                     }
 
-                        Console.WriteLine($"{equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 보여줄 창 
+                    Console.WriteLine($"{equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} |"); // 인벤토리에서 보여줄 창 
 
-                        Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
+                    Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
                 }
             }
-            else if(mode == 1) //상점에서 보여줄 창
+            else if (mode == 1) //상점에서 보여줄 창
             {
                 if (type == 2)
                 {
-                    string idAndName = $"{name} (x{count})"; 
+                    string idAndName = $"{name} (x{count})";
                     string pad_Id = PadRightKorean(idAndName, _width); //번호+이름을 변환
 
                     Console.WriteLine($"- {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 물약이 보여줄 창 
@@ -98,7 +98,7 @@ namespace ConsoleTextRPG.Scenes
 
                 }
             }
-            else if(mode == 2) //판매할때 보여줄 창
+            else if (mode == 2) //판매할때 보여줄 창
             {
                 if (type == 2)
                 {
@@ -117,9 +117,9 @@ namespace ConsoleTextRPG.Scenes
                         Console.ForegroundColor = ConsoleColor.Cyan; //장착시 초록색으로 표현
                     }
 
-                        Console.WriteLine($"{equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 판매시 보여줄 창
+                    Console.WriteLine($"{equippedStatus} {pad_Id} | {pad_StatType} | {pad_Comment} | {pad_Price}"); // 상점에서 판매시 보여줄 창
 
-                        Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
+                    Console.ResetColor(); //다음 콘솔에 영향을 주지 않도록 원래색으로 전환합니다.
                 }
             }
             else //구매할때 보여줄 창
@@ -140,6 +140,30 @@ namespace ConsoleTextRPG.Scenes
                 }
             }
 
+        }
+
+        //스킬번호, 스킬이름, 스킬정보, 스킬데미지/회복력, 쿨타임
+        public static void DisplaySkill(int id, string name, string info, int damage, int coolTime)
+        {
+            string skillname = $"{id.ToString()}. {name}"; //스킬번호 + 이름
+            string pad_name = PadRightKorean(skillname, _width); // 변환
+
+            string pad_Time = PadRightKorean(coolTime.ToString(), _width); // 쿨타임 변환
+
+            if (info == "Heal") //info를 통해 공격스킬인지 회복스킬인지 표현한다.
+            {
+                string skillinfo = "회복력";
+                string skillType = $"{skillinfo} : {damage}";
+                string pad_Type = PadRightKorean(skillType, _width);
+                Console.WriteLine($"{pad_name} | {pad_Type} |쿨타임 : {pad_Time}"); // 상태창에서 보여줄 창
+            }
+            else 
+            {
+                string skillinfo = "데미지";
+                string skillType = $"{skillinfo} : {damage}";
+                string pad_Type = PadRightKorean(skillType, _width);
+                Console.WriteLine($"{pad_name} | {pad_Type} |쿨타임 : {pad_Time}"); // 상태창에서 보여줄 창
+            }
         }
 
     }
