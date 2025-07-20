@@ -299,7 +299,7 @@ namespace ConsoleTextRPG.Scenes
             Console.Clear();
             Console.WriteLine("[내 정보]");
             Console.WriteLine($"이름   : {myPlayer.Name}");
-            Console.WriteLine($"레벨   : {myPlayer.Stat.Level}");
+            Console.WriteLine($"레벨   : {myPlayer.Stat.Level}  | (EXP : {myPlayer.CurrentExp} / {myPlayer.Stat.Level*5}) "); //레벨 | 레벨업에 경험치
             Console.WriteLine($"직업   : {myPlayer.Job}");
             Console.WriteLine($"소지금 : {myPlayer.Gold} G");
             Console.WriteLine($"공격력 : {myPlayer.Stat.BaseAttack}{(myPlayer.Stat.AdditionalAttack > 0 ? $"(+{myPlayer.Stat.AdditionalAttack})" : "")}");
