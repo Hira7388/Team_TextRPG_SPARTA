@@ -374,7 +374,6 @@ namespace ConsoleTextRPG.Scenes
                 case 3:
                     Info("방어합니다");
                     PlayerDefend();
-
                     Cooltime();  // 쿨타임 감소 및 턴 넘김
                     break;
                 case 4:
@@ -393,20 +392,31 @@ namespace ConsoleTextRPG.Scenes
         {
             // 플레이어 턴 종료 시 쿨타임 감소
             myPlayer.ReduceSkillCooldowns();
-            if (GameManager.Instance.currentState != DungeonState.PlayerSkill &&
-                GameManager.Instance.currentState != DungeonState.PlayerAttack)
-            {
-                GameManager.Instance.currentState = DungeonState.EnemyTurn;
-            }
+            GameManager.Instance.currentState = DungeonState.EnemyTurn;
         }
 
-
+        // 방어 메서드
         void PlayerDefend()
         {
             isDF = true;
+
+            Console.WriteLine("\n[방어] 태세에 돌입했습니다! \n방어력 만큼 받는 데미지가 감소됩니다.");
+            Console.WriteLine("\n계속하려면 아무 키나 누르세요...");
+            Console.ReadKey(true);
+
             Cooltime();
+
+            // ✅ 몬스터 턴을 위해 큐 재설정
+            monsterQueue.Clear();
+            foreach (var monster in currentMonsters)
+            {
+                if (!monster.Stat.IsDead)
+                {
+                    monsterQueue.Enqueue(monster);
+                }
+            }
+
             GameManager.Instance.currentState = DungeonState.EnemyTurn;
-            MonstersDeadCheck();
         }
 
         void PlayerRun()
@@ -476,7 +486,7 @@ namespace ConsoleTextRPG.Scenes
                 }
                 else
                 {
-                    skillInfo = $"{skill.Name} (데미지: {skill.Damage})";
+                    skillInfo = $"{skill.Name} (데미지: {skill.Damage})" ;
                 }
 
                 if (skill.CurrentCooldown > 0)
@@ -546,8 +556,8 @@ namespace ConsoleTextRPG.Scenes
                     int afterHP = myPlayer.Stat.CurrentHp;
                     int recovered = afterHP - beforeHP;
 
-                    Console.WriteLine($"\n<회복> 스킬을 사용했습니다!");
-                    Console.WriteLine($"HP가 {beforeHP} → {afterHP} ({recovered} 회복) 되었습니다.");
+                    Console.WriteLine($"\n              <회복>");
+                    Console.WriteLine($"==HP가 ({beforeHP} → {afterHP}) +{recovered} 회복 되었습니다.==");
                     Console.WriteLine("\n계속하려면 아무 키나 누르세요...");
                     Console.ReadKey(true);
 
@@ -706,6 +716,11 @@ namespace ConsoleTextRPG.Scenes
         // ============================[몬스터턴상태]============================
         void EnemyTurnRender()
         {
+
+            // ✅ 이번 턴 시작 시 몬스터 방어 상태 초기화
+            foreach (var monster in currentMonsters)
+                monster.IsDefending = false;
+
             Print("◎Battle!!◎", ConsoleColor.DarkYellow);
             Print($"\n몬스터의 공격이 시작됩니다!\n");
             Print("\n============[몬스터]============");
@@ -728,26 +743,42 @@ namespace ConsoleTextRPG.Scenes
             Print("◎ 몬스터의 턴 ◎", ConsoleColor.DarkRed);
             Print("==============================\n");
 
+            Random rand = new Random();
+
             while (monsterQueue.Count > 0)
             {
                 var nextMonster = monsterQueue.Dequeue();
                 int idx = currentMonsters.IndexOf(nextMonster);
 
+                // ✅ 턴 시작 시 방어 초기화
+                nextMonster.IsDefending = false;
+
                 if (nextMonster.Stat.IsDead)
                     continue;
 
+                // ✅ 방어 확률 판단은 여기서 새로 적용
+                bool monsterDefends = rand.Next(0, 100) < 20;
+                nextMonster.IsDefending = monsterDefends;
+
+                if (monsterDefends)
+                {
+                    Console.WriteLine($"{nextMonster.Name}이(가) 방어 태세를 취합니다!\n");
+                    Thread.Sleep(300);
+                    continue;
+                }                
+
                 int prevHp = myPlayer.Stat.CurrentHp;
 
-                EnemyAttack(idx); // 실제 공격 실행
+                EnemyAttack(idx); // 실제 공격 처리만 수행
 
                 int damage = prevHp - myPlayer.Stat.CurrentHp;
-                if (damage < 0) damage = 0;
+                if (damage < 0) damage = 0; // 안전 처리
 
                 if (isDF)
                 {
-                    // 방어 중이라면 메시지 따로 처리 (TakeDefendDamage 내부 메시지 대신 명확히 출력)
-                    Console.WriteLine($"{myPlayer.Name}은(는) {nextMonster.Name}의 공격을 받았지만 방어했습니다!");
-                    Console.WriteLine($"{damage}의 데미지 (기존체력 {prevHp} => 남은 체력: {myPlayer.Stat.CurrentHp})\n");
+                    // 방어 중이라면 메시지 따로 처리 (TakeDefendDamage 내부 메시지 대신 명확히 출력)                   
+                    Console.WriteLine($"{myPlayer.Name}은(는) 방어를 시도하여 {nextMonster.Name}의 공격에 {damage}의 데미지를 받았습니다.");
+                    Console.WriteLine($"(기존체력 {prevHp} => 남은 체력: {myPlayer.Stat.CurrentHp})\n");
                 }
                 else
                 {
@@ -772,11 +803,16 @@ namespace ConsoleTextRPG.Scenes
 
             dungeonHP = myPlayer.Stat.CurrentHp;
             isDF = false;
+
+            //// ✅ 몬스터 방어 상태 초기화
+            //foreach (var monster in currentMonsters)
+            //    monster.IsDefending = false;
+
             GameManager.Instance.currentState = DungeonState.PlayerTurn;
 
             Print("================================");
-            Print("\ninfo : 몬스터의 공격이 끝났습니다.");
-            Console.WriteLine("계속하려면 아무 키나 누르세요...");
+            Print("\ninfo : 몬스터의 공격이 끝났습니다.\n");
+            Console.WriteLine("\n계속하려면 아무 키나 누르세요...");
             Console.ReadKey(true);
         }
 
