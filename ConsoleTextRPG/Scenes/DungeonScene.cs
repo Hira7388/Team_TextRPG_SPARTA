@@ -703,6 +703,8 @@ namespace ConsoleTextRPG.Scenes
                     GameManager.Instance.currentState = DungeonState.EndBattle;
                     Info("모든 몬스터를 처치했습니다.");
                     myPlayer.GetExp(deadCount);   //배틀페이즈 종료후 경험치 획득
+                    myPlayer.AddGold(deadCount*100);   //배틀페이즈 종료후 골드 획득
+                    Console.WriteLine($"+{deadCount*100} G 획득!");
                     Thread.Sleep(200);
                     break;
                 }

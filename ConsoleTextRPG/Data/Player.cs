@@ -41,7 +41,7 @@ namespace ConsoleTextRPG.Data
             this.Stat = new CharacterStat(1, 10, 5, 100, 5);
 
             // Player만의 고유 속성 초기화
-            this.Gold = 1500;
+            this.Gold = 3000;
 
             // Player에게 인벤토리 생성
             this.Inventory = new Inventory();

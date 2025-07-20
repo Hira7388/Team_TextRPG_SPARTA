@@ -133,8 +133,8 @@ namespace ConsoleTextRPG.Managers
 
 
             // 임시 아이템 추가(테스트용)
-            Item item;
-            Player.Inventory.AddItem(item = AllItems.FirstOrDefault(i => i.Id == 0));
+            //Item item;
+            //Player.Inventory.AddItem(item = AllItems.FirstOrDefault(i => i.Id == 0));
 
             // Scene 등록
             // 작성법 :  scenes[SceneID.씬이름] = new 씬클래스이름(this);

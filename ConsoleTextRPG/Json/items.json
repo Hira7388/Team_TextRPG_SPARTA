@@ -6,7 +6,7 @@
     "Type": 1,
     "StatType": "방어력",
     "StatusBonus": 5,
-    "Price": 100
+    "Price": 1000
   },
   {
     "Id": 1,
@@ -15,7 +15,7 @@
     "Type": 1,
     "StatType": "방어력",
     "StatusBonus": 9,
-    "Price": 200
+    "Price": 1500
   },
   {
     "Id": 2,
@@ -23,8 +23,8 @@
     "Comment": "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.",
     "Type": 1,
     "StatType": "방어력",
-    "StatusBonus": 15,
-    "Price": 350
+    "StatusBonus": 12,
+    "Price": 3500
   },
   {
     "Id": 3,
@@ -32,8 +32,8 @@
     "Comment": "쉽게 볼 수 있는 낡은 검 입니다.",
     "Type": 0,
     "StatType": "공격력",
-    "StatusBonus": 2,
-    "Price": 60
+    "StatusBonus": 4,
+    "Price": 600
   },
   {
     "Id": 4,
@@ -41,8 +41,8 @@
     "Comment": "어디선가 사용됐던거 같은 도끼입니다.",
     "Type": 0,
     "StatType": "공격력",
-    "StatusBonus": 5,
-    "Price": 150
+    "StatusBonus": 7,
+    "Price": 2500
   },
   {
     "Id": 5,
@@ -50,8 +50,8 @@
     "Comment": "스파르타의 전사들이 사용했다는 전설의 창입니다.",
     "Type": 0,
     "StatType": "공격력",
-    "StatusBonus": 10,
-    "Price": 300
+    "StatusBonus": 15,
+    "Price": 4000
   },
   {
     "Id": 6,
@@ -60,7 +60,7 @@
     "Type": 2,
     "StatType": "회복력",
     "StatusBonus": 30,
-    "Price": 100
+    "Price": 500
   }
 
 

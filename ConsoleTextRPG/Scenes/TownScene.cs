@@ -304,7 +304,7 @@ namespace ConsoleTextRPG.Scenes
             Console.WriteLine($"소지금 : {myPlayer.Gold} G");
             Console.WriteLine($"공격력 : {myPlayer.Stat.BaseAttack}{(myPlayer.Stat.AdditionalAttack > 0 ? $"(+{myPlayer.Stat.AdditionalAttack})" : "")}");
             Console.WriteLine($"방어력 : {myPlayer.Stat.BaseDefense}{(myPlayer.Stat.AdditionalDefense > 0 ? $"(+{myPlayer.Stat.AdditionalDefense})" : "")}");
-            Console.WriteLine($"민첩 : {myPlayer.Stat.Dexterity}({myPlayer.Stat.MissingStat(myPlayer.Stat.Dexterity)*100}%)");
+            Console.WriteLine($"민첩   : {myPlayer.Stat.Dexterity}({myPlayer.Stat.MissingStat(myPlayer.Stat.Dexterity)*100}%)");
             Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}");
             // 아래는 아직 아이템으로 인한 추가 최대 체력이 없어서 잠시 비활성화 해두었습니다.
             //Console.WriteLine($"체력   : {myPlayer.Stat.MaxHp}{(myPlayer.Stat.AdditionalHp > 0 ? $"(+{myPlayer.ItemHealth})" : "")}"); 
