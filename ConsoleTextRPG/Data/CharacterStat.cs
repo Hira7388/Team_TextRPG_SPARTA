@@ -136,8 +136,21 @@ namespace ConsoleTextRPG.Data
             } 
         }
 
+        //레벨업 함수
+        public void LevelUp(int amount) 
+        {
+            Level += amount;
+            MaxHp += amount * 5;        //레벨업 시 최대 체력 증가
+            BaseAttack += amount * 2;     // 레벨업 시 공격력 증가 
+            BaseDefense += amount;         // 레벨업 시 방어력 증가 
 
-
+            CurrentHp = MaxHp;              //레벨업 시 체력 회복
+            Console.WriteLine($" Level UP! -> 공격력 : {BaseAttack}, 방어력 : {BaseDefense}이 되었습니다. 현재 체력 : {CurrentHp}");
+        }
+        public int RequiredExp() //레벨업에 필요한 exp양
+        {
+            return Level * 5;
+        }
 
     }
 }

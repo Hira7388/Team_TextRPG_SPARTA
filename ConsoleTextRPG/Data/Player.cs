@@ -10,12 +10,11 @@ namespace ConsoleTextRPG.Data
 
     public class Player : Character
     {
-
-
+        //경험치
+        public int CurrentExp { get; private set; } 
 
         //스킬
         public List<Skill> Skills { get; private set; } // Skill 타입 사용
-
 
 
         public int Gold { get;  set; }
@@ -204,6 +203,22 @@ namespace ConsoleTextRPG.Data
             {
                 Quests.Add(new PlayerQuest(questId));
             }
+        }
+
+        //경험치 증가 메서드
+        public void GetExp(int exp)
+        {
+            CurrentExp += exp;
+
+            if(CurrentExp >= Stat.RequiredExp())
+            {
+                Console.WriteLine($"{Name}가 {exp}의 exp를 획득하였습니다!");
+                CurrentExp -= Stat.RequiredExp(); //사용한 경험치 감소
+                Stat.LevelUp(1); // 레벨 1 증가
+            }
+            else
+                Console.WriteLine($"{Name}가 {CurrentExp}의 exp를 획득하였습니다!");
+
         }
     }
 }

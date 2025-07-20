@@ -702,6 +702,7 @@ namespace ConsoleTextRPG.Scenes
                     isWin = true;
                     GameManager.Instance.currentState = DungeonState.EndBattle;
                     Info("모든 몬스터를 처치했습니다.");
+                    myPlayer.GetExp(deadCount);   //배틀페이즈 종료후 경험치 획득
                     Thread.Sleep(200);
                     break;
                 }
@@ -856,7 +857,8 @@ namespace ConsoleTextRPG.Scenes
             Print("◎Battle!! - Result◎", ConsoleColor.DarkYellow);
             Print($"\nVictory!\n", ConsoleColor.Green);
             Print($"던전에서 몬스터 {currentMonsters.Count}마리를 잡았습니다.\n");
-            Print($"Lv.{myPlayer.Stat.Level} | {myPlayer.Name}");
+            Print($"| 레벨 | EXP | 이름");
+            Print($"| {myPlayer.Stat.Level} |{myPlayer.CurrentExp} |{myPlayer.Name}");
             Print($"HP.{dungeonHP} -> {myPlayer.Stat.CurrentHp}\n");
             Print(0, "다음", ConsoleColor.DarkCyan);
             Print("\n원하시는 행동을 입력해주세요");
