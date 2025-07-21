@@ -1,0 +1,39 @@
+﻿{
+  "PlayerName": "세트",
+  "PlayerJob": "전사",
+  "Gold": 1500,
+  "Level": 1,
+  "BaseAttack": 15,
+  "BaseDefense": 10,
+  "MaxHp": 120,
+  "CurrentHp": 112,
+  "Dexterity": 0,
+  "InventoryItemIds": [
+    0
+  ],
+  "EquippedWeaponId": -1,
+  "EquippedArmorId": -1,
+  "InProgressQuestIds": [
+    {
+      "QuestId": 1,
+      "CurrentCount": 1,
+      "State": 1
+    },
+    {
+      "QuestId": 2,
+      "CurrentCount": 0,
+      "State": 1
+    },
+    {
+      "QuestId": 4,
+      "CurrentCount": 1,
+      "State": 1
+    }
+  ],
+  "CompletedQuestIds": [],
+  "LearnedSkillIds": [
+    1,
+    2,
+    3
+  ]
+}
